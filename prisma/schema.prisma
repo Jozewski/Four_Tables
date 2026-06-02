@@ -11,8 +11,10 @@ model Recipe {
   title       String
   description String?
   cultural    String       // "Italian" | "Dutch" | "German" | "Mexican"
-  holiday     String       // "Christmas" | "Easter" | "Thanksgiving"
-  prepTime    Int?         // minutes (includes inactive time like marinating)
+  holiday     String?      // "Christmas" | "Easter" | "Thanksgiving" | null for everyday
+  category    String       // "Main" | "Dessert" | "Bread" | "Soup" | "Side" | "Seafood" | "Appetizer"
+  prepTime    Int?         // minutes
+  imageUrl    String?      // URL to food photography
   createdAt   DateTime     @default(now())
 
   notes       FamilyNote[]
@@ -32,10 +34,10 @@ model FamilyNote {
 
 model Ingredient {
   id       Int     @id @default(autoincrement())
-  order    Int     // display order within the recipe
-  amount   String  // e.g. "2", "1/2", "a pinch" — String because measurements vary
-  unit     String? // e.g. "cup", "tbsp", "g" — optional because some items are countable
-  name     String  // e.g. "all-purpose flour"
+  order    Int
+  amount   String
+  unit     String?
+  name     String
 
   recipe   Recipe  @relation(fields: [recipeId], references: [id])
   recipeId Int

@@ -2,13 +2,20 @@ require("dotenv").config();
 const { Client } = require("pg");
 
 const sql = `
+DROP TABLE IF EXISTS "FamilyNote";
+DROP TABLE IF EXISTS "Ingredient";
+DROP TABLE IF EXISTS "Step";
+DROP TABLE IF EXISTS "Recipe";
+
 CREATE TABLE IF NOT EXISTS "Recipe" (
   "id" SERIAL PRIMARY KEY,
   "title" TEXT NOT NULL,
   "description" TEXT,
   "cultural" TEXT NOT NULL,
-  "holiday" TEXT NOT NULL,
+  "holiday" TEXT,
+  "category" TEXT NOT NULL,
   "prepTime" INTEGER,
+  "imageUrl" TEXT,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
