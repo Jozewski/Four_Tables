@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Josefin+Sans:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream:        #F5F0E8;
+  --cream-dark:   #EDE6D6;
+  --ink:          #1C1917;
+  --ink-soft:     #44403C;
+  --ink-muted:    #78716C;
+
+  /* Four family accent colors */
+  --italian:      #8B2A2A;   /* deep Chianti red */
+  --dutch:        #1E4D7B;   /* Delft blue */
+  --german:       #3D5A2A;   /* forest green */
+  --mexican:      #B85C1A;   /* terra cotta */
+
+  --border:       #D6CFC0;
+  --gold:         #C9A84C;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Typography ── */
+.font-display  { font-family: 'Playfair Display', Georgia, serif; }
+.font-sans-alt { font-family: 'Josefin Sans', sans-serif; }
+.font-body     { font-family: 'Lora', Georgia, serif; }
+
+/* ── Cultural accent utilities ── */
+.accent-italian  { color: var(--italian);  }
+.accent-dutch    { color: var(--dutch);    }
+.accent-german   { color: var(--german);   }
+.accent-mexican  { color: var(--mexican);  }
+
+.bg-italian  { background-color: var(--italian);  }
+.bg-dutch    { background-color: var(--dutch);    }
+.bg-german   { background-color: var(--german);   }
+.bg-mexican  { background-color: var(--mexican);  }
+
+.border-italian  { border-color: var(--italian);  }
+.border-dutch    { border-color: var(--dutch);    }
+.border-german   { border-color: var(--german);   }
+.border-mexican  { border-color: var(--mexican);  }
+
+/* ── Decorative rule ── */
+.ornamental-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--gold);
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.ornamental-rule::before,
+.ornamental-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Card hover lift ── */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(28,25,23,0.12);
+}
+
+/* ── Ingredient & step lists ── */
+.ingredient-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Lora', serif;
+  font-size: 0.95rem;
+}
+
+.step-block {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Page fade-in ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fadeUp 0.5s ease both;
+}
+.fade-up-delay-1 { animation-delay: 0.08s; }
+.fade-up-delay-2 { animation-delay: 0.16s; }
+.fade-up-delay-3 { animation-delay: 0.24s; }
+.fade-up-delay-4 { animation-delay: 0.32s; }

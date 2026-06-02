@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  cultural    String       // "Italian" | "Dutch" | "German" | "Mexican"
+  holiday     String       // "Christmas" | "Easter" | "Thanksgiving"
+  prepTime    Int?         // minutes (includes inactive time like marinating)
+  createdAt   DateTime     @default(now())
+
+  notes       FamilyNote[]
+  ingredients Ingredient[]
+  steps       Step[]
+}
+
+model FamilyNote {
+  id        Int      @id @default(autoincrement())
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  Int
+}
+
+model Ingredient {
+  id       Int     @id @default(autoincrement())
+  order    Int     // display order within the recipe
+  amount   String  // e.g. "2", "1/2", "a pinch" — String because measurements vary
+  unit     String? // e.g. "cup", "tbsp", "g" — optional because some items are countable
+  name     String  // e.g. "all-purpose flour"
+
+  recipe   Recipe  @relation(fields: [recipeId], references: [id])
+  recipeId Int
+}
+
+model Step {
+  id          Int    @id @default(autoincrement())
+  stepNumber  Int
+  instruction String
+
+  recipe      Recipe @relation(fields: [recipeId], references: [id])
+  recipeId    Int
+}
