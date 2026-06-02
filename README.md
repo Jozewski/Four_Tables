@@ -9,7 +9,7 @@ A family heritage recipe collection — traditional holiday dishes from four cul
 
 ## Tech Stack
 
-- **Next.js 14** — App Router
+- **Next.js 16** — App Router
 - **TypeScript**
 - **Tailwind CSS**
 - **Prisma ORM**
@@ -27,11 +27,14 @@ npm install
 
 ### 2. Set up the database
 
-Create a free account at [neon.tech](https://neon.tech), create a project, and copy your connection string.
+Create a free account at [neon.tech](https://neon.tech), create a project, then copy both connection strings from Neon:
+- Pooled connection string (Connection pooling ON) for `DATABASE_URL`
+- Direct connection string (Connection pooling OFF) for `DIRECT_URL`
 
 ```bash
 cp .env.example .env
-# Paste your Neon connection string as DATABASE_URL
+# Paste pooled URL as DATABASE_URL
+# Paste direct URL as DIRECT_URL
 ```
 
 ### 3. Push the schema and seed
@@ -47,7 +50,7 @@ npx prisma db seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3002](http://localhost:3002).
 
 ### Prisma Studio (visual DB browser)
 
