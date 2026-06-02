@@ -6,12 +6,14 @@ import { Suspense } from "react";
 type SearchParams = {
   cultural?: string;
   holiday?: string;
+  category?: string;
 };
 
-async function RecipeGrid({ cultural, holiday }: SearchParams) {
+async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
   const where: Record<string, string> = {};
   if (cultural) where.cultural = cultural;
   if (holiday)  where.holiday  = holiday;
+  if (category) where.category = category;
 
   const recipes = await prisma.recipe.findMany({
     where,
@@ -22,7 +24,9 @@ async function RecipeGrid({ cultural, holiday }: SearchParams) {
       description: true,
       cultural: true,
       holiday: true,
+      category: true,
       prepTime: true,
+      imageUrl: true,
       _count: { select: { ingredients: true, steps: true } },
     },
   });
@@ -42,10 +46,11 @@ async function RecipeGrid({ cultural, holiday }: SearchParams) {
 
   return (
     <>
-      <p className="font-sans-alt text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-6">
+      <p className="font-sans-alt text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-8 text-center">
         {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
         {cultural ? ` · ${cultural}` : ""}
         {holiday  ? ` · ${holiday}`  : ""}
+        {category ? ` · ${category}` : ""}
       </p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {recipes.map((recipe) => (
@@ -56,29 +61,30 @@ async function RecipeGrid({ cultural, holiday }: SearchParams) {
   );
 }
 
-export default function RecipesPage({
+export default async function RecipesPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
-  const { cultural, holiday } = searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { cultural, holiday, category } = resolvedSearchParams;
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-14">
+    <div className="max-w-5xl mx-auto px-8 md:px-10 py-14">
       {/* Header */}
-      <div className="mb-10 fade-up">
+      <div className="mb-12 fade-up text-center">
         <h1 className="font-display text-4xl font-bold text-[var(--ink)] mb-2">
-          {cultural || holiday
-            ? `${cultural ?? ""} ${holiday ?? ""} Recipes`.trim()
+          {cultural || holiday || category
+            ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
             : "All Recipes"}
         </h1>
-        <p className="font-body text-sm italic text-[var(--ink-muted)]">
+        <p className="font-body text-sm italic text-[var(--ink-muted)] max-w-2xl mx-auto">
           Traditions from four tables, gathered in one place.
         </p>
       </div>
 
       {/* Filters */}
-      <div className="mb-10 pb-10 border-b border-[var(--border)] fade-up fade-up-delay-1">
+      <div className="mb-12 pb-10 border-b border-[var(--border)] fade-up fade-up-delay-1 max-w-4xl mx-auto">
         <Suspense>
           <FilterBar />
         </Suspense>
@@ -94,7 +100,7 @@ export default function RecipesPage({
           </div>
         }
       >
-        <RecipeGrid cultural={cultural} holiday={holiday} />
+        <RecipeGrid cultural={cultural} holiday={holiday} category={category} />
       </Suspense>
     </div>
   );
