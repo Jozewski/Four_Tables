@@ -155,7 +155,7 @@ async function main() {
     description: "A spectacular Easter pie from Liguria — flaky pastry layered with Swiss chard, fresh ricotta, and whole eggs baked inside. When you slice it, a perfectly set egg yolk is revealed in each portion.",
     cultural: "Italian", holiday: "Easter", category: "Main",
     prepTime: 120,
-    imageUrl: "https://source.unsplash.com/1200x800/?italian,spinach,ricotta,pie",
+    imageUrl: "https://www.italiankitchenconfessions.com/wp-content/uploads/2021/03/Torta-Pasqualina-Savory-Italian-Easter-Pie-3.jpg",
     notes: [{ author: "Grandma Louise", content: "Traditionally this pie has 33 layers of pastry — one for each year of Christ's life. I make it with two. It still tastes the same." }],
     ingredients: [
       { order: 1,  amount: "500", unit: "g",    name: "Swiss chard or spinach, stems removed" },
@@ -280,7 +280,7 @@ async function main() {
     description: "A thick, hearty split pea soup with rookworst sausage, celeriac, leeks, and smoked pork. Called 'snert' — traditionally eaten on Christmas Eve.",
     cultural: "Dutch", holiday: "Christmas", category: "Soup",
     prepTime: 150,
-    imageUrl: "https://source.unsplash.com/1200x800/?split-pea,soup,bowl",
+    imageUrl: "https://www.thegluttonlife.com/wp-content/uploads/2020/02/DSC_0130-1024x678.jpg",
     notes: [{ author: "Oma", content: "It must be thick enough for a spoon to stand up in it. If it is not, keep cooking." }],
     ingredients: [
       { order: 1,  amount: "500", unit: "g",      name: "green split peas, rinsed" },
@@ -345,7 +345,7 @@ async function main() {
     description: "Mashed potatoes and kale cooked together, served with rookworst and gravy. The Dutch comfort dish Oma makes for Thanksgiving because it feeds a crowd and travels well.",
     cultural: "Dutch", holiday: "Thanksgiving", category: "Side",
     prepTime: 45,
-    imageUrl: "https://source.unsplash.com/1200x800/?mashed-potatoes,kale,comfort-food",
+    imageUrl: "https://www.internationalcuisine.com/wp-content/uploads/2017/07/Dutch-Stompot-e1500418376615.jpg",
     notes: [{ author: "Oma", content: "Kale is better after the first frost. We don't get frost in Phoenix so I put the kale in the freezer for an hour first." }],
     ingredients: [
       { order: 1, amount: "1.5", unit: "kg",  name: "starchy potatoes, peeled and quartered" },
@@ -370,7 +370,7 @@ async function main() {
     description: "A richer, more festive version of the stol — packed with winter dried fruits, marzipan, and warming spices, topped with flaked almonds and a blizzard of powdered sugar.",
     cultural: "Dutch", holiday: "Christmas", category: "Bread",
     prepTime: 270,
-    imageUrl: "https://source.unsplash.com/1200x800/?christmas,bread,loaf",
+    imageUrl: "https://www.chefspencil.com/wp-content/uploads/Kerststol-Dutch-Christmas-Bread-.jpg",
     notes: [{ author: "Oma", content: "The stol improves every day it sits. Make it three days before Christmas. Wrap it well. On Christmas morning it will be perfect." }],
     ingredients: [
       { order: 1,  amount: "500", unit: "g",   name: "strong white bread flour" },
@@ -467,7 +467,7 @@ async function main() {
     description: "Whole goose roasted with apple, onion, and marjoram stuffing. Served with braised red cabbage and potato dumplings. The German Christmas centerpiece.",
     cultural: "German", holiday: "Christmas", category: "Main",
     prepTime: 240,
-    imageUrl: "https://images.unsplash.com/photo-1576402187878-974f70c890a5?w=800",
+    imageUrl: "https://ourgabledhome.com/wp-content/uploads/2024/11/roast-goose-1.jpg",
     notes: [{ author: "Opa Heinrich", content: "Score the skin so the fat renders properly. Baste every thirty minutes. This is the most important step." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: null,   name: "whole goose (about 4.5kg), giblets removed" },
@@ -500,7 +500,7 @@ async function main() {
     description: "A soft sponge cake baked in a lamb-shaped mold, dusted with powdered sugar, tied with a red ribbon. Every German household has the mold — it comes out at Easter every year.",
     cultural: "German", holiday: "Easter", category: "Dessert",
     prepTime: 75,
-    imageUrl: "https://source.unsplash.com/1200x800/?easter,cake,dessert",
+    imageUrl: "https://mydinner.co.uk/wp-content/uploads/2021/03/EasterLambCakeFB.jpg",
     notes: [{ author: "Tante Brigitte", content: "Grease and flour the mold very well or the ears will stick. This is how you ruin Easter." }],
     ingredients: [
       { order: 1,  amount: "4",   unit: null,  name: "large eggs, separated, room temperature" },
@@ -531,7 +531,7 @@ async function main() {
     description: "Beef marinated for three days in red wine vinegar, wine, and spices, then braised until fork-tender. The gravy is finished with crushed gingersnap cookies — sweet balancing sour. Start on Monday.",
     cultural: "German", holiday: "Thanksgiving", category: "Main",
     prepTime: 4320,
-    imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800",
+    imageUrl: "https://www.daringgourmet.com/wp-content/uploads/2024/07/Sauerbraten-Recipe-11.jpg",
     notes: [{ author: "Opa Heinrich", content: "Start this on Monday for Thanksgiving Thursday. There are no shortcuts with sauerbraten." }],
     ingredients: [
       { order: 1,  amount: "1.5", unit: "kg",  name: "beef rump roast or bottom round" },
@@ -562,7 +562,7 @@ async function main() {
     description: "Soft, chewy German gingerbread cookies glazed with white icing or dark chocolate. Fragrant with Lebkuchengewürz — the classic blend of cinnamon, cardamom, cloves, anise, and ginger that means Christmas in Germany.",
     cultural: "German", holiday: "Christmas", category: "Dessert",
     prepTime: 60,
-    imageUrl: "https://images.unsplash.com/photo-1481391032119-d89fee407e44?w=800",
+    imageUrl: "https://www.daringgourmet.com/wp-content/uploads/2015/12/Lebkuchen-3-cropped.jpg",
     notes: [{ author: "Tante Brigitte", content: "The dough must rest overnight in the refrigerator. The spices need time to bloom. Cookies made the same day they are mixed taste flat." }],
     ingredients: [
       { order: 1,  amount: "350", unit: "g",   name: "all-purpose flour" },
@@ -595,7 +595,7 @@ async function main() {
     description: "Germany's answer to mac and cheese — irregular egg noodles layered with caramelized onions and melted Emmental and Gruyère. A Swabian classic that is deeply comforting.",
     cultural: "German", holiday: null, category: "Main",
     prepTime: 60,
-    imageUrl: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800",
+    imageUrl: "https://www.daringgourmet.com/wp-content/uploads/2016/05/Kaesespaetzle-1-square.jpg",
     notes: [{ author: "Opa Heinrich", content: "The onions must be very dark and very sweet — this takes 45 minutes of patience. The cheese is nothing without the onions." }],
     ingredients: [
       { order: 1,  amount: "400", unit: "g",   name: "all-purpose flour" },
@@ -625,7 +625,7 @@ async function main() {
     description: "The iconic German layer cake — chocolate sponge soaked in Kirsch cherry liqueur, layered with whipped cream and sour cherries, decorated with chocolate shavings and whole cherries.",
     cultural: "German", holiday: null, category: "Dessert",
     prepTime: 120,
-    imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
+    imageUrl: "https://platedcravings.com/wp-content/uploads/2019/07/Black-Forest-Cake-Recipe-Wide-Plated-Cravings-1.jpg",
     notes: [{ author: "Tante Brigitte", content: "Do not be stingy with the Kirsch. It is not optional. The whole cake is built around that flavor. If you do not want to use alcohol, make a different cake." }],
     ingredients: [
       { order: 1,  amount: "6",   unit: null,   name: "large eggs" },
@@ -659,7 +659,7 @@ async function main() {
     description: "The iconic German Christmas bread — a rich, dense loaf packed with rum-soaked fruits, marzipan, and spices, then buried under butter and powdered sugar to form a white crust that keeps for weeks.",
     cultural: "German", holiday: "Christmas", category: "Bread",
     prepTime: 480,
-    imageUrl: "https://source.unsplash.com/1200x800/?stollen,christmas,bread",
+    imageUrl: "https://www.daringgourmet.com/wp-content/uploads/2018/11/Stollen-1200px.jpg",
     notes: [{ author: "Tante Brigitte", content: "Make it four weeks before Christmas. The stollen keeps for months wrapped well. Every week it tastes better. This is the only Christmas bread that improves with age." }],
     ingredients: [
       { order: 1,  amount: "500", unit: "g",    name: "strong white bread flour" },
@@ -701,7 +701,7 @@ async function main() {
     description: "Salt cod soaked for two days, simmered with tomatoes, olives, capers, roasted peppers, and potatoes. A Mexican Christmas Eve tradition inherited from Spanish colonial cooking.",
     cultural: "Mexican", holiday: "Christmas", category: "Seafood",
     prepTime: 2880,
-    imageUrl: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=800",
+    imageUrl: "https://mexicanappetizersandmore.com/wp-content/uploads/Bacalao-a-la-Vizcaina-Facebook-Image.jpg",
     notes: [{ author: "Tía Carmen", content: "Change the water every eight hours when soaking. The cod should taste like fish by the end, not like salt." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: "kg",   name: "dried salt cod (bacalao)" },
@@ -796,7 +796,7 @@ async function main() {
     description: "Tender masa dough filled with slow-braised chile pork, wrapped in corn husks and steamed for two hours. A Christmas Eve tradition — the whole family gathers to spread masa and assemble tamales the night before.",
     cultural: "Mexican", holiday: "Christmas", category: "Main",
     prepTime: 360,
-    imageUrl: "https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=800",
+    imageUrl: "https://www.isabeleats.com/wp-content/uploads/2024/11/pozole-featured-small-24-1.jpg",
     notes: [{ author: "Abuela Rosa", content: "Tamales are not a one-person recipe. You need hands. Call the family. Put on music. Making tamales is the celebration before the celebration." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: "kg",   name: "pork shoulder, cut into large chunks" },
@@ -829,7 +829,7 @@ async function main() {
     description: "A deeply flavored red chile broth with slow-cooked pork and plump hominy corn. Served with a full spread of garnishes — shredded cabbage, radishes, dried oregano, and lime. A Christmas and New Year's Eve tradition.",
     cultural: "Mexican", holiday: "Christmas", category: "Soup",
     prepTime: 180,
-    imageUrl: "https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=800",
+    imageUrl: "https://www.isabeleats.com/wp-content/uploads/2024/11/pozole-featured-small-24-1.jpg",
     notes: [{ author: "Tía Carmen", content: "The garnishes are not optional. They are half the recipe. Put everything on the table and let people build their own bowl." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: "kg",  name: "pork shoulder, bone-in if possible" },
@@ -859,7 +859,7 @@ async function main() {
     description: "Roasted poblano chiles stuffed with a fragrant picadillo of pork, fruit, and spices, topped with a cool walnut cream sauce and scattered with pomegranate seeds and parsley. Green, white, and red — the colors of the Mexican flag.",
     cultural: "Mexican", holiday: "Thanksgiving", category: "Main",
     prepTime: 180,
-    imageUrl: "https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=800",
+    imageUrl: "https://www.royalresorts.com/blog/wp-content/uploads/2023/08/chiles-en-nogada.jpg",
     notes: [{ author: "Abuela Rosa", content: "This dish celebrates the harvest. The pomegranate seeds must be fresh — not a garnish you skip. They are what makes this dish what it is." }],
     ingredients: [
       { order: 1,  amount: "8",   unit: null,   name: "large poblano chiles" },
@@ -894,7 +894,7 @@ async function main() {
     description: "A light sponge cake soaked in three kinds of milk — whole milk, evaporated milk, and sweetened condensed milk — until every bite is impossibly moist. Topped with whipped cream and a dusting of cinnamon.",
     cultural: "Mexican", holiday: null, category: "Dessert",
     prepTime: 90,
-    imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
+    imageUrl: "https://www.laylita.com/recipes/wp-content/uploads/2024/09/Traditional-tres-leches-cake-recipe.jpg",
     notes: [{ author: "Tía Carmen", content: "Do not skip the overnight rest in the refrigerator. The cake absorbs the milk while it sleeps. In the morning it is a different cake than what you baked." }],
     ingredients: [
       { order: 1,  amount: "5",   unit: null,   name: "large eggs, separated" },
@@ -926,7 +926,7 @@ async function main() {
     description: "Crispy fried dough dusted with cinnamon sugar, served with a thick, dark Mexican-style drinking chocolate for dipping. A beloved Mexican sweet found at every fair, every market, and now every holiday table.",
     cultural: "Mexican", holiday: null, category: "Dessert",
     prepTime: 45,
-    imageUrl: "https://source.unsplash.com/1200x800/?churros,chocolate,dessert",
+    imageUrl: "https://www.holajalapeno.com/wp-content/uploads/2021/12/homemade-churros.jpg",
     notes: [{ author: "Abuela Rosa", content: "The chocolate must be thick — thick enough to coat the churro and not drip. If it drips, it is hot chocolate, not churro chocolate. Keep cooking it." }],
     ingredients: [
       { order: 1,  amount: "250", unit: "ml",   name: "water" },
