@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import RecipeCard from "@/components/RecipeCard";
+import RecipeInlineListItem from "@/components/RecipeInlineListItem";
 import FilterBar from "@/components/FilterBar";
 import { Suspense } from "react";
 
@@ -17,7 +17,7 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
 
   const recipes = await prisma.recipe.findMany({
     where,
-    orderBy: [{ cultural: "asc" }, { holiday: "asc" }],
+    orderBy: [{ cultural: "asc" }, { title: "asc" }],
     select: {
       id: true,
       title: true,
@@ -27,17 +27,28 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
       category: true,
       prepTime: true,
       imageUrl: true,
-      _count: { select: { ingredients: true, steps: true } },
+      ingredients: {
+        orderBy: { order: "asc" },
+        select: { id: true, order: true, amount: true, unit: true, name: true },
+      },
+      steps: {
+        orderBy: { stepNumber: "asc" },
+        select: { id: true, stepNumber: true, instruction: true },
+      },
+      notes: {
+        orderBy: { createdAt: "asc" },
+        select: { id: true, author: true, content: true },
+      },
     },
   });
 
   if (recipes.length === 0) {
     return (
-      <div className="text-center py-20">
-        <p className="font-display text-2xl italic text-[var(--ink-soft)]">
+      <div className="section-card rounded-[1.75rem] text-center py-20 px-6">
+        <p className="font-display text-3xl text-[var(--ink-soft)]">
           No recipes found for that combination.
         </p>
-        <p className="font-body text-sm text-[var(--ink-muted)] mt-2">
+        <p className="font-body text-sm text-[var(--ink-muted)] mt-3 leading-7">
           Try clearing one of the filters.
         </p>
       </div>
@@ -46,15 +57,15 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
 
   return (
     <>
-      <p className="font-sans-alt text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-8 text-center">
+      <p className="font-sans-alt text-[11px] font-extrabold tracking-[0.18em] uppercase text-[var(--ink-muted)] mb-8 text-center">
         {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
         {cultural ? ` · ${cultural}` : ""}
         {holiday  ? ` · ${holiday}`  : ""}
         {category ? ` · ${category}` : ""}
       </p>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="space-y-6">
         {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+          <RecipeInlineListItem key={recipe.id} recipe={recipe} />
         ))}
       </div>
     </>
@@ -70,31 +81,29 @@ export default async function RecipesPage({
   const { cultural, holiday, category } = resolvedSearchParams;
 
   return (
-    <div className="max-w-5xl mx-auto px-8 md:px-10 py-14">
-      {/* Header */}
-      <div className="mb-12 fade-up text-center">
-        <h1 className="font-display text-4xl font-bold text-[var(--ink)] mb-2">
+    <div className="portal-shell py-10 md:py-14">
+      <div className="soft-panel rounded-[2rem] p-8 md:p-10 mb-10 fade-up text-center">
+        <p className="eyebrow justify-center mb-4">Browse recipes</p>
+        <h1 className="font-display text-4xl md:text-5xl font-bold text-[var(--ink)] mb-3">
           {cultural || holiday || category
             ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
             : "All Recipes"}
         </h1>
-        <p className="font-body text-sm italic text-[var(--ink-muted)] max-w-2xl mx-auto">
-          Traditions from four tables, gathered in one place.
+        <p className="font-body text-sm md:text-base text-[var(--ink-soft)] max-w-3xl mx-auto leading-7">
+          Move through the full collection by family tradition, holiday, or course. This page should feel practical first: find the dish, open it, cook it.
         </p>
       </div>
 
-      {/* Filters */}
-      <div className="mb-12 pb-10 border-b border-[var(--border)] fade-up fade-up-delay-1 max-w-4xl mx-auto">
+      <div className="mb-12 fade-up fade-up-delay-1 max-w-5xl mx-auto">
         <Suspense>
           <FilterBar />
         </Suspense>
       </div>
 
-      {/* Recipe grid */}
       <Suspense
         fallback={
-          <div className="text-center py-20">
-            <p className="font-sans-alt text-xs tracking-[0.2em] uppercase text-[var(--ink-muted)] animate-pulse">
+          <div className="section-card rounded-[1.75rem] text-center py-20">
+            <p className="font-sans-alt text-xs font-extrabold tracking-[0.2em] uppercase text-[var(--ink-muted)] animate-pulse">
               Loading recipes…
             </p>
           </div>

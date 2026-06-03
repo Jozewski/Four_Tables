@@ -1,24 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Josefin+Sans:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --cream:        #F5F0E8;
-  --cream-dark:   #EDE6D6;
-  --ink:          #1C1917;
-  --ink-soft:     #44403C;
-  --ink-muted:    #78716C;
+  --cream:        #fff8f1;
+  --cream-dark:   #f4ebdf;
+  --surface:      #ffffff;
+  --surface-soft: #fffdf9;
+  --ink:          #18181b;
+  --ink-soft:     #3f3f46;
+  --ink-muted:    #71717a;
+  --accent:       #d96a27;
+  --accent-soft:  #fff1e7;
 
-  /* Four family accent colors */
-  --italian:      #8B2A2A;   /* deep Chianti red */
-  --dutch:        #1E4D7B;   /* Delft blue */
-  --german:       #3D5A2A;   /* forest green */
-  --mexican:      #B85C1A;   /* terra cotta */
+  --italian:      #b83d2d;
+  --dutch:        #1d5a92;
+  --german:       #47652e;
+  --mexican:      #c7661e;
 
-  --border:       #D6CFC0;
-  --gold:         #C9A84C;
+  --border:       #eadfce;
+  --gold:         #cf8b2e;
+  --shadow:       0 20px 50px rgba(24, 24, 27, 0.08);
 }
 
 * {
@@ -30,16 +34,23 @@ html {
 }
 
 body {
-  background-color: var(--cream);
+  background:
+    radial-gradient(circle at top left, rgba(255, 220, 188, 0.55), transparent 24%),
+    linear-gradient(180deg, #fffdf9 0%, var(--cream) 28%, #fff 100%);
   color: var(--ink);
-  font-family: 'Lora', Georgia, serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* ── Typography ── */
-.font-display  { font-family: 'Playfair Display', Georgia, serif; }
-.font-sans-alt { font-family: 'Josefin Sans', sans-serif; }
-.font-body     { font-family: 'Lora', Georgia, serif; }
+.font-display  { font-family: 'DM Serif Display', Georgia, serif; }
+.font-sans-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-body     { font-family: 'Plus Jakarta Sans', sans-serif; }
 
 /* ── Cultural accent utilities ── */
 .accent-italian  { color: var(--italian);  }
@@ -62,27 +73,28 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--gold);
-  font-family: 'Josefin Sans', sans-serif;
+  color: var(--accent);
+  font-family: 'Manrope', sans-serif;
   font-size: 0.75rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  font-weight: 800;
 }
 .ornamental-rule::before,
 .ornamental-rule::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 /* ── Card hover lift ── */
 .card-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 .card-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(28,25,23,0.12);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
 }
 
 /* ── Ingredient & step lists ── */
@@ -92,7 +104,7 @@ body {
   gap: 0.5rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--border);
-  font-family: 'Lora', serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 0.95rem;
 }
 
@@ -101,6 +113,126 @@ body {
   grid-template-columns: 2.5rem 1fr;
   gap: 1rem;
   margin-bottom: 1.25rem;
+}
+
+.portal-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.section-card {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.chip-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 9999px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.chip-link:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+
+.section-heading {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.soft-panel {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 241, 0.92));
+}
+
+.recipe-inline-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.recipe-inline-media {
+  min-height: 200px;
+}
+
+.recipe-inline-ingredients {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .recipe-inline-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recipe-inline-media {
+    min-height: 240px;
+  }
+}
+
+@media (min-width: 768px) {
+  .recipe-inline-layout {
+    gap: 1.25rem;
+  }
+
+  .recipe-inline-media {
+    min-height: 288px;
+  }
+}
+
+.image-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(16, 16, 22, 0.48);
+  backdrop-filter: blur(4px);
+  padding: 0.45rem 0.7rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 /* ── Page fade-in ── */

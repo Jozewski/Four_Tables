@@ -37,18 +37,31 @@ export default function FilterBar() {
   }
  
   const hasFilters = activeCultural || activeHoliday || activeCategory;
+
+  function buttonClass(active: boolean) {
+    return [
+      "rounded-full px-4 py-2.5 border text-xs font-sans-alt font-extrabold uppercase tracking-[0.12em] transition-all min-h-10",
+      active ? "shadow-sm" : "bg-white hover:-translate-y-px",
+    ].join(" ");
+  }
  
   return (
-    <div className="space-y-6 text-center">
-      {/* Cultural */}
+    <div className="soft-panel rounded-[1.75rem] p-6 md:p-7 space-y-7 text-center">
+      <div className="max-w-2xl mx-auto">
+        <p className="font-sans-alt text-[11px] font-extrabold tracking-[0.22em] uppercase text-[var(--accent)] mb-2">Narrow the collection</p>
+        <p className="font-body text-sm text-[var(--ink-soft)] leading-7">
+          Filter by family tradition, holiday, or course to move through the recipe archive the way people browse a cooking site.
+        </p>
+      </div>
+
       <div>
         <p className="font-sans-alt text-[10px] tracking-[0.25em] uppercase text-[var(--ink-muted)] mb-3">Family</p>
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 justify-center">
           {cultures.map((c) => {
             const active = activeCultural === c;
             return (
               <button key={c} onClick={() => toggle("cultural", c)}
-                className="font-sans-alt text-xs tracking-[0.12em] uppercase px-4 py-2 border transition-all"
+                className={buttonClass(active)}
                 style={{
                   borderColor: active ? cultureColor[c] : "var(--border)",
                   backgroundColor: active ? cultureColor[c] : "transparent",
@@ -60,16 +73,15 @@ export default function FilterBar() {
           })}
         </div>
       </div>
- 
-      {/* Holiday */}
+
       <div>
         <p className="font-sans-alt text-[10px] tracking-[0.25em] uppercase text-[var(--ink-muted)] mb-3">Holiday</p>
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 justify-center">
           {holidays.map((h) => {
             const active = activeHoliday === h;
             return (
               <button key={h} onClick={() => toggle("holiday", h)}
-                className="font-sans-alt text-xs tracking-[0.12em] uppercase px-4 py-2 border transition-all"
+                className={buttonClass(active)}
                 style={{
                   borderColor: active ? "var(--gold)" : "var(--border)",
                   backgroundColor: active ? "var(--gold)" : "transparent",
@@ -84,16 +96,15 @@ export default function FilterBar() {
           })}
         </div>
       </div>
- 
-      {/* Category */}
+
       <div>
         <p className="font-sans-alt text-[10px] tracking-[0.25em] uppercase text-[var(--ink-muted)] mb-3">Course</p>
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 justify-center">
           {categories.map((c) => {
             const active = activeCategory === c;
             return (
               <button key={c} onClick={() => toggle("category", c)}
-                className="font-sans-alt text-xs tracking-[0.12em] uppercase px-4 py-2 border transition-all"
+                className={buttonClass(active)}
                 style={{
                   borderColor: active ? "var(--ink)" : "var(--border)",
                   backgroundColor: active ? "var(--ink)" : "transparent",
@@ -105,11 +116,10 @@ export default function FilterBar() {
           })}
         </div>
       </div>
- 
-      {/* Clear all */}
+
       {hasFilters && (
         <button onClick={() => navigate("", "", "")}
-          className="font-sans-alt text-xs tracking-[0.15em] uppercase text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors underline underline-offset-2 mx-auto block">
+          className="font-sans-alt text-xs font-extrabold tracking-[0.15em] uppercase text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors underline underline-offset-4 mx-auto block">
           ✕ Clear all filters
         </button>
       )}
