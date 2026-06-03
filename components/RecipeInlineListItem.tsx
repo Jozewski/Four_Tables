@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { getSafeImageUrl } from "@/lib/images";
+import RecipeFormModal from "@/components/RecipeFormModal";
+import { RecipeFormValues } from "@/lib/recipeValidation";
 
 const cultureColor: Record<string, string> = {
   Italian: "var(--italian)",
@@ -59,6 +61,22 @@ function formatPrepTime(minutes: number | null): string {
 export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
   const imageUrl = getSafeImageUrl(recipe.imageUrl);
+  const initialValues: RecipeFormValues = {
+    title: recipe.title,
+    description: recipe.description ?? "",
+    cultural: recipe.cultural,
+    holiday: recipe.holiday ?? "",
+    category: recipe.category,
+    prepTime: recipe.prepTime ? String(recipe.prepTime) : "",
+    imageUrl: recipe.imageUrl ?? "",
+    ingredients: recipe.ingredients.map((ingredient) => ({
+      amount: ingredient.amount,
+      unit: ingredient.unit ?? "",
+      name: ingredient.name,
+    })),
+    steps: recipe.steps.map((step) => ({ instruction: step.instruction })),
+    notes: recipe.notes.map((note) => ({ author: note.author, content: note.content })),
+  };
 
   return (
     <article className="section-card rounded-[1.6rem] p-4 md:p-5 lg:p-6">
@@ -100,19 +118,29 @@ export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
         }
       `}</style>
       <header className="mb-5">
-        <div className="flex flex-wrap gap-2 mb-3">
-          <span
-            className="font-sans-alt text-[10px] font-extrabold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border"
-            style={{ borderColor: color, color }}
-          >
-            {recipe.cultural}
-          </span>
-          <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-soft)]">
-            {recipe.holiday ? `${holidayEmoji[recipe.holiday] ?? ""} ${recipe.holiday}` : recipe.category}
-          </span>
-          <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]">
-            {formatPrepTime(recipe.prepTime)}
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div className="flex flex-wrap gap-2">
+            <span
+              className="font-sans-alt text-[10px] font-extrabold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border"
+              style={{ borderColor: color, color }}
+            >
+              {recipe.cultural}
+            </span>
+            <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-soft)]">
+              {recipe.holiday ? `${holidayEmoji[recipe.holiday] ?? ""} ${recipe.holiday}` : recipe.category}
+            </span>
+            <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]">
+              {formatPrepTime(recipe.prepTime)}
+            </span>
+          </div>
+
+          <RecipeFormModal
+            mode="edit"
+            recipeId={recipe.id}
+            initialValues={initialValues}
+            triggerLabel="Edit"
+            triggerClassName="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-[10px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-soft)] hover:text-[var(--ink)]"
+          />
         </div>
 
         <h2 className="font-display text-2xl md:text-4xl text-[var(--ink)] leading-tight">

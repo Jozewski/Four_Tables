@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import RecipeInlineListItem from "@/components/RecipeInlineListItem";
 import FilterBar from "@/components/FilterBar";
+import RecipeFormModal from "@/components/RecipeFormModal";
 import { Suspense } from "react";
 
 type SearchParams = {
@@ -92,6 +93,13 @@ export default async function RecipesPage({
         <p className="font-body text-sm md:text-base text-[var(--ink-soft)] max-w-3xl mx-auto leading-7">
           Move through the full collection by family tradition, holiday, or course. This page should feel practical first: find the dish, open it, cook it.
         </p>
+        <div className="mt-6 flex justify-center">
+          <RecipeFormModal
+            mode="create"
+            triggerLabel="Add Recipe"
+            triggerClassName="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white"
+          />
+        </div>
       </div>
 
       <div className="mb-12 fade-up fade-up-delay-1 max-w-5xl mx-auto">
