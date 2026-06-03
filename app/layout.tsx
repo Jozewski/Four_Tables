@@ -6,6 +6,16 @@ export const metadata: Metadata = {
   title: "Four Tables",
   description:
     "A family recipe collection shaped like a modern recipe portal, built around Italian, Dutch, German, and Mexican traditions.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+    ],
+    shortcut: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+  },
 };
 
 const cultures = [
