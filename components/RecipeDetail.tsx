@@ -58,16 +58,16 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
 
   return (
     <div>
-      {/* Tab bar */}
-      <div className="flex border-b border-[var(--border)] mb-8">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--border)] pb-5 mb-8">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className="font-sans-alt text-xs tracking-[0.15em] uppercase px-6 py-3 transition-all border-b-2 -mb-px"
+            className="rounded-full border px-4 py-2.5 font-sans-alt text-xs font-extrabold tracking-[0.15em] uppercase transition-all"
             style={{
-              borderBottomColor: activeTab === tab.key ? color : "transparent",
-              color: activeTab === tab.key ? color : "var(--ink-muted)",
+              borderColor: activeTab === tab.key ? color : "var(--border)",
+              backgroundColor: activeTab === tab.key ? color : "var(--surface)",
+              color: activeTab === tab.key ? "white" : "var(--ink-muted)",
             }}
           >
             {tab.label}
@@ -75,10 +75,9 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
         ))}
       </div>
 
-      {/* Ingredients */}
       {activeTab === "ingredients" && (
         <div className="fade-up">
-          <div className="divide-y divide-[var(--border)]">
+          <div className="rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border)] px-5 md:px-6">
             {ingredients
               .sort((a, b) => a.order - b.order)
               .map((ing) => (
@@ -94,10 +93,9 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
         </div>
       )}
 
-      {/* Steps */}
       {activeTab === "steps" && (
         <div className="fade-up space-y-1">
-          <p className="font-sans-alt text-[10px] tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-6">
+          <p className="font-sans-alt text-[10px] font-extrabold tracking-[0.2em] uppercase text-[var(--ink-muted)] mb-6">
             Tap a step to mark it complete
           </p>
           {steps
@@ -108,7 +106,7 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
                 <button
                   key={step.id}
                   onClick={() => toggleStep(step.stepNumber)}
-                  className="step-block w-full text-left p-4 transition-colors rounded-sm hover:bg-[var(--cream-dark)]"
+                  className="step-block w-full text-left p-5 transition-colors rounded-[1.25rem] border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--cream-dark)]"
                   style={{ opacity: done ? 0.45 : 1 }}
                 >
                   <span
@@ -129,7 +127,7 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
 
           {completedSteps.size === steps.length && steps.length > 0 && (
             <div className="text-center py-10 fade-up">
-              <p className="font-display text-2xl italic text-[var(--ink-soft)]">
+              <p className="font-display text-2xl text-[var(--ink-soft)]">
                 All steps complete. Enjoy your meal.
               </p>
             </div>
@@ -137,19 +135,18 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
         </div>
       )}
 
-      {/* Notes */}
       {activeTab === "notes" && (
         <div className="fade-up space-y-6">
           {notes.map((note) => (
             <blockquote
               key={note.id}
-              className="border-l-4 pl-6 py-1"
+              className="rounded-[1.25rem] border border-[var(--border)] bg-[var(--surface)] px-6 py-5"
               style={{ borderColor: color }}
             >
               <p className="font-body text-base italic text-[var(--ink-soft)] leading-relaxed mb-3">
                 &ldquo;{note.content}&rdquo;
               </p>
-              <footer className="font-sans-alt text-[11px] tracking-[0.2em] uppercase text-[var(--ink-muted)]">
+              <footer className="font-sans-alt text-[11px] font-extrabold tracking-[0.2em] uppercase text-[var(--ink-muted)]">
                 — {note.author}
               </footer>
             </blockquote>

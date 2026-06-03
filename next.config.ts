@@ -78,6 +78,36 @@ const nextConfig: NextConfig = {
         hostname: "www.italiankitchenconfessions.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.themediterraneandish.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.thespruceeats.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lechicpatissier.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "muybuenoblog.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "tastesbetterfromscratch.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.seriouseats.com",
+        pathname: "/**",
+      },
     ],
   },
 };

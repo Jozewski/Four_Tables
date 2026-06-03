@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getSafeImageUrl } from "@/lib/images";
  
 const cultureColor: Record<string, string> = {
   Italian: "var(--italian)",
@@ -42,16 +43,17 @@ function formatPrepTime(minutes: number | null): string {
  
 export default function RecipeCard({ recipe }: Props) {
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
+  const metaLabel = recipe.holiday ?? recipe.category;
+  const prepTime = formatPrepTime(recipe.prepTime);
+  const imageUrl = getSafeImageUrl(recipe.imageUrl);
  
   return (
-    <Link href={`/recipes/${recipe.id}`} className="card-lift group block">
-      <article className="border border-[var(--border)] bg-white/60 h-full relative overflow-hidden flex flex-col">
- 
-        {/* Photo */}
-        <div className="relative w-full h-48 bg-[var(--cream-dark)] overflow-hidden flex-shrink-0">
-          {recipe.imageUrl ? (
+    <Link href={`/recipes/${recipe.id}`} className="card-lift group block h-full">
+      <article className="section-card rounded-[1.5rem] h-full relative overflow-hidden flex flex-col">
+        <div className="relative w-full h-52 bg-[var(--cream-dark)] overflow-hidden flex-shrink-0">
+          {imageUrl ? (
             <Image
-              src={recipe.imageUrl}
+              src={imageUrl}
               alt={recipe.title}
               width={1200}
               height={800}
@@ -68,57 +70,44 @@ export default function RecipeCard({ recipe }: Props) {
               </span>
             </div>
           )}
-          {/* Holiday badge overlaid on photo */}
-          {recipe.holiday && (
-            <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm px-2 py-1">
-              <span className="font-sans-alt text-[9px] tracking-[0.15em] uppercase text-white">
-                {holidayEmoji[recipe.holiday]} {recipe.holiday}
-              </span>
-            </div>
-          )}
-          {/* Category badge */}
-          {!recipe.holiday && (
-            <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm px-2 py-1">
-              <span className="font-sans-alt text-[9px] tracking-[0.15em] uppercase text-white">
-                {recipe.category}
-              </span>
-            </div>
-          )}
-          {/* Color bar at bottom of image */}
-          <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: color }} />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute left-4 right-4 bottom-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-2">
+            <span className="image-chip">
+              {recipe.cultural}
+            </span>
+
+            <span className="image-chip">
+              {recipe.holiday ? `${holidayEmoji[recipe.holiday]} ${metaLabel}` : metaLabel}
+            </span>
+          </div>
+          <div className="absolute top-0 left-0 right-0 h-1.5" style={{ backgroundColor: color }} />
         </div>
- 
-        {/* Content */}
-        <div className="p-5 flex flex-col flex-1">
-          <span
-            className="font-sans-alt text-[10px] tracking-[0.2em] uppercase font-semibold mb-2"
-            style={{ color }}
-          >
-            {recipe.cultural}
-          </span>
- 
-          <h2 className="font-display text-lg font-semibold text-[var(--ink)] leading-snug mb-3 group-hover:underline decoration-1 underline-offset-2 flex-1">
+
+        <div className="p-5 md:p-6 flex flex-col flex-1">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3 text-[10px] font-sans-alt font-extrabold uppercase tracking-[0.16em] text-[var(--ink-muted)] mb-3">
+            <span>{recipe.category}</span>
+            {prepTime ? <span>{prepTime}</span> : <span>Family recipe</span>}
+          </div>
+
+          <h2 className="font-display text-[1.25rem] sm:text-[1.45rem] font-semibold text-[var(--ink)] leading-tight mb-3 group-hover:text-[var(--accent)] transition-colors flex-1">
             {recipe.title}
           </h2>
- 
+
           {recipe.description && (
-            <p className="font-body text-sm text-[var(--ink-soft)] leading-relaxed line-clamp-2 mb-4">
+            <p className="font-body text-sm text-[var(--ink-soft)] leading-7 line-clamp-2 sm:line-clamp-3 mb-5">
               {recipe.description}
             </p>
           )}
- 
-          {/* Stats */}
-          <div className="flex items-center gap-3 pt-3 border-t border-[var(--border)] mt-auto">
-            {recipe.prepTime && (
-              <span className="font-sans-alt text-[11px] tracking-wide text-[var(--ink-muted)]">
-                ⏱ {formatPrepTime(recipe.prepTime)}
-              </span>
-            )}
-            <span className="font-sans-alt text-[11px] tracking-wide text-[var(--ink-muted)]">
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-4 border-t border-[var(--border)] mt-auto">
+            <span className="font-sans-alt text-[11px] font-semibold tracking-wide text-[var(--ink-muted)]">
               {recipe._count.ingredients} ingredients
             </span>
-            <span className="font-sans-alt text-[11px] tracking-wide text-[var(--ink-muted)]">
+            <span className="font-sans-alt text-[11px] font-semibold tracking-wide text-[var(--ink-muted)]">
               {recipe._count.steps} steps
+            </span>
+            <span className="sm:ml-auto font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.14em]" style={{ color }}>
+              View recipe
             </span>
           </div>
         </div>

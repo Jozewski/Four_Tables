@@ -95,7 +95,7 @@ async function main() {
     description: "Whole artichokes packed with seasoned breadcrumbs, garlic, parsley, and Pecorino, steamed in white wine and olive oil. The dish Grandma Louise brings to every Thanksgiving.",
     cultural: "Italian", holiday: "Thanksgiving", category: "Appetizer",
     prepTime: 75,
-    imageUrl: "https://images.unsplash.com/photo-1600398138360-766b7c2e38b0?w=800",
+    imageUrl: "https://www.themediterraneandish.com/wp-content/uploads/2024/02/TMD-Feb-Stuffed-Artichokes-Lead-04-Angle-Vertical.jpg",
     notes: [{ author: "Grandma Louise", content: "This is what I bring to Thanksgiving every year. The Americans always ask for the recipe." }],
     ingredients: [
       { order: 1, amount: "4",    unit: null,   name: "large globe artichokes" },
@@ -280,7 +280,7 @@ async function main() {
     description: "A thick, hearty split pea soup with rookworst sausage, celeriac, leeks, and smoked pork. Called 'snert' — traditionally eaten on Christmas Eve.",
     cultural: "Dutch", holiday: "Christmas", category: "Soup",
     prepTime: 150,
-    imageUrl: "https://www.thegluttonlife.com/wp-content/uploads/2020/02/DSC_0130-1024x678.jpg",
+    imageUrl: "https://www.thespruceeats.com/thmb/pmobys0PG4tYlIbWYN2V4nNwGPw=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/DutchSplitPeaSoup-56a273d43df78cf772760681.jpg",
     notes: [{ author: "Oma", content: "It must be thick enough for a spoon to stand up in it. If it is not, keep cooking." }],
     ingredients: [
       { order: 1,  amount: "500", unit: "g",      name: "green split peas, rinsed" },
@@ -405,7 +405,7 @@ async function main() {
     description: "Two thin, crisp waffle cookies sandwiched around a warm caramel syrup filling. The syrup softens the wafer when placed over a hot cup of coffee — that is the correct way to eat them.",
     cultural: "Dutch", holiday: null, category: "Dessert",
     prepTime: 90,
-    imageUrl: "https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=800",
+    imageUrl: "https://lechicpatissier.com/cdn/shop/products/Stroopwafel_HeroShot.png?v=1675719116&width=1100",
     notes: [{ author: "Oma", content: "Rest them on top of your coffee cup for one minute before eating. The steam softens the caramel. This is not optional — it is the whole point." }],
     ingredients: [
       { order: 1,  amount: "250", unit: "g",    name: "all-purpose flour" },
@@ -467,7 +467,7 @@ async function main() {
     description: "Whole goose roasted with apple, onion, and marjoram stuffing. Served with braised red cabbage and potato dumplings. The German Christmas centerpiece.",
     cultural: "German", holiday: "Christmas", category: "Main",
     prepTime: 240,
-    imageUrl: "https://ourgabledhome.com/wp-content/uploads/2024/11/roast-goose-1.jpg",
+    imageUrl: "https://www.seriouseats.com/thmb/qlQSovIK1l8aQVwJ77HeJtbVuZU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__recipes__images__2015__12__20151212-goose-vicky-wasik-14-2bc1c05a78a34133a74ceca026e54b19.jpg",
     notes: [{ author: "Opa Heinrich", content: "Score the skin so the fat renders properly. Baste every thirty minutes. This is the most important step." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: null,   name: "whole goose (about 4.5kg), giblets removed" },
@@ -731,7 +731,7 @@ async function main() {
     description: "Layers of toasted bolillo bread soaked in piloncillo and cinnamon syrup, with raisins, peanuts, coconut, and Cotija cheese. Eaten during Lent and Easter — every ingredient is symbolic.",
     cultural: "Mexican", holiday: "Easter", category: "Dessert",
     prepTime: 90,
-    imageUrl: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800",
+    imageUrl: "https://muybuenoblog.com/wp-content/uploads/2024/02/baked-bread-pudding-capirotada.jpeg",
     notes: [{ author: "Tía Carmen", content: "The cheese is not a mistake. Do not leave it out. It melts into the syrup and you cannot taste it separately — you just taste richness." }],
     ingredients: [
       { order: 1,  amount: "6",   unit: null,   name: "bolillo rolls, sliced 2cm thick and dried overnight" },
@@ -796,7 +796,7 @@ async function main() {
     description: "Tender masa dough filled with slow-braised chile pork, wrapped in corn husks and steamed for two hours. A Christmas Eve tradition — the whole family gathers to spread masa and assemble tamales the night before.",
     cultural: "Mexican", holiday: "Christmas", category: "Main",
     prepTime: 360,
-    imageUrl: "https://www.isabeleats.com/wp-content/uploads/2024/11/pozole-featured-small-24-1.jpg",
+    imageUrl: "https://tastesbetterfromscratch.com/wp-content/uploads/2017/10/Tamales-17.jpg",
     notes: [{ author: "Abuela Rosa", content: "Tamales are not a one-person recipe. You need hands. Call the family. Put on music. Making tamales is the celebration before the celebration." }],
     ingredients: [
       { order: 1,  amount: "1",   unit: "kg",   name: "pork shoulder, cut into large chunks" },
