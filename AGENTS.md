@@ -112,7 +112,8 @@ npm run check
 - The add/edit modal should guide the user through structured entry.
 - AI assist belongs near the top of the add/edit flow.
 - Avoid large redesigns during this sprint.
-- Do not add dark mode, auth, social sharing, or delete unless all Must Haves are already complete.
+- Do not add auth unless all Must Haves are already complete.
+- Delete recipes, dark mode, and social sharing are allowed sprint items, but they must not delay AI, CRUD verification, deployment, or user evidence.
 
 ## Scope Rules
 
@@ -126,16 +127,19 @@ Must do:
 Should do:
 
 - Save success confirmation.
+- Delete recipe support with confirmation.
 - AI setup documentation.
 - Final screenshot audit.
+
+Stretch goals:
+
+- Dark mode.
+- Social sharing from recipe detail pages.
 
 Won't do this sprint:
 
 - Authentication.
 - Admin roles.
-- Delete recipes.
-- Dark mode.
-- Social sharing.
 - Full design system rewrite.
 - Multi-user collaboration.
 
@@ -150,6 +154,7 @@ Won't do this sprint:
 - Sprint plan lives in `documentation/SPRINT_PLAN.md`.
 - Project plan lives in `documentation/PLAN.md`.
 - Requirements and TDD prompts live in `documentation/doc.md`.
+- Running TDD proof lives in `documentation/TDD_SUMMARY.md`.
 - Longer project context lives in `documentation/PROJECT_CONTEXT.md`.
 
 ## Coding Guardrails
@@ -160,4 +165,5 @@ Won't do this sprint:
 - Do not run destructive database scripts without confirming intent.
 - Do not revert unrelated user changes.
 - Keep documentation dates aligned: deploy Saturday, June 20; demo Monday, June 22.
+- Update `documentation/TDD_SUMMARY.md` when implementing sprint features through red/green/blue.
 - Run tests before saying implementation work is complete.

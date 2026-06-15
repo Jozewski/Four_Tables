@@ -60,37 +60,47 @@ Completed before this sprint:
 | Vercel deployment notes and smoke test | Must Have | Medium |
 | User testing evidence checklist | Must Have | Small |
 | Save success confirmation | Should Have | Small |
+| Delete recipes | Should Have | Medium |
 | Additional recipe form polish | Should Have | Medium |
+| Dark mode | Nice to Have | Medium |
+| Social sharing | Nice to Have | Small |
 | Extra analytics | Nice to Have | Medium |
-| Delete recipes | Won't Do | Medium |
 | Authentication/admin roles | Won't Do | Large |
 
 ## Prioritized Backlog
 
+### Estimate Legend
+
+- `S` = Small: expected to take under 30 minutes.
+- `M` = Medium: expected to take about 30-60 minutes.
+- `L` = Large: expected to take over 1 hour.
+
+These estimates describe task size, not priority. Priority is handled separately through Must Have, Should Have, Nice To Have, Won't Do, and P1/P2/P3 bug labels.
+
 ### Must Have
 
 1. Add an OpenAI-powered recipe assistant API route.
-   - Estimate: M
+   - Estimate: Medium (M, 30-60 minutes)
    - User story: As a user, I can send rough family recipe notes to the server so that AI can return structured recipe fields.
    - Definition of Done: A server route accepts notes plus optional current recipe context, calls OpenAI, returns JSON shaped like `RecipeFormValues`, and handles missing API key or malformed AI output.
 
 2. Add AI assist to the create/edit recipe modal.
-   - Estimate: L
+   - Estimate: Large (L, over 1 hour)
    - User story: As a user, I can use AI inside the recipe form so that adding or improving a family recipe is faster.
    - Definition of Done: The modal has an AI notes field/action, shows loading and error states, applies AI output to editable fields, and never exposes `OPENAI_API_KEY` to client code.
 
 3. Verify create/read/update workflows end-to-end after AI is added.
-   - Estimate: M
+   - Estimate: Medium (M, 30-60 minutes)
    - User story: As a user, I can create, read, and update recipes with ingredients, steps, and notes so that the core recipe archive works.
    - Definition of Done: A new AI-assisted recipe appears in the list/detail page, and an edited recipe shows updated ingredients, steps, and notes after refresh.
 
 4. Deploy to Vercel with production env vars.
-   - Estimate: M
+   - Estimate: Medium (M, 30-60 minutes)
    - User story: As a reviewer, I can open a live URL so that the app clears the deployment gate.
    - Definition of Done: Vercel deploy succeeds with database and OpenAI env vars, and the live URL passes a smoke test for home, recipes, detail, create/edit, and AI assist.
 
 5. Document real user activity.
-   - Estimate: S
+   - Estimate: Small (S, under 30 minutes)
    - User story: As a reviewer, I can see that real people used the app so that the app clears the user activity gate.
    - Definition of Done: 2-3 users try the live URL and evidence is saved as screenshots, feedback notes, or analytics captures.
 
@@ -99,12 +109,15 @@ Completed before this sprint:
 - Add a small save success confirmation after create/update.
 - Add a short README section for AI setup, Vercel env vars, and QA steps.
 - Improve AI prompt copy in the modal after first manual test.
+- Add delete recipe support with a confirmation step after create/update/AI are stable.
 - Add one screenshot of the deployed app to the sprint docs.
 - Use Playwright screenshots to do one final UI pass before deploy.
 
 ### Nice To Have
 
 - Add AI "suggest family note" option.
+- Add dark mode if core workflows and deployment are already green.
+- Add social sharing for recipe detail pages if deployment prep is not at risk.
 - Add lightweight analytics if setup takes less than 30 minutes.
 - Add AI image suggestion support.
 - Add better empty states for narrow filters.
@@ -112,9 +125,6 @@ Completed before this sprint:
 ### Won't Do This Sprint
 
 - Authentication or admin roles.
-- Delete recipes.
-- Dark mode.
-- Social sharing.
 - Full automated test suite beyond focused TDD and manual QA.
 - Full redesign; yesterday's merged UI pass is the sprint baseline.
 - Multi-user collaboration features.
@@ -123,15 +133,15 @@ Completed before this sprint:
 
 ### DAY 1 (Monday, June 15)
 
-- [ ] Write failing tests for AI response normalization.
+- [x] Write failing tests for AI response normalization.
   - Type: Test
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a developer, I can validate AI output before saving so that bad model responses do not break recipe creation.
   - Definition of Done: Tests fail first for malformed AI output, missing required fields, and valid structured recipe output.
 
-- [ ] Build the AI assistant server route.
+- [x] Build the AI assistant server route.
   - Type: Build
-  - Estimate: L
+  - Estimate: Large (L, over 1 hour)
   - User story: As a user, I can submit rough notes to a secure server endpoint so that OpenAI can structure the recipe.
   - Definition of Done: `POST /api/recipes/assist` validates input, calls OpenAI from the server, returns structured JSON, and returns clear errors for missing API key or invalid request body.
 
@@ -139,13 +149,13 @@ Completed before this sprint:
 
 - [ ] Add the AI assist panel to `RecipeFormModal`.
   - Type: Build
-  - Estimate: L
+  - Estimate: Large (L, over 1 hour)
   - User story: As a user, I can paste rough notes in the add/edit modal so that AI can fill or improve recipe fields.
   - Definition of Done: The modal includes a notes textarea, AI action button, loading state, error state, and applies returned fields to the existing form.
 
 - [ ] Run red/green/blue cleanup on AI validation.
   - Type: Test/Fix
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a developer, I can trust the AI path because tests cover the risky parsing and validation behavior.
   - Definition of Done: Tests pass, duplicated parsing logic is cleaned up, and AI output still flows through `validateRecipeInput`.
 
@@ -153,19 +163,19 @@ Completed before this sprint:
 
 - [ ] Smoke test local create/edit with AI.
   - Type: Test
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a project owner, I know whether the AI-assisted workflow is usable before production polish.
   - Definition of Done: One AI-assisted create and one AI-assisted edit are manually tested locally, with bugs written down in this file.
 
 - [ ] Fix AI/create/edit bugs from local testing.
   - Type: Fix
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a user, I can complete the AI-assisted recipe workflow without crashes or data loss.
   - Definition of Done: All P1/P2 bugs from local testing are fixed or explicitly deferred if non-blocking.
 
 - [ ] Add production-ready AI/env documentation.
   - Type: Document
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a deployer, I can configure the app correctly on Vercel so that the AI and database features work in production.
   - Definition of Done: README or sprint docs list required env vars: `DATABASE_URL`, `DIRECT_URL`, and `OPENAI_API_KEY`, plus the commands used to verify the app.
 
@@ -173,19 +183,25 @@ Completed before this sprint:
 
 - [ ] Full local QA pass.
   - Type: Test
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a user, I can browse, create, update, and use AI without hitting obvious failures.
   - Definition of Done: Home, recipe list, filters, detail, add, edit, AI assist, mobile layout, lint, tests, and build are checked locally.
 
 - [ ] Apply quick Should Have polish only if QA is green.
   - Type: Polish
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a user, I get clearer feedback after saving a recipe so that the app feels finished.
   - Definition of Done: Add save success feedback, clearer AI prompt copy, or one small UI fix. Do not add new major features.
 
+- [ ] Add delete recipe support only if Must Haves are stable.
+  - Type: Build
+  - Estimate: Medium (M, 30-60 minutes)
+  - User story: As a user, I can delete a recipe I no longer want in the archive so that test or duplicate recipes can be removed.
+  - Definition of Done: Delete action has a confirmation step, removes the recipe and related records safely, refreshes the list, and does not break create/read/update.
+
 - [ ] Capture fresh UI screenshots.
   - Type: Test/Document
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a presenter, I can compare the final UI against the intended recipe-site direction.
   - Definition of Done: Desktop and mobile screenshots are captured for home, recipes, detail, and add/edit modal.
 
@@ -193,39 +209,45 @@ Completed before this sprint:
 
 - [ ] Fix only deploy-blocking bugs.
   - Type: Fix
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a reviewer, I can use the live app without core workflow failures.
   - Definition of Done: Any remaining P1/P2 bugs from Day 4 QA are fixed; non-blocking polish is deferred.
 
 - [ ] Final local production check.
   - Type: Test
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a developer, I can deploy with confidence because local production checks pass.
   - Definition of Done: `npm run check` passes, AI route handles missing/valid env states, and no debug logs or placeholder text remain in visible UI.
 
 - [ ] Prepare Vercel deployment checklist.
   - Type: Deploy Prep
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a deployer, I know exactly what must be set before production deploy.
   - Definition of Done: Vercel env vars are listed, database access is confirmed, and the deploy branch is ready.
+
+- [ ] Add one stretch feature only if final checks are green.
+  - Type: Polish
+  - Estimate: Small (S, under 30 minutes)
+  - User story: As a visitor, I can either use the app in a darker visual mode or share a recipe link more easily.
+  - Definition of Done: Add either dark mode or social sharing, not both, unless all deploy-blocking work is complete and `npm run check` still passes.
 
 ### DEPLOY DAY (Saturday, June 20)
 
 - [ ] Deploy to Vercel.
   - Type: Deploy
-  - Estimate: M
+  - Estimate: Medium (M, 30-60 minutes)
   - User story: As a reviewer, I can open Four Tables from a live URL.
   - Definition of Done: Vercel build succeeds and the live URL works with `DATABASE_URL`, `DIRECT_URL`, and `OPENAI_API_KEY`.
 
 - [ ] Smoke test the live URL.
   - Type: Test
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a reviewer, I can use the deployed app, not just the local app.
   - Definition of Done: Live home, recipes, detail, create, update, and AI assist all work.
 
 - [ ] Collect user evidence.
   - Type: Document
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a reviewer, I can see proof that real users tried the project.
   - Definition of Done: 2-3 users try the live URL and evidence is saved as screenshots, short feedback quotes, or analytics captures.
 
@@ -233,7 +255,7 @@ Completed before this sprint:
 
 - [ ] Demo prep.
   - Type: Demo Prep
-  - Estimate: S
+  - Estimate: Small (S, under 30 minutes)
   - User story: As a presenter, I can confidently show the app and explain the tradeoffs made during the sprint.
   - Definition of Done: Live URL opens, schema walkthrough points are ready, AI assist demo path is known, and user evidence is accessible.
 
@@ -246,6 +268,7 @@ Completed before this sprint:
 - [ ] Add recipe modal opens and closes.
 - [ ] Create recipe saves a new recipe with ingredients and steps.
 - [ ] Edit recipe saves changed title, ingredients, steps, and notes.
+- [ ] Delete recipe requires confirmation and removes the recipe.
 - [ ] AI assist accepts rough recipe notes.
 - [ ] AI assist returns useful structured data.
 - [ ] AI output can be edited before saving.
@@ -288,11 +311,11 @@ Top 3 Must Haves:
 
 1. OpenAI-powered recipe assistant.
    - If this is not done, the app fails the AI-touch gate.
-   - Cut to fit it: delete recipes, auth, social sharing, extra AI features.
+   - Cut to fit it: auth, extra AI features, analytics.
 
 2. Verified create/read/update workflow.
    - If this is not done, users cannot trust the recipe archive as a working CRUD app.
-   - Cut to fit it: dark mode, analytics, image suggestion support.
+   - Cut to fit it: analytics, image suggestion support, extra dark mode polish.
 
 3. Vercel deployment plus user evidence.
    - If this is not done, the app fails the live URL and documented user activity gates.
