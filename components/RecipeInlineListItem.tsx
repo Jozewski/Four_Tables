@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import RecipeImage from "@/components/RecipeImage";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import { getSafeImageUrl } from "@/lib/images";
 import { RecipeFormValues } from "@/lib/recipeValidation";
@@ -85,7 +85,7 @@ export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
         aria-label={`Open ${recipe.title}`}
       >
         {imageUrl ? (
-          <Image
+          <RecipeImage
             src={imageUrl}
             alt={recipe.title}
             width={900}

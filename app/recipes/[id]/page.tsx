@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import RecipeImage from "@/components/RecipeImage";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
@@ -95,7 +95,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
         <aside className="section-card overflow-hidden rounded-[1.35rem] lg:sticky lg:top-24">
           <div className="relative h-[22rem] w-full bg-[var(--cream-dark)] md:h-[30rem] lg:h-[38rem]">
             {imageUrl ? (
-              <Image
+              <RecipeImage
                 src={imageUrl}
                 alt={recipe.title}
                 width={1200}

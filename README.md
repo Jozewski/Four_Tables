@@ -14,6 +14,7 @@ A family heritage recipe collection: traditional holiday dishes from four cultur
 - **Tailwind CSS**
 - **Prisma ORM**
 - **PostgreSQL** via [Neon](https://neon.tech)
+- **OpenAI API** for AI-assisted recipe drafting
 - **Vitest** for targeted TDD checks
 
 ## Getting Started
@@ -37,6 +38,20 @@ Create a free account at [neon.tech](https://neon.tech), create a project, then 
 cp .env.example .env
 # Paste pooled URL as DATABASE_URL
 # Paste direct URL as DIRECT_URL
+# Paste your OpenAI API key as OPENAI_API_KEY
+```
+
+Optional:
+
+- `OPENAI_MODEL` defaults to `gpt-4.1-mini` if it is not set.
+
+Required environment variables for local development and Vercel:
+
+```text
+DATABASE_URL
+DIRECT_URL
+OPENAI_API_KEY
+OPENAI_MODEL
 ```
 
 ### 3. Push the schema and seed

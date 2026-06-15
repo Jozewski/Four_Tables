@@ -36,6 +36,17 @@ function parseMaybeJson(value: unknown): unknown {
   }
 }
 
+function normalizeIngredientAmount(amount: unknown, name: unknown): string {
+  const normalizedAmount = toFormString(amount);
+  const normalizedName = toFormString(name);
+
+  if (normalizedAmount || !normalizedName) {
+    return normalizedAmount;
+  }
+
+  return "as needed";
+}
+
 export function normalizeAiRecipeOutput(rawOutput: unknown): AiRecipeAssistResult {
   const parsed = parseMaybeJson(rawOutput);
   const root = objectFromUnknown(parsed);
@@ -56,7 +67,7 @@ export function normalizeAiRecipeOutput(rawOutput: unknown): AiRecipeAssistResul
     ingredients: rawIngredients.map((ingredient) => {
       const i = objectFromUnknown(ingredient);
       return {
-        amount: toFormString(i.amount),
+        amount: normalizeIngredientAmount(i.amount, i.name),
         unit: toFormString(i.unit),
         name: toFormString(i.name),
       };

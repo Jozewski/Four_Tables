@@ -4,9 +4,9 @@ This document tracks the red/green/blue testing work used during the Four Tables
 
 ## TDD Method
 
-- ❌ Red: write a failing test that describes the expected behavior.
-- ✅ Green: implement the smallest change that makes the test pass.
-- 🔵 Blue: refactor or clean up while keeping tests green.
+- :x: Red: write a failing test that describes the expected behavior.
+- :white_check_mark: Green: implement the smallest change that makes the test pass.
+- :large_blue_circle: Blue: refactor or clean up while keeping tests green.
 
 ## Current Test Commands
 
@@ -17,9 +17,22 @@ npm run check
 
 `npm run check` runs lint, Vitest, and the production build.
 
+## Required Test Environment
+
+Local and deployed AI assist requires these environment variables:
+
+```text
+DATABASE_URL
+DIRECT_URL
+OPENAI_API_KEY
+OPENAI_MODEL
+```
+
+`OPENAI_MODEL` is optional in code because the route defaults to `gpt-4.1-mini`, but it is included in `.env.example` so the intended model is explicit. If `OPENAI_API_KEY` is missing, the AI route intentionally returns `OPENAI_API_KEY is not configured.`
+
 ## Current Test Suite
 
-The current Vitest suite has 2 test files and 5 total tests.
+The current Vitest suite has 5 test files and 13 total tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -34,7 +47,7 @@ Suite: `recipe input validation`
 2. `rejects missing required relationship data`
    - Proves recipes without ingredients are rejected.
    - Proves recipes without steps are rejected.
-   - Confirms the validation messages include:
+   - Confirms validation messages include:
      - `At least one ingredient is required.`
      - `At least one step is required.`
 
@@ -56,6 +69,47 @@ Suite: `AI recipe assist output normalization`
    - Confirms whitespace is trimmed.
    - Confirms ingredients, steps, and notes are preserved in form-ready shape.
 
+3. `fills unspecified AI ingredient amounts with as needed`
+   - Proves AI output with a named ingredient but blank amount is repaired instead of rejected.
+   - Confirms unspecified amounts become `as needed`.
+   - Covers the bruschetta failure where OpenAI generated extra ingredients without amounts.
+
+### `__tests__/RecipeFormModal.ai.test.tsx`
+
+Suite: `RecipeFormModal AI assist`
+
+1. `sends rough notes to AI assist and applies returned values to editable fields`
+   - Proves the modal exposes an AI notes field.
+   - Proves the modal calls `POST /api/recipes/assist`.
+   - Proves returned AI values populate editable recipe form fields.
+
+2. `shows AI assist errors returned by the server`
+   - Proves the modal displays server-returned AI errors.
+   - Proves rough notes remain in the textarea after an AI failure.
+
+### `__tests__/images.test.ts`
+
+Suite: `recipe image helpers`
+
+1. `allows next/image for configured recipe image hosts`
+   - Proves configured image hosts can still use Next image optimization.
+
+2. `does not use next/image for unknown user-submitted image hosts`
+   - Proves unknown external image URLs remain valid recipe images.
+   - Proves unknown hosts avoid the Next `next/image` configured-host runtime crash.
+
+### `__tests__/recipeImageUpload.test.ts`
+
+Suite: `recipe image uploads`
+
+1. `accepts image data URLs as recipe image input`
+   - Proves uploaded image values can be saved through the existing recipe `imageUrl` field.
+   - Confirms the validation layer accepts `data:image/...` values produced by the upload route.
+
+2. `rejects non-image uploads`
+   - Proves text files and other non-image uploads are rejected before they can be saved.
+   - Confirms the user-facing error explains the accepted image formats.
+
 ## TDD Log
 
 ### 2026-06-14: Recipe Input Validation Baseline
@@ -64,7 +118,7 @@ Goal:
 
 - Establish baseline validation coverage before changing create/update or AI behavior.
 
-❌ Red:
+:x: Red:
 
 - Added `__tests__/recipeValidation.test.ts`.
 - Wrote tests for:
@@ -79,12 +133,12 @@ npm run test:run
 
 - First failure to capture next time: this baseline was created before the project started tracking TDD evidence in this document, so the original terminal failure output was not preserved.
 
-✅ Green:
+:white_check_mark: Green:
 
 - Confirmed existing `lib/recipeValidation.ts` behavior satisfied the baseline tests.
 - The tests established guardrails for future API and AI work.
 
-🔵 Blue:
+:large_blue_circle: Blue:
 
 - Kept validation logic centralized in `lib/recipeValidation.ts`.
 - No separate route-specific validation was introduced.
@@ -105,7 +159,7 @@ Goal:
 
 - Validate AI-generated recipe data before it can be applied to the add/edit recipe form.
 
-❌ Red:
+:x: Red:
 
 - Added `__tests__/aiRecipeAssist.test.ts`.
 - Wrote failing tests for:
@@ -127,7 +181,7 @@ Error: Failed to resolve import "@/lib/aiRecipeAssist" from "__tests__/aiRecipeA
 Does the file exist?
 ```
 
-✅ Green:
+:white_check_mark: Green:
 
 - Added `lib/aiRecipeAssist.ts`.
 - Implemented `normalizeAiRecipeOutput`.
@@ -143,7 +197,7 @@ Result:
 - 1 test file passed.
 - 2 tests passed.
 
-🔵 Blue:
+:large_blue_circle: Blue:
 
 - Kept normalization isolated from the API route so it can be tested without calling OpenAI.
 - Reused existing recipe validation instead of creating separate AI-only validation rules.
@@ -163,6 +217,273 @@ Result:
 - Lint passed.
 - Production build passed.
 
+### 2026-06-15: Recipe Modal AI Assist UI
+
+Goal:
+
+- Add AI assist to the add/edit recipe modal so rough notes can populate editable recipe fields.
+
+:x: Red:
+
+- Added `__tests__/RecipeFormModal.ai.test.tsx`.
+- Wrote a failing component test for:
+  - typing rough notes into an AI notes field
+  - calling `/api/recipes/assist`
+  - applying returned values to form fields
+- First red run:
+
+```bash
+npm run test:run -- __tests__/RecipeFormModal.ai.test.tsx
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/RecipeFormModal.ai.test.tsx
+TestingLibraryElementError: Unable to find a label with the text of: AI recipe notes
+```
+
+:white_check_mark: Green:
+
+- Updated `components/RecipeFormModal.tsx`.
+- Added:
+  - AI notes textarea
+  - `Draft with AI` button
+  - loading state
+  - error state
+  - call to `POST /api/recipes/assist`
+  - form population from returned `RecipeFormValues`
+- Confirmed the targeted test passed:
+
+```bash
+npm run test:run -- __tests__/RecipeFormModal.ai.test.tsx
+```
+
+Result:
+
+- 1 test file passed.
+- 1 test passed.
+
+:large_blue_circle: Blue:
+
+- Kept AI state local to `RecipeFormModal`.
+- Reused the existing form state instead of creating a parallel AI-only form.
+- Preserved user review/edit behavior before final save.
+- Completed manual AI-assisted create and edit smoke tests with a real OpenAI key:
+  - rough recipe notes were pasted into the AI notes field
+  - AI returned structured recipe fields
+  - generated fields remained editable before saving
+  - the recipe saved through the normal create flow
+  - an existing recipe was updated through the edit flow
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 3 test files passed.
+- 6 tests passed.
+- Lint passed.
+- Production build passed.
+
+Post-blue verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 4 test files passed.
+- 10 tests passed.
+- Lint passed.
+- Production build passed.
+
+### 2026-06-15: AI Assist Error Visibility
+
+Goal:
+
+- Make OpenAI failures actionable in the modal instead of showing only a generic failure message.
+
+:x: Red:
+
+- Added a modal failure-path test in `__tests__/RecipeFormModal.ai.test.tsx`.
+- Wrote coverage for:
+  - server returning `{ ok: false, errors: [...] }`
+  - modal showing the server error
+  - rough notes staying in the AI textarea after failure
+
+:white_check_mark: Green:
+
+- Confirmed the modal already displayed server errors and preserved the typed notes.
+- Updated `app/api/recipes/assist/route.ts` so OpenAI non-OK responses return a sanitized OpenAI error message.
+
+:large_blue_circle: Blue:
+
+- Kept the error extraction isolated in `getOpenAiErrorMessage`.
+- Preserved the generic fallback when OpenAI does not return a structured error.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 3 test files passed.
+- 7 tests passed.
+- Lint passed.
+- Production build passed.
+
+### 2026-06-15: AI Ingredient Amount Repair
+
+Goal:
+
+- Prevent valid recipe drafts from failing when OpenAI returns named ingredients with blank amounts.
+
+:x: Red:
+
+- Updated `__tests__/aiRecipeAssist.test.ts`.
+- Added coverage for a bruschetta-style AI output where `toasted crusty Italian bread` has a blank amount.
+- First red run:
+
+```bash
+npm run test:run -- __tests__/aiRecipeAssist.test.ts
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/aiRecipeAssist.test.ts > AI recipe assist output normalization > fills unspecified AI ingredient amounts with as needed
+AssertionError: expected false to be true
+```
+
+:white_check_mark: Green:
+
+- Updated `lib/aiRecipeAssist.ts`.
+- Added ingredient amount repair:
+  - if an ingredient has a name but no amount, normalize the amount to `as needed`
+- Updated `app/api/recipes/assist/route.ts` prompt/schema guidance so OpenAI is told every ingredient must have a non-empty amount.
+
+:large_blue_circle: Blue:
+
+- Kept manual recipe validation strict.
+- Limited the repair to AI output normalization only.
+- Preserved the existing rule that recipes with no ingredients are rejected.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 3 test files passed.
+- 8 tests passed.
+- Lint passed.
+- Production build passed.
+
+### 2026-06-15: User-Submitted Image Host Safety
+
+Goal:
+
+- Prevent recipes with user-added external image URLs from crashing when the URL host is not configured in `next.config.ts`.
+
+:x: Red:
+
+- Added `__tests__/images.test.ts`.
+- Wrote coverage for:
+  - known configured hosts using Next image optimization
+  - unknown hosts such as `lolascocina.com` avoiding `next/image`
+- Runtime failure that triggered the test:
+
+```text
+Invalid src prop (...) on `next/image`, hostname "lolascocina.com" is not configured under images in your `next.config.js`
+```
+
+:white_check_mark: Green:
+
+- Added `canUseNextImage` to `lib/images.ts`.
+- Added `components/RecipeImage.tsx`.
+- Updated recipe list cards and recipe detail hero to use `RecipeImage`.
+- Unknown user-submitted hosts now render with a standard `img` element instead of crashing.
+
+:large_blue_circle: Blue:
+
+- Kept `next/image` for configured trusted hosts.
+- Kept fallback behavior local to one wrapper component.
+- Preserved existing fallback initials when image URLs are missing or blocked.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 4 test files passed.
+- 10 tests passed.
+- Lint passed.
+- Production build passed.
+
+### 2026-06-15: Family Recipe Image Uploads
+
+Goal:
+
+- Let family members add recipe photos from their device while keeping the create/edit flow deployable and tested.
+
+:x: Red:
+
+- Added `__tests__/recipeImageUpload.test.ts`.
+- Wrote failing coverage for:
+  - uploaded `data:image/...` values passing recipe validation
+  - non-image uploads being rejected
+- First red run:
+
+```bash
+npm run test:run -- __tests__/recipeImageUpload.test.ts
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/recipeImageUpload.test.ts
+Error: Failed to resolve import "@/lib/recipeImageUpload" from "__tests__/recipeImageUpload.test.ts".
+Does the file exist?
+```
+
+:white_check_mark: Green:
+
+- Added `lib/recipeImageUpload.ts`.
+- Added `POST /api/recipes/images`.
+- Updated `lib/recipeValidation.ts` so the recipe form can save uploaded image data URLs.
+- Added a modal test proving the upload control calls `/api/recipes/images` and applies the returned image value.
+
+:large_blue_circle: Blue:
+
+- Used a server-side upload route instead of reading files directly into form state.
+- Kept uploaded images in the existing `imageUrl` field as deployable `data:image/...` values for this sprint.
+- Fixed the file input label with explicit `id`/`htmlFor` after the UI test exposed the accessibility gap.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 5 test files passed.
+- 13 tests passed.
+- Lint passed.
+- Production build passed.
+
 ## Next TDD Entries
 
 Use this template for future sprint work.
@@ -173,17 +494,17 @@ Goal:
 
 - What behavior are we proving?
 
-❌ Red:
+:x: Red:
 
 - What failing test was written?
 - What did the failure prove?
 
-✅ Green:
+:white_check_mark: Green:
 
 - What minimal implementation made the test pass?
 - What command confirmed it?
 
-🔵 Blue:
+:large_blue_circle: Blue:
 
 - What cleanup or refactor happened after tests passed?
 

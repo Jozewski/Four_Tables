@@ -61,6 +61,7 @@ Completed before this sprint:
 | User testing evidence checklist | Must Have | Small |
 | Save success confirmation | Should Have | Small |
 | Delete recipes | Should Have | Medium |
+| Family recipe image uploads | Should Have | Medium |
 | Additional recipe form polish | Should Have | Medium |
 | Dark mode | Nice to Have | Medium |
 | Social sharing | Nice to Have | Small |
@@ -110,6 +111,7 @@ These estimates describe task size, not priority. Priority is handled separately
 - Add a short README section for AI setup, Vercel env vars, and QA steps.
 - Improve AI prompt copy in the modal after first manual test.
 - Add delete recipe support with a confirmation step after create/update/AI are stable.
+- Add family recipe image uploads for create/edit after AI is stable.
 - Add one screenshot of the deployed app to the sprint docs.
 - Use Playwright screenshots to do one final UI pass before deploy.
 
@@ -147,7 +149,7 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ### DAY 2 (Tuesday, June 16)
 
-- [ ] Add the AI assist panel to `RecipeFormModal`.
+- [x] Add the AI assist panel to `RecipeFormModal`.
   - Type: Build
   - Estimate: Large (L, over 1 hour)
   - User story: As a user, I can paste rough notes in the add/edit modal so that AI can fill or improve recipe fields.
@@ -161,11 +163,12 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ### DAY 3 (Wednesday, June 17)
 
-- [ ] Smoke test local create/edit with AI.
+- [x] Smoke test local create/edit with AI.
   - Type: Test
   - Estimate: Small (S, under 30 minutes)
   - User story: As a project owner, I know whether the AI-assisted workflow is usable before production polish.
   - Definition of Done: One AI-assisted create and one AI-assisted edit are manually tested locally, with bugs written down in this file.
+  - Progress: AI-assisted create and edit smoke tests are complete.
 
 - [ ] Fix AI/create/edit bugs from local testing.
   - Type: Fix
@@ -173,7 +176,7 @@ These estimates describe task size, not priority. Priority is handled separately
   - User story: As a user, I can complete the AI-assisted recipe workflow without crashes or data loss.
   - Definition of Done: All P1/P2 bugs from local testing are fixed or explicitly deferred if non-blocking.
 
-- [ ] Add production-ready AI/env documentation.
+- [x] Add production-ready AI/env documentation.
   - Type: Document
   - Estimate: Medium (M, 30-60 minutes)
   - User story: As a deployer, I can configure the app correctly on Vercel so that the AI and database features work in production.
@@ -198,6 +201,12 @@ These estimates describe task size, not priority. Priority is handled separately
   - Estimate: Medium (M, 30-60 minutes)
   - User story: As a user, I can delete a recipe I no longer want in the archive so that test or duplicate recipes can be removed.
   - Definition of Done: Delete action has a confirmation step, removes the recipe and related records safely, refreshes the list, and does not break create/read/update.
+
+- [x] Add family recipe image uploads.
+  - Type: Build
+  - Estimate: Medium (M, 30-60 minutes)
+  - User story: As a user, I can upload a family recipe photo from my device so that the recipe archive can include real family images.
+  - Definition of Done: The add/edit modal accepts JPEG, PNG, WebP, and GIF uploads up to 1.5 MB, validates uploads server-side, applies the returned image value to the recipe form, and keeps URL entry available as a fallback.
 
 - [ ] Capture fresh UI screenshots.
   - Type: Test/Document
@@ -262,21 +271,22 @@ These estimates describe task size, not priority. Priority is handled separately
 ## Manual QA Checklist
 
 - [ ] Home page loads without runtime errors.
-- [ ] Recipe list page loads all recipes.
+- [x] Recipe list page loads all recipes.
 - [ ] Filters update the URL and list results.
 - [ ] Recipe detail page loads ingredients, steps, and notes.
-- [ ] Add recipe modal opens and closes.
-- [ ] Create recipe saves a new recipe with ingredients and steps.
-- [ ] Edit recipe saves changed title, ingredients, steps, and notes.
+- [x] Add recipe modal opens and closes.
+- [x] Create recipe saves a new recipe with ingredients and steps.
+- [x] Edit recipe saves changed title, ingredients, steps, and notes.
 - [ ] Delete recipe requires confirmation and removes the recipe.
-- [ ] AI assist accepts rough recipe notes.
-- [ ] AI assist returns useful structured data.
-- [ ] AI output can be edited before saving.
+- [x] AI assist accepts rough recipe notes.
+- [x] AI assist returns useful structured data.
+- [x] AI output can be edited before saving.
+- [x] Family recipe image upload accepts a valid image file.
 - [ ] AI errors are understandable when the API key is missing or the request fails.
-- [ ] `npm run lint` passes.
-- [ ] `npm run test:run` passes.
-- [ ] `npm run build` passes.
-- [ ] `npm run check` passes.
+- [x] `npm run lint` passes.
+- [x] `npm run test:run` passes.
+- [x] `npm run build` passes.
+- [x] `npm run check` passes.
 - [ ] Live Vercel URL works on desktop.
 - [ ] Live Vercel URL works on mobile.
 - [ ] User evidence is captured from 2-3 real users.
