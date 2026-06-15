@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/prisma";
-import RecipeInlineListItem from "@/components/RecipeInlineListItem";
+import { Suspense } from "react";
 import FilterBar from "@/components/FilterBar";
 import RecipeFormModal from "@/components/RecipeFormModal";
-import { Suspense } from "react";
+import RecipeInlineListItem from "@/components/RecipeInlineListItem";
+import { prisma } from "@/lib/prisma";
 
 type SearchParams = {
   cultural?: string;
@@ -13,7 +13,7 @@ type SearchParams = {
 async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
   const where: Record<string, string> = {};
   if (cultural) where.cultural = cultural;
-  if (holiday)  where.holiday  = holiday;
+  if (holiday) where.holiday = holiday;
   if (category) where.category = category;
 
   const recipes = await prisma.recipe.findMany({
@@ -45,12 +45,12 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
 
   if (recipes.length === 0) {
     return (
-      <div className="section-card rounded-[1.75rem] text-center py-20 px-6">
+      <div className="section-card rounded-[1.25rem] px-6 py-16 text-center">
         <p className="font-display text-3xl text-[var(--ink-soft)]">
           No recipes found for that combination.
         </p>
-        <p className="font-body text-sm text-[var(--ink-muted)] mt-3 leading-7">
-          Try clearing one of the filters.
+        <p className="mt-3 font-body text-sm leading-7 text-[var(--ink-muted)]">
+          Clear a filter or add a new family recipe.
         </p>
       </div>
     );
@@ -58,13 +58,13 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
 
   return (
     <>
-      <p className="font-sans-alt text-[11px] font-extrabold tracking-[0.18em] uppercase text-[var(--ink-muted)] mb-8 text-center">
+      <p className="mb-6 text-center font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.16em] text-[var(--ink-muted)]">
         {recipes.length} recipe{recipes.length !== 1 ? "s" : ""}
-        {cultural ? ` · ${cultural}` : ""}
-        {holiday  ? ` · ${holiday}`  : ""}
-        {category ? ` · ${category}` : ""}
+        {cultural ? ` / ${cultural}` : ""}
+        {holiday ? ` / ${holiday}` : ""}
+        {category ? ` / ${category}` : ""}
       </p>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {recipes.map((recipe) => (
           <RecipeInlineListItem key={recipe.id} recipe={recipe} />
         ))}
@@ -82,27 +82,31 @@ export default async function RecipesPage({
   const { cultural, holiday, category } = resolvedSearchParams;
 
   return (
-    <div className="portal-shell py-10 md:py-14">
-      <div className="soft-panel rounded-[2rem] p-8 md:p-10 mb-10 fade-up text-center">
-        <p className="eyebrow justify-center mb-4">Browse recipes</p>
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-[var(--ink)] mb-3">
-          {cultural || holiday || category
-            ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
-            : "All Recipes"}
-        </h1>
-        <p className="font-body text-sm md:text-base text-[var(--ink-soft)] max-w-3xl mx-auto leading-7">
-          Move through the full collection by family tradition, holiday, or course. This page should feel practical first: find the dish, open it, cook it.
-        </p>
-        <div className="mt-6 flex justify-center">
+    <div className="portal-shell py-8 md:py-10">
+      <div className="recipe-index-hero mb-8">
+        <div>
+          <p className="eyebrow mb-3">Recipe index</p>
+          <h1 className="font-display text-4xl font-bold leading-tight text-[var(--ink)] md:text-5xl">
+            {cultural || holiday || category
+              ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
+              : "All Recipes"}
+          </h1>
+          <p className="mt-3 max-w-2xl font-body text-sm leading-7 text-[var(--ink-soft)] md:text-base">
+            Search the family archive by tradition, holiday, or course. Open a recipe
+            for the full cooking view, or add a new one from family notes.
+          </p>
+        </div>
+
+        <div className="flex md:justify-end">
           <RecipeFormModal
             mode="create"
             triggerLabel="Add Recipe"
-            triggerClassName="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white"
+            triggerClassName="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_10px_24px_rgba(217,106,39,0.25)]"
           />
         </div>
       </div>
 
-      <div className="mb-12 fade-up fade-up-delay-1 max-w-5xl mx-auto">
+      <div className="mx-auto mb-10 max-w-5xl fade-up fade-up-delay-1">
         <Suspense>
           <FilterBar />
         </Suspense>
@@ -110,9 +114,9 @@ export default async function RecipesPage({
 
       <Suspense
         fallback={
-          <div className="section-card rounded-[1.75rem] text-center py-20">
-            <p className="font-sans-alt text-xs font-extrabold tracking-[0.2em] uppercase text-[var(--ink-muted)] animate-pulse">
-              Loading recipes…
+          <div className="section-card rounded-[1.25rem] py-16 text-center">
+            <p className="animate-pulse font-sans-alt text-xs font-extrabold uppercase tracking-[0.2em] text-[var(--ink-muted)]">
+              Loading recipes...
             </p>
           </div>
         }

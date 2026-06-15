@@ -147,7 +147,7 @@ export default function RecipeDetail({ cultural, ingredients, steps, notes }: Pr
                 &ldquo;{note.content}&rdquo;
               </p>
               <footer className="font-sans-alt text-[11px] font-extrabold tracking-[0.2em] uppercase text-[var(--ink-muted)]">
-                — {note.author}
+                - {note.author}
               </footer>
             </blockquote>
           ))}

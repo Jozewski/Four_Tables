@@ -46,11 +46,6 @@ export default function RecipeFormModal({
   const [values, setValues] = useState<RecipeFormValues>(defaultValues);
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -203,7 +198,7 @@ export default function RecipeFormModal({
       onClick={closeModal}
     >
       <div
-        className="relative mx-auto my-3 md:my-8 w-full max-w-5xl rounded-[1.6rem] border border-[var(--border)] bg-[linear-gradient(180deg,#ffffff_0%,#fffaf3_100%)] shadow-[0_28px_90px_rgba(17,17,17,0.32)] max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto"
+        className="recipe-form-dialog relative mx-auto my-3 md:my-8 w-full max-w-5xl rounded-[1.6rem] border border-[var(--border)] bg-[linear-gradient(180deg,#ffffff_0%,#fffaf3_100%)] shadow-[0_28px_90px_rgba(17,17,17,0.32)] max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto"
         style={{ width: "min(1040px, 100%)" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -228,7 +223,7 @@ export default function RecipeFormModal({
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-white text-lg leading-none text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
-            ×
+            x
           </button>
         </div>
 
@@ -383,7 +378,7 @@ export default function RecipeFormModal({
                     className="sm:col-span-1 rounded-lg border border-[var(--border)] px-2 py-2 text-xs"
                     aria-label={`Remove ingredient ${index + 1}`}
                   >
-                    ×
+                    x
                   </button>
                 </div>
               ))}
@@ -416,7 +411,7 @@ export default function RecipeFormModal({
                     className="sm:col-span-1 rounded-lg border border-[var(--border)] px-2 py-2 text-xs"
                     aria-label={`Remove step ${index + 1}`}
                   >
-                    ×
+                    x
                   </button>
                 </div>
               ))}
@@ -455,7 +450,7 @@ export default function RecipeFormModal({
                     className="sm:col-span-1 rounded-lg border border-[var(--border)] px-2 py-2 text-xs"
                     aria-label={`Remove note ${index + 1}`}
                   >
-                    ×
+                    x
                   </button>
                 </div>
               ))}
@@ -505,7 +500,7 @@ export default function RecipeFormModal({
         {triggerLabel}
       </button>
 
-      {mounted && modalContent ? createPortal(modalContent, document.body) : null}
+      {modalContent && typeof document !== "undefined" ? createPortal(modalContent, document.body) : null}
     </>
   );
 }

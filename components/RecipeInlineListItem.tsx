@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { getSafeImageUrl } from "@/lib/images";
+import Link from "next/link";
 import RecipeFormModal from "@/components/RecipeFormModal";
+import { getSafeImageUrl } from "@/lib/images";
 import { RecipeFormValues } from "@/lib/recipeValidation";
 
 const cultureColor: Record<string, string> = {
@@ -8,12 +9,6 @@ const cultureColor: Record<string, string> = {
   Dutch: "var(--dutch)",
   German: "var(--german)",
   Mexican: "var(--mexican)",
-};
-
-const holidayEmoji: Record<string, string> = {
-  Christmas: "🎄",
-  Easter: "🐣",
-  Thanksgiving: "🍂",
 };
 
 type Ingredient = {
@@ -51,11 +46,15 @@ type Recipe = {
 };
 
 function formatPrepTime(minutes: number | null): string {
-  if (!minutes) return "Not specified";
+  if (!minutes) return "Time not set";
   if (minutes < 60) return `${minutes} min`;
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return m ? `${h}h ${m}m` : `${h}h`;
+}
+
+function cultureInitial(cultural: string): string {
+  return cultural.slice(0, 1).toUpperCase();
 }
 
 export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
@@ -79,154 +78,116 @@ export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
   };
 
   return (
-    <article className="section-card rounded-[1.6rem] p-4 md:p-5 lg:p-6">
-      <style>{`
-        .recipe-inline-layout-fixed {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1rem;
-          align-items: stretch;
-        }
+    <article className="recipe-list-item">
+      <Link
+        href={`/recipes/${recipe.id}`}
+        className="recipe-list-media"
+        aria-label={`Open ${recipe.title}`}
+      >
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={recipe.title}
+            width={900}
+            height={700}
+            className="h-full w-full object-cover"
+            sizes="(max-width: 767px) 100vw, 15rem"
+          />
+        ) : (
+          <div
+            className="flex h-full min-h-[13rem] items-center justify-center font-display text-6xl text-white"
+            style={{ backgroundColor: color }}
+          >
+            {cultureInitial(recipe.cultural)}
+          </div>
+        )}
+      </Link>
 
-        .recipe-inline-media-fixed {
-          min-height: 200px;
-        }
-
-        .recipe-inline-ingredients-fixed {
-          display: flex;
-          flex-direction: column;
-        }
-
-        @media (min-width: 640px) {
-          .recipe-inline-layout-fixed {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .recipe-inline-media-fixed {
-            min-height: 240px;
-          }
-        }
-
-        @media (min-width: 768px) {
-          .recipe-inline-layout-fixed {
-            gap: 1.25rem;
-          }
-
-          .recipe-inline-media-fixed {
-            min-height: 288px;
-          }
-        }
-      `}</style>
-      <header className="mb-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div className="flex flex-wrap gap-2">
+      <div className="recipe-list-content">
+        <div className="min-w-0">
+          <div className="mb-3 flex flex-wrap gap-2">
             <span
-              className="font-sans-alt text-[10px] font-extrabold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border"
+              className="rounded-full border px-2.5 py-1 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.16em]"
               style={{ borderColor: color, color }}
             >
               {recipe.cultural}
             </span>
-            <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-soft)]">
-              {recipe.holiday ? `${holidayEmoji[recipe.holiday] ?? ""} ${recipe.holiday}` : recipe.category}
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2.5 py-1 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.16em] text-[var(--ink-soft)]">
+              {recipe.holiday ?? recipe.category}
             </span>
-            <span className="font-sans-alt text-[10px] font-extrabold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]">
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2.5 py-1 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.16em] text-[var(--ink-muted)]">
               {formatPrepTime(recipe.prepTime)}
             </span>
           </div>
 
-          <RecipeFormModal
-            mode="edit"
-            recipeId={recipe.id}
-            initialValues={initialValues}
-            triggerLabel="Edit"
-            triggerClassName="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-[10px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-soft)] hover:text-[var(--ink)]"
-          />
+          <Link href={`/recipes/${recipe.id}`} className="group">
+            <h2 className="font-display text-3xl leading-tight text-[var(--ink)] transition-colors group-hover:text-[var(--accent)]">
+              {recipe.title}
+            </h2>
+          </Link>
+
+          {recipe.description && (
+            <p className="mt-3 line-clamp-2 font-body text-sm leading-7 text-[var(--ink-soft)]">
+              {recipe.description}
+            </p>
+          )}
+
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <Link
+              href={`/recipes/${recipe.id}`}
+              className="inline-flex min-h-10 items-center justify-center rounded-full px-5 py-2.5 font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.12em] shadow-[0_10px_22px_rgba(217,106,39,0.22)] transition"
+              style={{ backgroundColor: "var(--accent)", color: "#fff" }}
+            >
+              Open Recipe
+            </Link>
+            <RecipeFormModal
+              mode="edit"
+              recipeId={recipe.id}
+              initialValues={initialValues}
+              triggerLabel="Edit"
+              triggerClassName="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--ink)]"
+            />
+          </div>
         </div>
 
-        <h2 className="font-display text-2xl md:text-4xl text-[var(--ink)] leading-tight">
-          {recipe.title}
-        </h2>
-
-        {recipe.description && (
-          <p className="font-body text-sm md:text-base text-[var(--ink-soft)] leading-7 mt-3">
-            {recipe.description}
+        <aside className="recipe-snapshot">
+          <p className="mb-3 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
+            Recipe Snapshot
           </p>
-        )}
-      </header>
-
-      <div className="recipe-inline-layout-fixed">
-        <section className="recipe-inline-media-fixed rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] overflow-hidden order-1">
-          <div className="relative w-full h-full bg-[var(--cream-dark)]">
-            {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt={recipe.title}
-                width={1200}
-                height={900}
-                className="w-full h-full object-cover"
-                sizes="(max-width: 639px) 100vw, 50vw"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-35">
-                {recipe.cultural === "Italian" ? "🍝" : recipe.cultural === "Dutch" ? "🌷" : recipe.cultural === "German" ? "🦢" : "🌶️"}
-              </div>
-            )}
+          <div className="grid grid-cols-3 gap-2 border-b border-[var(--border)] pb-3 text-center">
+            <div>
+              <p className="font-display text-2xl text-[var(--ink)]">{recipe.ingredients.length}</p>
+              <p className="font-sans-alt text-[9px] font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+                Items
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-2xl text-[var(--ink)]">{recipe.steps.length}</p>
+              <p className="font-sans-alt text-[9px] font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+                Steps
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-2xl text-[var(--ink)]">{recipe.notes.length}</p>
+              <p className="font-sans-alt text-[9px] font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+                Notes
+              </p>
+            </div>
           </div>
-        </section>
 
-        <section className="recipe-inline-ingredients-fixed rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] p-4 md:p-5 h-full order-2">
-          <p className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)] mb-3">
-            Ingredients ({recipe.ingredients.length})
-          </p>
-          <ul className="flex-1 grid gap-2 sm:gap-3">
-            {recipe.ingredients.map((ingredient) => (
-              <li key={ingredient.id} className="font-body text-sm text-[var(--ink-soft)] leading-6 break-words">
-                <span className="font-semibold text-[var(--ink)]">{ingredient.amount}{ingredient.unit ? ` ${ingredient.unit}` : ""}</span> {ingredient.name}
+          <ul className="mt-3 space-y-2">
+            {recipe.ingredients.slice(0, 4).map((ingredient) => (
+              <li key={ingredient.id} className="font-body text-sm leading-6 text-[var(--ink-soft)]">
+                <span className="font-semibold text-[var(--ink)]">
+                  {ingredient.amount}
+                  {ingredient.unit ? ` ${ingredient.unit}` : ""}
+                </span>{" "}
+                {ingredient.name}
               </li>
             ))}
           </ul>
-        </section>
+        </aside>
       </div>
-
-      <section className="rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] p-4 md:p-5 mt-4 md:mt-5">
-        <p className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)] mb-4">
-          Instructions ({recipe.steps.length})
-        </p>
-
-        <div className="space-y-3">
-          {recipe.steps.map((step) => (
-            <div key={step.id} className="rounded-[0.9rem] border border-[var(--border)] bg-[var(--surface-soft)] p-3 md:p-4">
-              <p className="font-body text-sm text-[var(--ink-soft)] leading-7">
-                <span className="inline-flex items-center justify-center h-6 min-w-6 px-1 rounded-full bg-[var(--ink)] text-white font-sans-alt text-[10px] font-extrabold mr-2 align-middle shrink-0">
-                  {step.stepNumber}
-                </span>
-                {step.instruction}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] p-4 md:p-5 mt-4 md:mt-5">
-        <p className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)] mb-3">
-          Family Notes ({recipe.notes.length})
-        </p>
-
-        {recipe.notes.length > 0 ? (
-          <div className="grid gap-3 md:grid-cols-2">
-            {recipe.notes.map((note) => (
-              <blockquote key={note.id} className="rounded-[0.9rem] border border-[var(--border)] bg-[var(--surface-soft)] p-4" style={{ borderLeftColor: color, borderLeftWidth: "3px" }}>
-                <p className="font-body text-sm italic text-[var(--ink-soft)] leading-6">&ldquo;{note.content}&rdquo;</p>
-                <footer className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--ink-muted)] mt-1">
-                  {note.author}
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-        ) : (
-          <p className="font-body text-sm text-[var(--ink-muted)] italic">No family notes yet.</p>
-        )}
-      </section>
     </article>
   );
 }
