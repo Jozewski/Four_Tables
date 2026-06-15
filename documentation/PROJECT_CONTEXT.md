@@ -1,39 +1,28 @@
-# Four Tables CLI Agent Rules
+# Four Tables Project Context And Guardrails
 
-These rules apply to Codex, Claude, or any other CLI coding agent working in this repository.
+## Purpose Of This File
 
-## Project Mission
+Use this file as the longer context source for CLI agents working in this repo. The enforceable agent rules live in `../AGENTS.md`, and `../CLAUDE.md` points to `../AGENTS.md` so Claude-style agents use the same rules.
 
-Four Tables is a family recipe archive for Italian, Dutch, German, and Mexican recipe traditions. The current sprint goal is to ship a deployed recipe app with working create/read/update flows and a meaningful OpenAI-powered recipe assistant.
+## Project Summary
 
-Timeline:
+Four Tables is a family recipe archive for Italian, Dutch, German, and Mexican recipe traditions. The app supports browsing recipes, reading recipe details, creating recipes, updating recipes, and adding an OpenAI-powered assist feature for turning rough family notes into structured recipe fields.
+
+## Current Sprint
 
 - Sprint length: 5 build days.
 - Deploy day: Saturday, June 20.
 - Demo day: Monday, June 22.
-
-For broader planning context, read `documentation/PROJECT_CONTEXT.md`, `documentation/PLAN.md`, `documentation/SPRINT_PLAN.md`, and `documentation/doc.md`.
+- Main sprint goal: ship a deployed recipe app with working create/read/update and meaningful OpenAI integration.
 
 ## Required Gate Items
 
 - One schema entity with relationships.
 - Create and Read implemented end-to-end.
-- Update implemented and verified.
+- Update implemented and verified if time allows, already present in code.
 - One meaningful OpenAI API feature.
 - Live Vercel URL.
 - Evidence that 2-3 real users used the app.
-
-## Next.js Rule
-
-This is not the Next.js you know.
-
-This repo uses Next.js 16, which may have breaking API, convention, and file-structure changes compared with older examples. Before changing Next.js APIs, route handlers, image behavior, metadata, server components, testing setup, or config, read the relevant local guide under:
-
-```text
-node_modules/next/dist/docs/
-```
-
-Heed deprecation notices. Do not assume older Next.js examples are correct.
 
 ## Tech Stack Rules
 
@@ -41,10 +30,19 @@ Heed deprecation notices. Do not assume older Next.js examples are correct.
 - Use React 19 and TypeScript.
 - Use Prisma with PostgreSQL/Neon.
 - Use Tailwind CSS 4 and existing CSS patterns in `app/globals.css`.
-- Use package-level ESM.
-- Do not add CommonJS `require` or `module.exports`.
+- Use package-level ESM. Do not add CommonJS `require` or `module.exports`.
 - Keep config files as `.js`, `.ts`, or `.mts` according to current project conventions.
 - Do not reintroduce `.mjs` unless a tool specifically requires it.
+
+## Next.js Rule
+
+This repo uses a version of Next.js with breaking changes compared with older examples. Before changing Next APIs, route handlers, image behavior, metadata, or testing setup, read the relevant local docs under:
+
+```text
+node_modules/next/dist/docs/
+```
+
+Do not assume older Next.js examples are correct.
 
 ## Data Rules
 
@@ -65,21 +63,20 @@ Guardrails:
 - Ingredient order matters.
 - Step order matters.
 - AI-generated recipe data must be validated before it is saved.
-- Optional fields should be normalized through existing validation behavior.
+- Optional fields should be normalized to `null` or empty strings according to existing validation behavior.
 
 ## AI Rules
 
 - The OpenAI API must only be called from server-side code.
 - Never expose `OPENAI_API_KEY` to the browser.
-- Never commit secrets or `.env` values.
-- Treat AI output as untrusted input.
-- AI output must pass the same validation rules as manual recipe input.
 - The user must review and edit AI output before saving.
-- If OpenAI fails, show a clear error and preserve user-entered form data.
+- AI output must be treated as untrusted input.
+- AI output must pass the same validation rules as manual recipe input.
+- If OpenAI fails, the app should show a clear error and preserve user-entered form data.
 
-## TDD Rules
+## Testing Rules
 
-Follow red/green/blue for validation, AI data shaping, API behavior, and non-trivial UI state:
+Follow red/green/blue:
 
 - Red: write a failing test for the behavior.
 - Green: implement the smallest working change.
@@ -111,8 +108,8 @@ npm run check
 - Recipe details should be cook-friendly: clear ingredients, ordered steps, and family context.
 - The add/edit modal should guide the user through structured entry.
 - AI assist belongs near the top of the add/edit flow.
-- Avoid large redesigns during this sprint.
-- Do not add dark mode, auth, social sharing, or delete unless all Must Haves are already complete.
+- Avoid large new redesigns during this sprint.
+- Do not add dark mode, auth, social sharing, or delete unless the sprint Must Haves are already complete.
 
 ## Scope Rules
 
@@ -150,7 +147,6 @@ Won't do this sprint:
 - Sprint plan lives in `documentation/SPRINT_PLAN.md`.
 - Project plan lives in `documentation/PLAN.md`.
 - Requirements and TDD prompts live in `documentation/doc.md`.
-- Longer project context lives in `documentation/PROJECT_CONTEXT.md`.
 
 ## Coding Guardrails
 
@@ -158,6 +154,6 @@ Won't do this sprint:
 - Prefer existing patterns over new abstractions.
 - Do not mutate database setup scripts unless the task explicitly requires it.
 - Do not run destructive database scripts without confirming intent.
-- Do not revert unrelated user changes.
+- Do not commit secrets or `.env` values.
 - Keep documentation dates aligned: deploy Saturday, June 20; demo Monday, June 22.
-- Run tests before saying implementation work is complete.
+- Run tests before saying work is complete.
