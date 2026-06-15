@@ -66,6 +66,10 @@ function toNullableString(value: unknown): string | null {
   return v.length > 0 ? v : null;
 }
 
+function isValidImageDataUrl(value: string): boolean {
+  return /^data:image\/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value);
+}
+
 export function normalizeRecipeInput(input: unknown): NormalizedRecipeInput {
   const obj = (input && typeof input === "object" ? input : {}) as Record<string, unknown>;
 
@@ -133,13 +137,15 @@ export function validateRecipeInput(input: unknown): { valid: true; data: Normal
   }
 
   if (data.imageUrl) {
-    try {
-      const parsed = new URL(data.imageUrl);
-      if (!["http:", "https:"].includes(parsed.protocol)) {
-        errors.push("Image URL must use http or https.");
+    if (!isValidImageDataUrl(data.imageUrl)) {
+      try {
+        const parsed = new URL(data.imageUrl);
+        if (!["http:", "https:"].includes(parsed.protocol)) {
+          errors.push("Image URL must use http, https, or an uploaded image file.");
+        }
+      } catch {
+        errors.push("Image URL must be a valid URL or uploaded image file.");
       }
-    } catch {
-      errors.push("Image URL must be a valid URL.");
     }
   }
 

@@ -37,9 +37,13 @@ const recipeJsonSchema = {
         additionalProperties: false,
         required: ["amount", "unit", "name"],
         properties: {
-          amount: { type: "string" },
+          amount: {
+            type: "string",
+            minLength: 1,
+            description: "Required. Use text like 'as needed' when the source notes do not specify an amount.",
+          },
           unit: { type: "string" },
-          name: { type: "string" },
+          name: { type: "string", minLength: 1 },
         },
       },
     },
@@ -95,6 +99,25 @@ function getResponseText(payload: unknown): string {
   return "";
 }
 
+function getOpenAiErrorMessage(payload: unknown): string {
+  const data = payload as {
+    error?: {
+      message?: unknown;
+      code?: unknown;
+      type?: unknown;
+    };
+  };
+
+  const message = typeof data?.error?.message === "string" ? data.error.message.trim() : "";
+  const code = typeof data?.error?.code === "string" ? data.error.code.trim() : "";
+  const type = typeof data?.error?.type === "string" ? data.error.type.trim() : "";
+
+  if (message && code) return `OpenAI error (${code}): ${message}`;
+  if (message && type) return `OpenAI error (${type}): ${message}`;
+  if (message) return `OpenAI error: ${message}`;
+  return "OpenAI could not generate recipe fields right now.";
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -138,7 +161,7 @@ export async function POST(request: Request) {
           {
             role: "system",
             content:
-              "You turn rough family recipe notes into clean structured recipe form data. Return only valid JSON matching the schema. Do not invent family stories, but you may infer reasonable cooking structure from the notes.",
+              "You turn rough family recipe notes into clean structured recipe form data. Return only valid JSON matching the schema. Do not invent family stories, but you may infer reasonable cooking structure from the notes. Every ingredient must have a non-empty amount. If the notes do not specify an amount, use 'as needed'.",
           },
           {
             role: "user",
@@ -167,7 +190,7 @@ export async function POST(request: Request) {
     const openAiJson = await response.json().catch(() => null);
     if (!response.ok) {
       return NextResponse.json(
-        { ok: false, errors: ["OpenAI could not generate recipe fields right now."] },
+        { ok: false, errors: [getOpenAiErrorMessage(openAiJson)] },
         { status: 502 },
       );
     }

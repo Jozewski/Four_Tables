@@ -58,4 +58,35 @@ describe("AI recipe assist output normalization", () => {
       });
     }
   });
+
+  it("fills unspecified AI ingredient amounts with as needed", () => {
+    const result = normalizeAiRecipeOutput({
+      title: "Quick Tomato Bruschetta",
+      description: "A quick Italian appetizer.",
+      cultural: "Italian",
+      holiday: "",
+      category: "Appetizer",
+      prepTime: "15",
+      imageUrl: "",
+      ingredients: [
+        { amount: "4", unit: "", name: "ripe Roma tomatoes, diced" },
+        { amount: "2", unit: "cloves", name: "garlic, minced" },
+        { amount: "", unit: "", name: "toasted crusty Italian bread" },
+      ],
+      steps: [
+        { instruction: "Toss the tomatoes, garlic, basil, olive oil, and salt together." },
+        { instruction: "Spoon over toasted crusty Italian bread." },
+      ],
+      notes: [],
+    });
+
+    expect(result.valid).toBe(true);
+    if (result.valid) {
+      expect(result.values.ingredients[2]).toEqual({
+        amount: "as needed",
+        unit: "",
+        name: "toasted crusty Italian bread",
+      });
+    }
+  });
 });

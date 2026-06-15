@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
@@ -37,6 +37,7 @@ export default function RecipeFormModal({
   initialValues,
 }: Props) {
   const router = useRouter();
+  const imageUploadId = useId();
   const defaultValues = useMemo(
     () => cloneValues(initialValues ?? EMPTY_RECIPE_FORM),
     [initialValues],
@@ -46,6 +47,11 @@ export default function RecipeFormModal({
   const [values, setValues] = useState<RecipeFormValues>(defaultValues);
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [aiNotes, setAiNotes] = useState("");
+  const [aiError, setAiError] = useState("");
+  const [aiSubmitting, setAiSubmitting] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -59,11 +65,14 @@ export default function RecipeFormModal({
   function openModal() {
     setValues(cloneValues(defaultValues));
     setErrors([]);
+    setAiNotes("");
+    setAiError("");
+    setImageUploadError("");
     setOpen(true);
   }
 
   function closeModal() {
-    if (submitting) return;
+    if (submitting || aiSubmitting) return;
     setOpen(false);
   }
 
@@ -132,6 +141,77 @@ export default function RecipeFormModal({
 
   function removeNote(index: number) {
     setValues((prev) => ({ ...prev, notes: prev.notes.filter((_, i) => i !== index) }));
+  }
+
+  async function handleAiAssist() {
+    const notes = aiNotes.trim();
+
+    if (notes.length < 10) {
+      setAiError("Add at least 10 characters of recipe notes before using AI assist.");
+      return;
+    }
+
+    setAiSubmitting(true);
+    setAiError("");
+
+    try {
+      const response = await fetch("/api/recipes/assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          notes,
+          currentRecipe: values,
+        }),
+      });
+
+      const json = (await response.json().catch(() => null)) as
+        | { ok?: boolean; values?: RecipeFormValues; errors?: string[] }
+        | null;
+
+      if (!response.ok || !json?.ok || !json.values) {
+        setAiError(json?.errors?.length ? json.errors.join(" ") : "Unable to draft recipe fields right now.");
+        return;
+      }
+
+      setValues(cloneValues(json.values));
+      setErrors([]);
+    } catch {
+      setAiError("Unable to draft recipe fields right now.");
+    } finally {
+      setAiSubmitting(false);
+    }
+  }
+
+  async function handleImageUpload(file: File | null) {
+    if (!file) return;
+
+    setImageUploading(true);
+    setImageUploadError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("/api/recipes/images", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = (await response.json().catch(() => null)) as
+        | { ok?: boolean; imageUrl?: string; errors?: string[] }
+        | null;
+
+      if (!response.ok || !json?.ok || !json.imageUrl) {
+        setImageUploadError(json?.errors?.length ? json.errors.join(" ") : "Unable to upload image right now.");
+        return;
+      }
+
+      updateField("imageUrl", json.imageUrl);
+    } catch {
+      setImageUploadError("Unable to upload image right now.");
+    } finally {
+      setImageUploading(false);
+    }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -232,6 +312,37 @@ export default function RecipeFormModal({
           className="space-y-6 px-6 py-5 md:space-y-7 md:px-8 md:py-7"
           style={{ paddingInline: horizontalPad }}
         >
+          <section className={sectionCardClass} style={{ paddingInline: "clamp(14px, 2.2vw, 26px)" }}>
+            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+              <label className="space-y-2">
+                <span className={labelClass}>AI recipe notes</span>
+                <textarea
+                  value={aiNotes}
+                  onChange={(e) => setAiNotes(e.target.value)}
+                  className={`${inputClass} min-h-28`}
+                  placeholder="Paste rough family notes, ingredient memories, or old recipe card text."
+                  disabled={aiSubmitting || submitting}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={handleAiAssist}
+                className="rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[var(--accent)] disabled:opacity-60 lg:mb-1"
+                disabled={aiSubmitting || submitting}
+              >
+                {aiSubmitting ? "Drafting..." : "Draft with AI"}
+              </button>
+            </div>
+            {aiError && (
+              <p className="mt-3 rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {aiError}
+              </p>
+            )}
+            <p className="mt-3 text-xs leading-5 text-[var(--ink-muted)]">
+              AI drafts editable fields only. Review ingredients, steps, and family notes before saving.
+            </p>
+          </section>
+
           {errors.length > 0 && (
             <div className="rounded-xl border border-red-300 bg-red-50/95 p-4 text-sm text-red-700">
               <p className="font-semibold mb-2">Please fix the following:</p>
@@ -267,6 +378,28 @@ export default function RecipeFormModal({
                 placeholder="https://..."
               />
             </label>
+
+            <div className="space-y-1">
+              <label htmlFor={imageUploadId} className={labelClass}>
+                Upload Family Photo
+              </label>
+              <input
+                id={imageUploadId}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(e) => void handleImageUpload(e.target.files?.[0] ?? null)}
+                className={`${inputClass} file:mr-3 file:rounded-full file:border-0 file:bg-[var(--ink)] file:px-3 file:py-1.5 file:text-xs file:font-bold file:uppercase file:tracking-[0.1em] file:text-white`}
+                disabled={imageUploading || submitting}
+              />
+              <span className="block text-xs leading-5 text-[var(--ink-muted)]">
+                {imageUploading ? "Uploading image..." : "JPEG, PNG, WebP, or GIF up to 1.5 MB."}
+              </span>
+              {imageUploadError && (
+                <span className="block rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {imageUploadError}
+                </span>
+              )}
+            </div>
 
             <label className="space-y-1 md:col-span-2">
               <span className={labelClass}>Description</span>

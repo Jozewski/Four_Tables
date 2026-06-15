@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import RecipeImage from "@/components/RecipeImage";
 import { getSafeImageUrl } from "@/lib/images";
  
 const cultureColor: Record<string, string> = {
@@ -50,7 +50,7 @@ export default function RecipeCard({ recipe }: Props) {
       <article className="section-card rounded-[1.5rem] h-full relative overflow-hidden flex flex-col">
         <div className="relative w-full h-52 bg-[var(--cream-dark)] overflow-hidden flex-shrink-0">
           {imageUrl ? (
-            <Image
+            <RecipeImage
               src={imageUrl}
               alt={recipe.title}
               width={1200}
