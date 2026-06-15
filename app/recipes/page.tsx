@@ -18,7 +18,7 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
 
   const recipes = await prisma.recipe.findMany({
     where,
-    orderBy: [{ cultural: "asc" }, { title: "asc" }],
+    orderBy: [{ title: "asc" }],
     select: {
       id: true,
       title: true,

@@ -32,7 +32,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 5 test files and 13 total tests.
+The current Vitest suite has 6 test files and 14 total tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -109,6 +109,15 @@ Suite: `recipe image uploads`
 2. `rejects non-image uploads`
    - Proves text files and other non-image uploads are rejected before they can be saved.
    - Confirms the user-facing error explains the accepted image formats.
+
+### `__tests__/ThemeToggle.test.tsx`
+
+Suite: `ThemeToggle`
+
+1. `toggles the document theme and persists the choice`
+   - Proves the theme button switches the app between light and dark mode.
+   - Confirms the selected theme is stored in `localStorage`.
+   - Confirms the document `data-theme` attribute changes so CSS variables can style the app.
 
 ## TDD Log
 
@@ -470,6 +479,10 @@ Does the file exist?
 - Used a server-side upload route instead of reading files directly into form state.
 - Kept uploaded images in the existing `imageUrl` field as deployable `data:image/...` values for this sprint.
 - Fixed the file input label with explicit `id`/`htmlFor` after the UI test exposed the accessibility gap.
+- Completed a manual smoke test with a real dish photo:
+  - uploaded a family recipe image from the add recipe modal
+  - saved the recipe successfully
+  - confirmed the uploaded image rendered after saving
 
 Final verification:
 
@@ -484,7 +497,94 @@ Result:
 - Lint passed.
 - Production build passed.
 
+### 2026-06-15: Light/Dark Mode Toggle
+
+Goal:
+
+- Add a user-controlled light/dark mode toggle without disrupting the existing recipe-site visual system.
+
+:x: Red:
+
+- Added `__tests__/ThemeToggle.test.tsx`.
+- Wrote failing coverage for:
+  - rendering a button to switch to dark mode
+  - updating `document.documentElement.dataset.theme`
+  - persisting the selected theme in `localStorage`
+- First red run:
+
+```bash
+npm run test:run -- __tests__/ThemeToggle.test.tsx
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/ThemeToggle.test.tsx
+Error: Failed to resolve import "@/components/ThemeToggle" from "__tests__/ThemeToggle.test.tsx".
+Does the file exist?
+```
+
+:white_check_mark: Green:
+
+- Added `components/ThemeToggle.tsx`.
+- Mounted the toggle in the desktop culture nav and mobile header controls.
+- Confirmed the targeted test passed:
+
+```bash
+npm run test:run -- __tests__/ThemeToggle.test.tsx
+```
+
+Result:
+
+- 1 test file passed.
+- 1 test passed.
+
+:large_blue_circle: Blue:
+
+- Added dark-mode CSS variables under `:root[data-theme="dark"]`.
+- Kept the existing light theme as the default.
+- Added dark overrides for core white surfaces, modal fields, and error panels so the mode change feels intentional instead of partial.
+- Added `suppressHydrationWarning` on the root HTML element because the client applies the saved theme after hydration.
+- Refined the dark palette from warm brown tones to slate-based surfaces.
+- Replaced the first compact text toggle with a clearer SVG sun/moon switch CTA.
+- Added recipe index card and snapshot dark-mode overrides so text remains readable in dark mode.
+- Used Playwright screenshots to verify dark-mode contrast on the recipe index and home page:
+  - `screenshots/ui-audit/dark-recipes-desktop-viewport.png`
+  - `screenshots/ui-audit/dark-recipes-mobile-viewport.png`
+  - `screenshots/ui-audit/dark-home-desktop-viewport.png`
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 6 test files passed.
+- 14 tests passed.
+- Lint passed.
+- Production build passed.
+
 ## Next TDD Entries
+
+## Additional QA Notes
+
+### 2026-06-15: Recipe Index Alphabetical Ordering
+
+- Changed the recipe index query so `All Recipes` sorts by recipe `title` instead of grouping by `cultural` first.
+- Verified with:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 6 test files passed.
+- 14 tests passed.
+- Lint passed.
+- Production build passed.
 
 Use this template for future sprint work.
 

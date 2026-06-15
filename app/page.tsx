@@ -80,7 +80,7 @@ export default async function HomePage() {
               >
                 Explore all recipes
               </Link>
-              <Link href="/recipes?holiday=Christmas" className="rounded-full border border-[var(--border)] bg-white px-6 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.16em] text-[var(--ink)]">
+              <Link href="/recipes?holiday=Christmas" className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.16em] text-[var(--ink)]">
                 Holiday favorites
               </Link>
             </div>
@@ -88,7 +88,7 @@ export default async function HomePage() {
 
             <div className="grid grid-cols-3 gap-3 lg:w-[28rem]">
               {stats.map((stat) => (
-                <div key={stat.label} className="rounded-[1rem] border border-[var(--border)] bg-white/85 px-4 py-4 text-center">
+                <div key={stat.label} className="rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-center">
                   <p className="font-display text-4xl text-[var(--ink)]">{stat.value}</p>
                   <p className="mt-1 font-sans-alt text-[9px] font-extrabold uppercase tracking-[0.14em] text-[var(--ink-muted)]">{stat.label}</p>
                 </div>
