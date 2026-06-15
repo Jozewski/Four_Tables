@@ -10,7 +10,7 @@ const cultureColor: Record<string, string> = {
 };
  
 export const metadata = {
-  title: "Four Tables — Home",
+  title: "Four Tables - Home",
   description: "A browse-first recipe home for four family traditions.",
 };
  
@@ -53,16 +53,17 @@ export default async function HomePage() {
 
   const stats = [
     { label: "Recipes", value: String(recipes.length) },
-    { label: "Family traditions", value: "4" },
+    { label: "Traditions", value: "4" },
     { label: "Holiday collections", value: String(new Set(recipes.map((recipe: Recipe) => recipe.holiday).filter(Boolean)).size) },
   ];
 
   return (
     <div className="portal-shell py-10 md:py-14 space-y-14">
-      <section className="grid gap-6 lg:grid-cols-[1.35fr_0.85fr] fade-up">
+      <section className="fade-up">
         <div className="soft-panel rounded-[2rem] p-8 md:p-10 overflow-hidden relative">
           <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[var(--accent-soft)] to-transparent opacity-80 pointer-events-none" />
-          <div className="relative max-w-2xl">
+          <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div className="max-w-3xl">
             <p className="eyebrow mb-5">Browse four family tables</p>
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl leading-[0.95] tracking-[-0.03em] text-[var(--ink)] max-w-3xl">
               Recipes organized like a cooking site, grounded in family tradition.
@@ -72,7 +73,11 @@ export default async function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/recipes" className="rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.16em] text-white">
+              <Link
+                href="/recipes"
+                className="rounded-full px-6 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.16em]"
+                style={{ backgroundColor: "var(--accent)", color: "#fff" }}
+              >
                 Explore all recipes
               </Link>
               <Link href="/recipes?holiday=Christmas" className="rounded-full border border-[var(--border)] bg-white px-6 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.16em] text-[var(--ink)]">
@@ -80,15 +85,16 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
 
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-          {stats.map((stat) => (
-            <div key={stat.label} className="section-card rounded-[1.5rem] p-6 fade-up fade-up-delay-1">
-              <p className="font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)]">{stat.label}</p>
-              <p className="font-display text-5xl text-[var(--ink)] mt-3">{stat.value}</p>
+            <div className="grid grid-cols-3 gap-3 lg:w-[28rem]">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-[1rem] border border-[var(--border)] bg-white/85 px-4 py-4 text-center">
+                  <p className="font-display text-4xl text-[var(--ink)]">{stat.value}</p>
+                  <p className="mt-1 font-sans-alt text-[9px] font-extrabold uppercase tracking-[0.14em] text-[var(--ink-muted)]">{stat.label}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
@@ -129,12 +135,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr] fade-up fade-up-delay-3">
-        <div>
+      <section className="fade-up fade-up-delay-3">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
-              <p className="eyebrow mb-3">By family</p>
-              <h2 className="section-heading text-[var(--ink)]">Each table keeps its own voice.</h2>
+              <p className="eyebrow mb-3">By tradition</p>
+              <h2 className="section-heading text-[var(--ink)]">Each tradition keeps its own voice.</h2>
             </div>
           </div>
 
@@ -150,7 +155,7 @@ export default async function HomePage() {
                       <p className="font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: cultureColor[culture] }}>
                         {culture}
                       </p>
-                      <h3 className="font-display text-3xl text-[var(--ink)] mt-2">{culture} family collection</h3>
+                      <h3 className="font-display text-3xl text-[var(--ink)] mt-2">{culture} tradition collection</h3>
                       <p className="font-body text-sm text-[var(--ink-soft)] leading-7 mt-3">{familyNotes[culture]}</p>
                     </div>
 
@@ -163,18 +168,22 @@ export default async function HomePage() {
                     </Link>
                   </div>
 
-                  <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                    {cultureRecipes.slice(0, 3).map((recipe: Recipe) => (
-                      <RecipeCard key={recipe.id} recipe={recipe} />
+                  <div
+                    className="recipe-carousel"
+                    style={{ gridAutoColumns: "clamp(17rem, calc((100% - 1.25rem) / 2), 38rem)" }}
+                  >
+                    {cultureRecipes.map((recipe: Recipe) => (
+                      <div key={recipe.id} className="recipe-carousel-item">
+                        <RecipeCard recipe={recipe} />
+                      </div>
                     ))}
                   </div>
                 </section>
               );
             })}
           </div>
-        </div>
 
-        <div className="space-y-6">
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <section className="section-card rounded-[1.5rem] p-6 md:p-7">
             <p className="eyebrow mb-4">Seasonal picks</p>
             <h2 className="font-display text-3xl text-[var(--ink)]">Holiday recipes and celebration bakes.</h2>
@@ -185,7 +194,7 @@ export default async function HomePage() {
               {holidaySpotlight.map((recipe: Recipe) => (
                 <Link key={recipe.id} href={`/recipes/${recipe.id}`} className="block rounded-[1.2rem] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 card-lift">
                   <p className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.16em] text-[var(--ink-muted)]">
-                    {recipe.holiday} · {recipe.cultural}
+                    {recipe.holiday} / {recipe.cultural}
                   </p>
                   <h3 className="font-display text-xl text-[var(--ink)] mt-1">{recipe.title}</h3>
                 </Link>

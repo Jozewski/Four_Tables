@@ -9,12 +9,6 @@ const cultureColor: Record<string, string> = {
   Mexican: "var(--mexican)",
 };
  
-const holidayEmoji: Record<string, string> = {
-  Christmas:    "🎄",
-  Easter:       "🐣",
-  Thanksgiving: "🍂",
-};
- 
 type Props = {
   recipe: {
     id: number;
@@ -40,6 +34,10 @@ function formatPrepTime(minutes: number | null): string {
   const days = Math.floor(minutes / 1440);
   return `${days}d`;
 }
+
+function cultureInitial(cultural: string): string {
+  return cultural.slice(0, 1).toUpperCase();
+}
  
 export default function RecipeCard({ recipe }: Props) {
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
@@ -61,12 +59,9 @@ export default function RecipeCard({ recipe }: Props) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-4xl opacity-30">
-                {recipe.cultural === "Italian"  ? "🍝"
-                : recipe.cultural === "Dutch"   ? "🌷"
-                : recipe.cultural === "German"  ? "🦢"
-                : "🌶️"}
+            <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: color }}>
+              <span className="font-display text-6xl text-white/85">
+                {cultureInitial(recipe.cultural)}
               </span>
             </div>
           )}
@@ -77,7 +72,7 @@ export default function RecipeCard({ recipe }: Props) {
             </span>
 
             <span className="image-chip">
-              {recipe.holiday ? `${holidayEmoji[recipe.holiday]} ${metaLabel}` : metaLabel}
+              {metaLabel}
             </span>
           </div>
           <div className="absolute top-0 left-0 right-0 h-1.5" style={{ backgroundColor: color }} />
