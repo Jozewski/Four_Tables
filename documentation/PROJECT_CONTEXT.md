@@ -58,12 +58,14 @@ Related models:
 
 Guardrails:
 
-- A recipe must have at least one ingredient.
-- A recipe must have at least one step.
-- Ingredient order matters.
-- Step order matters.
-- AI-generated recipe data must be validated before it is saved.
-- Optional fields should be normalized to `null` or empty strings according to existing validation behavior.
+- Enforce required recipe relationships in `lib/recipeValidation.ts`, not only in UI copy.
+- Reject create, update, and AI-generated payloads that do not include at least one valid ingredient.
+- Reject create, update, and AI-generated payloads that do not include at least one valid step.
+- Preserve ingredient order by mapping submitted ingredients to sequential `order` values before saving.
+- Preserve step order by mapping submitted steps to sequential `stepNumber` values before saving.
+- Treat AI-generated recipe data as untrusted input and pass it through the same validation path as manual form submissions.
+- Add or update Vitest coverage when changing ingredient, step, or AI output validation.
+- Normalize optional fields through existing validation behavior instead of handling empty strings differently in separate routes or components.
 
 ## AI Rules
 
@@ -109,7 +111,8 @@ npm run check
 - The add/edit modal should guide the user through structured entry.
 - AI assist belongs near the top of the add/edit flow.
 - Avoid large new redesigns during this sprint.
-- Do not add dark mode, auth, social sharing, or delete unless the sprint Must Haves are already complete.
+- Do not add auth unless the sprint Must Haves are already complete.
+- Delete recipes, dark mode, and social sharing are allowed sprint items, but they must not delay AI, CRUD verification, deployment, or user evidence.
 
 ## Scope Rules
 
@@ -123,16 +126,19 @@ Must do:
 Should do:
 
 - Save success confirmation.
+- Delete recipe support with confirmation.
 - AI setup documentation.
 - Final screenshot audit.
+
+Stretch goals:
+
+- Dark mode.
+- Social sharing from recipe detail pages.
 
 Won't do this sprint:
 
 - Authentication.
 - Admin roles.
-- Delete recipes.
-- Dark mode.
-- Social sharing.
 - Full design system rewrite.
 - Multi-user collaboration.
 
@@ -147,6 +153,7 @@ Won't do this sprint:
 - Sprint plan lives in `documentation/SPRINT_PLAN.md`.
 - Project plan lives in `documentation/PLAN.md`.
 - Requirements and TDD prompts live in `documentation/doc.md`.
+- Running TDD proof lives in `documentation/TDD_SUMMARY.md`.
 
 ## Coding Guardrails
 
@@ -156,4 +163,5 @@ Won't do this sprint:
 - Do not run destructive database scripts without confirming intent.
 - Do not commit secrets or `.env` values.
 - Keep documentation dates aligned: deploy Saturday, June 20; demo Monday, June 22.
+- Update `documentation/TDD_SUMMARY.md` when implementing sprint features through red/green/blue.
 - Run tests before saying work is complete.
