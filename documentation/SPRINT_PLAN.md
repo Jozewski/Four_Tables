@@ -118,7 +118,7 @@ These estimates describe task size, not priority. Priority is handled separately
 ### Nice To Have
 
 - Add AI "suggest family note" option.
-- Add dark mode if core workflows and deployment are already green.
+- Add dark mode if core workflows and deployment are already green. Completed on `feature/light-dark-mode-toggle`.
 - Add social sharing for recipe detail pages if deployment prep is not at risk.
 - Add lightweight analytics if setup takes less than 30 minutes.
 - Add AI image suggestion support.
@@ -234,11 +234,12 @@ These estimates describe task size, not priority. Priority is handled separately
   - User story: As a deployer, I know exactly what must be set before production deploy.
   - Definition of Done: Vercel env vars are listed, database access is confirmed, and the deploy branch is ready.
 
-- [ ] Add one stretch feature only if final checks are green.
+- [x] Add one stretch feature only if final checks are green.
   - Type: Polish
   - Estimate: Small (S, under 30 minutes)
   - User story: As a visitor, I can either use the app in a darker visual mode or share a recipe link more easily.
   - Definition of Done: Add either dark mode or social sharing, not both, unless all deploy-blocking work is complete and `npm run check` still passes.
+  - Progress: Dark mode toggle implemented.
 
 ### DEPLOY DAY (Saturday, June 20)
 
@@ -270,10 +271,10 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ## Manual QA Checklist
 
-- [ ] Home page loads without runtime errors.
-- [x] Recipe list page loads all recipes.
+- [x] Home page loads without runtime errors.
+- [x] Recipe list page loads all recipes alphabetically by recipe title.
 - [ ] Filters update the URL and list results.
-- [ ] Recipe detail page loads ingredients, steps, and notes.
+- [x] Recipe detail page loads ingredients, steps, notes, and uploaded image.
 - [x] Add recipe modal opens and closes.
 - [x] Create recipe saves a new recipe with ingredients and steps.
 - [x] Edit recipe saves changed title, ingredients, steps, and notes.
@@ -282,6 +283,9 @@ These estimates describe task size, not priority. Priority is handled separately
 - [x] AI assist returns useful structured data.
 - [x] AI output can be edited before saving.
 - [x] Family recipe image upload accepts a valid image file.
+- [x] Uploaded family recipe image renders after saving.
+- [x] Light/dark mode toggle switches the visible app theme with a sun/moon icon CTA.
+- [x] All Recipes ordering was verified after changing the recipe index query to sort by title.
 - [ ] AI errors are understandable when the API key is missing or the request fails.
 - [x] `npm run lint` passes.
 - [x] `npm run test:run` passes.

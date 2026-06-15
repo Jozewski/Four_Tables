@@ -62,8 +62,8 @@ export default function FilterBar() {
                   className={buttonClass(active)}
                   style={{
                     borderColor: active ? cultureColor[culture] : "var(--border)",
-                    backgroundColor: active ? cultureColor[culture] : "white",
-                    color: active ? "white" : "var(--ink-soft)",
+                    backgroundColor: active ? cultureColor[culture] : "var(--filter-chip-bg)",
+                    color: active ? "#ffffff" : "#0f172a",
                   }}
                 >
                   {culture}
@@ -87,8 +87,8 @@ export default function FilterBar() {
                   className={buttonClass(active)}
                   style={{
                     borderColor: active ? "var(--gold)" : "var(--border)",
-                    backgroundColor: active ? "var(--gold)" : "white",
-                    color: active ? "white" : "var(--ink-soft)",
+                    backgroundColor: active ? "var(--gold)" : "var(--filter-chip-bg)",
+                    color: active ? "#111827" : "#0f172a",
                   }}
                 >
                   {holiday}
@@ -111,9 +111,9 @@ export default function FilterBar() {
                   onClick={() => toggle("category", category)}
                   className={buttonClass(active)}
                   style={{
-                    borderColor: active ? "var(--ink)" : "var(--border)",
-                    backgroundColor: active ? "var(--ink)" : "white",
-                    color: active ? "white" : "var(--ink-soft)",
+                    borderColor: active ? "var(--accent)" : "var(--border)",
+                    backgroundColor: active ? "var(--accent)" : "var(--filter-chip-bg)",
+                    color: active ? "#111827" : "#0f172a",
                   }}
                 >
                   {category}

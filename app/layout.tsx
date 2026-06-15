@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Four Tables",
@@ -32,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
         <div className="flex h-1">
           {cultures.map((culture) => (
@@ -82,9 +83,12 @@ export default function RootLayout({
                   {culture.label}
                 </Link>
               ))}
+              <ThemeToggle />
             </div>
 
-            <details className="mobile-menu relative ml-auto">
+            <div className="mobile-menu ml-auto flex items-center gap-2">
+              <ThemeToggle />
+            <details className="relative">
               <summary className="inline-flex cursor-pointer list-none items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.16em] text-[var(--ink)] shadow-sm">
                 <span className="flex flex-col gap-1">
                   <span className="block h-0.5 w-4 bg-[var(--ink)]" />
@@ -137,6 +141,7 @@ export default function RootLayout({
                 </div>
               </div>
             </details>
+            </div>
           </div>
         </header>
 
