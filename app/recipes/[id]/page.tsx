@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import RecipeImage from "@/components/RecipeImage";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
@@ -16,6 +17,8 @@ type RelatedRecipe = {
   title: string;
   holiday: string | null;
 };
+
+export const dynamic = "force-dynamic";
 
 const cultureColor: Record<string, string> = {
   Italian: "var(--italian)",
@@ -40,11 +43,9 @@ function cultureInitial(cultural: string): string {
   return cultural.slice(0, 1).toUpperCase();
 }
 
-export async function generateStaticParams() {
-  return [];
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  await connection();
+
   const resolvedParams = await params;
   const id = Number(resolvedParams.id);
 
@@ -79,6 +80,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
+  await connection();
+
   const resolvedParams = await params;
   const id = Number(resolvedParams.id);
 
