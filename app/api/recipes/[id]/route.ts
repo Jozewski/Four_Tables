@@ -73,3 +73,36 @@ export async function PUT(
     );
   }
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const resolvedParams = await params;
+    const id = Number(resolvedParams.id);
+
+    if (!Number.isFinite(id)) {
+      return NextResponse.json({ ok: false, errors: ["Invalid recipe id."] }, { status: 400 });
+    }
+
+    const existing = await prisma.recipe.findUnique({ where: { id }, select: { id: true } });
+    if (!existing) {
+      return NextResponse.json({ ok: false, errors: ["Recipe not found."] }, { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.ingredient.deleteMany({ where: { recipeId: id } }),
+      prisma.step.deleteMany({ where: { recipeId: id } }),
+      prisma.familyNote.deleteMany({ where: { recipeId: id } }),
+      prisma.recipe.delete({ where: { id }, select: { id: true } }),
+    ]);
+
+    return NextResponse.json({ ok: true, id });
+  } catch {
+    return NextResponse.json(
+      { ok: false, errors: ["Unable to delete recipe right now."] },
+      { status: 500 },
+    );
+  }
+}

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import FilterBar from "@/components/FilterBar";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import RecipeInlineListItem from "@/components/RecipeInlineListItem";
@@ -8,10 +9,14 @@ type SearchParams = {
   cultural?: string;
   holiday?: string;
   category?: string;
+  status?: string;
 };
 
-async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
-  const where: Record<string, string> = {};
+async function RecipeGrid({ cultural, holiday, category, status }: SearchParams) {
+  const showingArchived = status === "archived";
+  const where: Record<string, unknown> = {
+    archivedAt: showingArchived ? { not: null } : null,
+  };
   if (cultural) where.cultural = cultural;
   if (holiday) where.holiday = holiday;
   if (category) where.category = category;
@@ -28,6 +33,7 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
       category: true,
       prepTime: true,
       imageUrl: true,
+      archivedAt: true,
       ingredients: {
         orderBy: { order: "asc" },
         select: { id: true, order: true, amount: true, unit: true, name: true },
@@ -50,7 +56,7 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
           No recipes found for that combination.
         </p>
         <p className="mt-3 font-body text-sm leading-7 text-[var(--ink-muted)]">
-          Clear a filter or add a new family recipe.
+        Clear a filter or add a new family recipe.
         </p>
       </div>
     );
@@ -63,6 +69,7 @@ async function RecipeGrid({ cultural, holiday, category }: SearchParams) {
         {cultural ? ` / ${cultural}` : ""}
         {holiday ? ` / ${holiday}` : ""}
         {category ? ` / ${category}` : ""}
+        {showingArchived ? " / archived" : ""}
       </p>
       <div className="space-y-5">
         {recipes.map((recipe) => (
@@ -79,7 +86,8 @@ export default async function RecipesPage({
   searchParams: Promise<SearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const { cultural, holiday, category } = resolvedSearchParams;
+  const { cultural, holiday, category, status } = resolvedSearchParams;
+  const showingArchived = status === "archived";
 
   return (
     <div className="portal-shell py-8 md:py-10">
@@ -89,15 +97,24 @@ export default async function RecipesPage({
           <h1 className="font-display text-4xl font-bold leading-tight text-[var(--ink)] md:text-5xl">
             {cultural || holiday || category
               ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
-              : "All Recipes"}
+              : showingArchived
+                ? "Archived Recipes"
+                : "All Recipes"}
           </h1>
           <p className="mt-3 max-w-2xl font-body text-sm leading-7 text-[var(--ink-soft)] md:text-base">
-            Search the family archive by tradition, holiday, or course. Open a recipe
-            for the full cooking view, or add a new one from family notes.
+            {showingArchived
+              ? "Review recipes that were removed from the main browsing list."
+              : "Search the family archive by tradition, holiday, or course. Open a recipe for the full cooking view, or add a new one from family notes."}
           </p>
         </div>
 
-        <div className="flex md:justify-end">
+        <div className="flex flex-wrap gap-3 md:justify-end">
+          <Link
+            href={showingArchived ? "/recipes" : "/recipes?status=archived"}
+            className="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+          >
+            {showingArchived ? "All Recipes" : "Archived"}
+          </Link>
           <RecipeFormModal
             mode="create"
             triggerLabel="Add Recipe"
@@ -121,7 +138,7 @@ export default async function RecipesPage({
           </div>
         }
       >
-        <RecipeGrid cultural={cultural} holiday={holiday} category={category} />
+        <RecipeGrid cultural={cultural} holiday={holiday} category={category} status={status} />
       </Suspense>
     </div>
   );

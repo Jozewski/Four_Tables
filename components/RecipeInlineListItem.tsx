@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArchiveRecipeButton from "@/components/ArchiveRecipeButton";
 import RecipeImage from "@/components/RecipeImage";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import { getSafeImageUrl } from "@/lib/images";
@@ -40,6 +41,7 @@ type Recipe = {
   category: string;
   prepTime: number | null;
   imageUrl: string | null;
+  archivedAt?: Date | null;
   ingredients: Ingredient[];
   steps: Step[];
   notes: FamilyNote[];
@@ -147,6 +149,13 @@ export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
               triggerLabel="Edit"
               triggerClassName="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--ink)]"
             />
+            {recipe.archivedAt ? (
+              <span className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+                Archived
+              </span>
+            ) : (
+              <ArchiveRecipeButton recipeId={recipe.id} recipeTitle={recipe.title} />
+            )}
           </div>
         </div>
 

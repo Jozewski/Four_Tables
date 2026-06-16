@@ -432,23 +432,30 @@ a {
   background: currentColor;
 }
 
-.theme-toggle-dark .theme-toggle-track {
+:root[data-theme="dark"] .theme-toggle-track {
   background: linear-gradient(135deg, #0f172a, #334155);
 }
 
-.theme-toggle-dark .theme-toggle-thumb {
+:root[data-theme="dark"] .theme-toggle-thumb {
   transform: translateX(2.25rem);
   background: #e2e8f0;
   color: #0f172a;
 }
 
-.theme-toggle-dark .theme-toggle-thumb::before {
+:root[data-theme="dark"] .theme-toggle-thumb::before {
   box-shadow: -0.22rem -0.05rem 0 0 #e2e8f0;
   background: #0f172a;
 }
 
-.theme-toggle-light .theme-toggle-icon-sun,
-.theme-toggle-dark .theme-toggle-icon-moon {
+.theme-toggle-icon-sun {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .theme-toggle-icon-sun {
+  color: var(--ink-muted);
+}
+
+:root[data-theme="dark"] .theme-toggle-icon-moon {
   color: var(--ink);
 }
 

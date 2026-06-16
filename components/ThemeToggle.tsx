@@ -1,15 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 const storageKey = "four-tables-theme";
+const themeChangeEvent = "four-tables-theme-change";
 
 type Theme = "light" | "dark";
 type IconProps = {
   className?: string;
 };
 
-function getInitialTheme(): Theme {
+function getServerTheme(): Theme {
+  return "light";
+}
+
+function getClientTheme(): Theme {
   if (typeof window === "undefined") return "light";
 
   const saved = window.localStorage.getItem(storageKey);
@@ -20,9 +25,23 @@ function getInitialTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-function applyTheme(theme: Theme) {
+function subscribeToThemeChanges(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(themeChangeEvent, onStoreChange);
+
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(themeChangeEvent, onStoreChange);
+  };
+}
+
+function applyDocumentTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
+}
+
+function saveTheme(theme: Theme) {
   window.localStorage.setItem(storageKey, theme);
+  window.dispatchEvent(new Event(themeChangeEvent));
 }
 
 function SunIcon({ className }: IconProps) {
@@ -68,25 +87,23 @@ function MoonIcon({ className }: IconProps) {
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const theme = useSyncExternalStore(subscribeToThemeChanges, getClientTheme, getServerTheme);
 
   useEffect(() => {
-    applyTheme(theme);
+    applyDocumentTheme(theme);
   }, [theme]);
 
   function toggleTheme() {
-    setTheme((current) => (current === "dark" ? "light" : "dark"));
+    saveTheme(theme === "dark" ? "light" : "dark");
   }
-
-  const isDark = theme === "dark";
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      className={`theme-toggle ${isDark ? "theme-toggle-dark" : "theme-toggle-light"}`}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="theme-toggle"
+      aria-label="Toggle color theme"
+      title="Toggle color theme"
     >
       <span className="theme-toggle-icon theme-toggle-icon-sun">
         <SunIcon className="h-4 w-4" />
