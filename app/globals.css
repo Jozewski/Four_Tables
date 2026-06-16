@@ -511,6 +511,47 @@ a {
   color: var(--ink);
 }
 
+.recipe-share-primary {
+  border: 1px solid transparent;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(24, 24, 27, 0.16);
+}
+
+.recipe-share-primary:hover {
+  border-color: var(--accent);
+  opacity: 0.92;
+}
+
+.recipe-detail-culture-pill,
+.recipe-detail-meta-pill {
+  backdrop-filter: blur(4px);
+}
+
+:root[data-theme="dark"] .recipe-share-primary {
+  border-color: rgba(56, 189, 248, 0.34);
+  background: #38bdf8;
+  color: #082f49;
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.22);
+}
+
+:root[data-theme="dark"] .recipe-share-primary:hover {
+  border-color: #bae6fd;
+  background: #7dd3fc;
+  color: #082f49;
+}
+
+:root[data-theme="dark"] .recipe-detail-culture-pill {
+  background: rgba(15, 23, 42, 0.76);
+  color: #f8fafc;
+}
+
+:root[data-theme="dark"] .recipe-detail-meta-pill {
+  border-color: rgba(148, 163, 184, 0.42);
+  background: rgba(248, 250, 252, 0.9);
+  color: #0f172a;
+}
+
 .recipe-carousel {
   display: grid;
   grid-auto-flow: column;

@@ -87,11 +87,7 @@ export default function RecipeInlineListItem({
 
   return (
     <article className="recipe-list-item">
-      <Link
-        href={`/recipes/${recipe.id}`}
-        className="recipe-list-media"
-        aria-label={`Open ${recipe.title}`}
-      >
+      <div className="recipe-list-media" aria-hidden="true">
         {imageUrl ? (
           <RecipeImage
             src={imageUrl}
@@ -109,7 +105,7 @@ export default function RecipeInlineListItem({
             {cultureInitial(recipe.cultural)}
           </div>
         )}
-      </Link>
+      </div>
 
       <div className="recipe-list-content">
         <div className="min-w-0">

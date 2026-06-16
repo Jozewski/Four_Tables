@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import RecipeImage from "@/components/RecipeImage";
+import RecipeShareActions from "@/components/RecipeShareActions";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site";
 import {
   getBreadcrumbStructuredData,
   getRecipeStructuredData,
@@ -97,6 +99,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   const imageUrl = getSafeImageUrl(recipe.imageUrl);
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
+  const recipeUrl = `${getSiteUrl()}/recipes/${recipe.id}`;
 
   const related = await prisma.recipe.findMany({
     where: { cultural: recipe.cultural, id: { not: recipe.id } },
@@ -176,12 +179,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className="rounded-full border border-white/60 bg-black/25 px-3 py-1.5 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.22em]"
+                  className="recipe-detail-culture-pill rounded-full border border-white/60 bg-black/25 px-3 py-1.5 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.22em]"
                   style={{ borderColor: color }}
                 >
                   {recipe.cultural}
                 </span>
-                <span className="rounded-full border border-white/25 bg-white/90 px-3 py-1.5 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink)]">
+                <span className="recipe-detail-meta-pill rounded-full border border-white/25 bg-white/90 px-3 py-1.5 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink)]">
                   {recipe.holiday ?? recipe.category}
                 </span>
               </div>
@@ -201,6 +204,13 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 {recipe.description}
               </p>
             )}
+
+            <RecipeShareActions
+              title={recipe.title}
+              description={recipe.description}
+              url={recipeUrl}
+              imageUrl={imageUrl}
+            />
 
             <div className="mt-7 grid grid-cols-2 gap-3 border-t border-[var(--border)] pt-6 xl:grid-cols-4">
               {recipe.prepTime && (

@@ -35,7 +35,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 15 test files and 38 total tests. The Playwright accessibility suite has 1 test file and 4 total tests.
+The current Vitest suite has 16 test files and 42 total tests. The Playwright accessibility suite has 1 test file and 4 total tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -97,6 +97,22 @@ Suite: `RecipeFormModal accessibility`
 1. `has no detectable WCAG A/AA accessibility violations when the create dialog is open`
    - Proves the open add-recipe dialog has no detectable axe violations at the modal component layer.
    - Covers dialog semantics and labeled interactive fields in a deterministic client-component test.
+
+### `__tests__/RecipeShareActions.test.tsx`
+
+Suite: `RecipeShareActions`
+
+1. `uses the native share sheet when available`
+   - Proves the primary share CTA prefers the browser-native share flow.
+
+2. `copies the recipe link and confirms the action`
+   - Proves the copy-link CTA writes the canonical recipe URL and gives visible feedback.
+
+3. `falls back to copying the link when native sharing is unavailable`
+   - Proves the primary share CTA still works on browsers without `navigator.share`.
+
+4. `renders outbound email and Pinterest share links`
+   - Proves the component exposes lightweight outbound sharing actions without SDK dependencies.
 
 ### `tests/accessibility.spec.ts`
 
@@ -898,6 +914,68 @@ Result:
 - 15 Vitest files passed.
 - 38 Vitest tests passed.
 - 4 Playwright accessibility tests passed.
+
+### 2026-06-16: Recipe Detail Social Sharing
+
+Goal:
+
+- Add recipe-detail sharing controls that work on the deployed site and follow the existing V2 roadmap without adding third-party embed SDKs.
+
+:x: Red:
+
+- Added `__tests__/RecipeShareActions.test.tsx` before implementation.
+- The first test run failed because `@/components/RecipeShareActions` did not exist.
+- That failure proved the sharing surface was still missing from the app.
+
+Failure proof:
+
+```bash
+npm run test:run -- __tests__/RecipeShareActions.test.tsx
+```
+
+Result:
+
+- Vitest failed to resolve the new sharing component import.
+
+:white_check_mark: Green:
+
+- Added `components/RecipeShareActions.tsx`.
+- Added a primary `Share` CTA that uses `navigator.share` when available.
+- Added a `Copy Link` CTA that writes the canonical recipe URL to the clipboard.
+- Added direct `Email` and `Pinterest` share links.
+- Wired the new share actions into `app/recipes/[id]/page.tsx`.
+
+Verification:
+
+```bash
+npm run test:run -- __tests__/RecipeShareActions.test.tsx
+```
+
+Result:
+
+- 1 Vitest file passed.
+- 4 sharing tests passed.
+
+:large_blue_circle: Blue:
+
+- Kept the share UI limited to recipe detail pages so the broader browsing interface stays focused.
+- Reused the canonical site URL helper so share links stay aligned with sitemap, robots, metadata, and redirects.
+- Kept platform support lightweight by using native share, clipboard, and standard outbound links instead of fragile SDK-based integrations.
+
+Final verification:
+
+```bash
+npm run lint
+npm run test:run
+npm run build
+```
+
+Result:
+
+- Lint passed.
+- 16 Vitest files passed.
+- 42 Vitest tests passed.
+- Production build passed.
 
 Use this template for future sprint work.
 
