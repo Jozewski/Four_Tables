@@ -110,6 +110,8 @@ npm run build
 npm run start
 npm run lint
 npm run test:run
+npm run test:a11y
+npm run test:responsive
 npm run check
 ```
 
@@ -133,6 +135,7 @@ Current automated coverage includes:
 - theme toggle behavior
 - recipe detail sharing behavior
 - accessibility checks for key public and contributor-facing flows
+- responsive layout checks across desktop, tablet, iPhone-sized, and Android-sized viewports
 
 Manual QA is also used for:
 
@@ -143,6 +146,13 @@ Manual QA is also used for:
 - AI-assisted recipe drafting
 - recipe detail sharing
 - responsive UI checks
+
+Responsive browser coverage can be run locally or against production:
+
+```powershell
+$env:PLAYWRIGHT_BASE_URL="https://jozewski.tech"
+npm run test:responsive
+```
 
 ## Deployment
 
