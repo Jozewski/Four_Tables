@@ -1,12 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import RecipeImage from "@/components/RecipeImage";
-import RecipeShareActionsClient from "@/components/RecipeShareActionsClient";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
 import { prisma } from "@/lib/prisma";
-import { getSiteUrl } from "@/lib/site";
 import {
   getBreadcrumbStructuredData,
   getRecipeStructuredData,
@@ -99,7 +97,6 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   const imageUrl = getSafeImageUrl(recipe.imageUrl);
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
-  const recipeUrl = `${getSiteUrl()}/recipes/${recipe.id}`;
 
   const related = await prisma.recipe.findMany({
     where: { cultural: recipe.cultural, id: { not: recipe.id } },
@@ -204,13 +201,6 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 {recipe.description}
               </p>
             )}
-
-            <RecipeShareActionsClient
-              title={recipe.title}
-              description={recipe.description}
-              url={recipeUrl}
-              imageUrl={imageUrl}
-            />
 
             <div className="mt-7 grid grid-cols-2 gap-3 border-t border-[var(--border)] pt-6 xl:grid-cols-4">
               {recipe.prepTime && (
