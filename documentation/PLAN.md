@@ -287,3 +287,9 @@ Planned Version 2 focus:
 - Open Graph metadata
 - sitemap generation
 - recipe-level social sharing
+
+Current Version 2 status:
+
+- canonical metadata, Open Graph metadata, sitemap, robots, and structured data are implemented
+- recipe detail pages now render at request time in production
+- recipe-level social sharing is implemented and manually verified on the deployed site

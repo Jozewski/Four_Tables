@@ -52,7 +52,7 @@ Completed on the current V2 branches:
 - `sitemap.xml` generation for public routes and recipe detail pages
 - `robots.txt` generation
 - `WebSite`, `CollectionPage`, `ItemList`, `Recipe`, and `BreadcrumbList` structured data
-- canonical host hardening for `jozewski.tech` with a `www` to apex redirect
+- recipe-detail route moved to explicit request-time rendering so deployed recipe pages stay stable on Vercel
 - recipe-detail social sharing controls
 
 ### 1. Canonical Metadata And SEO Tags
@@ -130,6 +130,8 @@ Implemented on `feature/v2-social-sharing-tdd`:
 - Add a dedicated `Copy Link` CTA
 - Add direct `Email` and `Pinterest` share links
 - Limit sharing UI to recipe detail pages
+- Keep the live share surface client-only and below the recipe content block
+- Manual production testing confirmed the sharing controls work as expected
 
 Expected value:
 
