@@ -447,3 +447,10 @@ Key Version 2 additions:
 - Open Graph metadata
 - sitemap generation
 - social sharing links
+
+Current Version 2 progress:
+
+- canonical metadata, Open Graph metadata, sitemap, robots, and structured data are implemented
+- recipe detail pages use request-time rendering in production
+- recipe-detail sharing is implemented with native share, copy link, email, and Pinterest actions
+- deployed manual testing confirmed sharing works as expected

@@ -943,7 +943,8 @@ Result:
 - Added a primary `Share` CTA that uses `navigator.share` when available.
 - Added a `Copy Link` CTA that writes the canonical recipe URL to the clipboard.
 - Added direct `Email` and `Pinterest` share links.
-- Wired the new share actions into `app/recipes/[id]/page.tsx`.
+- Reintroduced the share actions safely through a dedicated client wrapper after the recipe detail route was corrected to use request-time rendering.
+- Wired the new share actions back into `app/recipes/[id]/page.tsx` below the recipe content so the sharing surface does not participate in SSR metadata or Prisma data loading.
 
 Verification:
 
@@ -961,6 +962,8 @@ Result:
 - Kept the share UI limited to recipe detail pages so the broader browsing interface stays focused.
 - Reused the canonical site URL helper so share links stay aligned with sitemap, robots, metadata, and redirects.
 - Kept platform support lightweight by using native share, clipboard, and standard outbound links instead of fragile SDK-based integrations.
+- Moved the live share surface out of the recipe hero and into a lower-risk client-only section after manual production debugging showed the detail page needed to stay explicitly dynamic.
+- Refined dark-mode CTA contrast and pill borders so the share action matches the rest of the recipe detail UI.
 
 Final verification:
 
@@ -976,6 +979,7 @@ Result:
 - 16 Vitest files passed.
 - 42 Vitest tests passed.
 - Production build passed.
+- Manual QA confirmed recipe sharing works as expected on the deployed site after the detail-route rendering fix.
 
 Use this template for future sprint work.
 

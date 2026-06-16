@@ -102,10 +102,7 @@ export default function RecipeShareActions({ title, description, url, imageUrl }
           Pinterest
         </a>
       </div>
-      <p
-        className="mt-3 min-h-5 font-body text-sm text-[var(--ink-muted)]"
-        aria-live="polite"
-      >
+      <p className="sr-only" aria-live="polite">
         {feedback}
       </p>
     </div>
