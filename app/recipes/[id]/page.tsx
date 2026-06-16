@@ -29,8 +29,7 @@ function cultureInitial(cultural: string): string {
 }
 
 export async function generateStaticParams() {
-  const recipes = await prisma.recipe.findMany({ select: { id: true } });
-  return recipes.map((recipe) => ({ id: String(recipe.id) }));
+  return [];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
