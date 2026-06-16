@@ -239,6 +239,13 @@ These estimates describe task size, not priority. Priority is handled separately
   - Definition of Done: Tests prove unauthenticated/unauthorized calls cannot create, update, archive, upload images, or use AI assist.
   - Progress: Focused route and UI tests passed for contributor tokens, sign-in, protected route rejection, authenticated archive/delete paths, and hidden public controls.
 
+- [x] Add WCAG AA accessibility coverage.
+  - Type: Test
+  - Estimate: Medium (M, 30-60 minutes)
+  - User story: As a reviewer, I can use the key public and contributor screens without obvious accessibility failures.
+  - Definition of Done: Browser-level axe checks pass for the home page, recipes index, contributor page, and signed-in contributor recipes page, and the add-recipe modal has a passing component-level axe test.
+  - Progress: Added Playwright accessibility coverage plus a modal accessibility test; `npm run test:a11y` and `npm run test:run` are passing.
+
 - [ ] Fix only deploy-blocking bugs.
   - Type: Fix
   - Estimate: Medium (M, 30-60 minutes)
@@ -256,6 +263,7 @@ These estimates describe task size, not priority. Priority is handled separately
   - Estimate: Small (S, under 30 minutes)
   - User story: As a deployer, I know exactly what must be set before production deploy.
   - Definition of Done: Vercel env vars are listed, database access is confirmed, and the deploy branch is ready.
+  - Progress: Neon production compute was updated from `0.25 CU -> 2 CU` to `1 CU -> 2 CU`; scale-to-zero remains a plan-controlled tradeoff to verify during live smoke testing.
 
 - [x] Add one stretch feature only if final checks are green.
   - Type: Polish
@@ -318,11 +326,13 @@ These estimates describe task size, not priority. Priority is handled separately
 - [x] App owner can invite contributors by setting `CONTRIBUTOR_INVITE_CODE` and `AUTH_SECRET` in local/Vercel env vars.
 - [x] `npm run lint` passes.
 - [x] `npm run test:run` passes.
+- [x] `npm run test:a11y` passes.
 - [x] `npm run build` passes.
 - [x] `npm run check` passes.
 - [ ] Live Vercel URL works on desktop.
 - [ ] Live Vercel URL works on mobile.
 - [ ] User evidence is captured from 2-3 real users.
+- [ ] Neon production branch wake-from-idle latency is acceptable for demo use.
 
 ## Peer Review Notes
 

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import ContributorSignInForm from "@/components/ContributorSignInForm";
-import ContributorSignOutButton from "@/components/ContributorSignOutButton";
 import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 
 async function hasContributorAccess() {
@@ -28,16 +27,13 @@ export default async function ContributorPage() {
 
         {signedIn ? (
           <div className="mt-7 rounded-[1.1rem] border border-[var(--border)] bg-[var(--surface-soft)] p-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.16em] text-[var(--accent)]">
-                  Signed In
-                </p>
-                <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">
-                  Contributor tools are available until you sign out.
-                </p>
-              </div>
-              <ContributorSignOutButton />
+            <div>
+              <p className="font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.16em] text-[var(--accent)]">
+                Signed In
+              </p>
+              <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">
+                Contributor tools are available while your header log out control remains active.
+              </p>
             </div>
             <Link
               href="/recipes"

@@ -12,8 +12,11 @@ This document tracks the red/green/blue testing work used during the Four Tables
 
 ```bash
 npm run test:run
+npm run test:a11y
 npm run check
 ```
+
+`npm run test:a11y` runs browser accessibility checks with Playwright and axe against the key public and contributor recipe pages.
 
 `npm run check` runs lint, Vitest, and the production build.
 
@@ -32,7 +35,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 8 test files and 19 total tests.
+The current Vitest suite has 15 test files and 38 total tests. The Playwright accessibility suite has 1 test file and 4 total tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -86,6 +89,30 @@ Suite: `RecipeFormModal AI assist`
 2. `shows AI assist errors returned by the server`
    - Proves the modal displays server-returned AI errors.
    - Proves rough notes remain in the textarea after an AI failure.
+
+### `__tests__/RecipeFormModal.accessibility.test.tsx`
+
+Suite: `RecipeFormModal accessibility`
+
+1. `has no detectable WCAG A/AA accessibility violations when the create dialog is open`
+   - Proves the open add-recipe dialog has no detectable axe violations at the modal component layer.
+   - Covers dialog semantics and labeled interactive fields in a deterministic client-component test.
+
+### `tests/accessibility.spec.ts`
+
+Suite: `WCAG AA accessibility`
+
+1. `home page has no detectable WCAG A/AA violations`
+   - Proves the public landing page passes browser-level axe checks for WCAG A/AA tags.
+
+2. `recipes index has no detectable WCAG A/AA violations`
+   - Proves the public recipe index passes browser-level axe checks for WCAG A/AA tags.
+
+3. `contributor page has no detectable WCAG A/AA violations`
+   - Proves the contributor sign-in page passes browser-level axe checks for WCAG A/AA tags.
+
+4. `signed-in contributor recipes page has no detectable WCAG A/AA violations`
+   - Proves the authenticated contributor recipe index state also passes browser-level axe checks.
 
 ### `__tests__/images.test.ts`
 
@@ -807,6 +834,70 @@ Result:
 - 14 test files passed.
 - 37 tests passed.
 - Production build passed after rerunning with normal database/network access.
+
+### 2026-06-16: WCAG AA Accessibility Coverage
+
+Goal:
+
+- Add automated accessibility checks that target WCAG 2.1/2.2 Level AA for the most important public and contributor-facing UI states.
+
+:x: Red:
+
+- Added `tests/accessibility.spec.ts` for browser-level axe checks.
+- The first Playwright run failed on real contrast issues in the public UI, including accent and muted text combinations that did not meet AA contrast.
+- The initial full test run also exposed a test-runner boundary problem because Vitest was trying to execute the Playwright spec.
+
+Failure proof:
+
+```bash
+npm run test:a11y
+```
+
+Result:
+
+- Accessibility suite failed with WCAG contrast violations.
+
+:white_check_mark: Green:
+
+- Adjusted core light-theme tokens in `app/globals.css` to improve AA contrast for accent, muted, and category colors.
+- Updated the contributor sign-in CTA in `app/recipes/page.tsx` so the intended white text color is preserved.
+- Added `__tests__/RecipeFormModal.accessibility.test.tsx` to cover the add-recipe dialog with axe in a deterministic component test.
+- Updated `vitest.config.mts` to exclude Playwright specs from Vitest so browser and unit test runners stay separated.
+
+Verification:
+
+```bash
+npm run test:a11y
+npm run test:run -- __tests__/RecipeFormModal.accessibility.test.tsx
+```
+
+Result:
+
+- 4 Playwright accessibility tests passed.
+- 1 modal accessibility component test passed.
+
+:large_blue_circle: Blue:
+
+- Kept browser-level axe checks focused on real rendered pages where contrast is meaningful.
+- Kept modal accessibility coverage at the component layer because the modal trigger path was less deterministic than the modal markup itself.
+- Preserved one clear separation:
+  - Playwright for rendered page accessibility
+  - Vitest for component accessibility and application logic
+
+Final verification:
+
+```bash
+npm run lint
+npm run test:run
+npm run test:a11y
+```
+
+Result:
+
+- Lint passed.
+- 15 Vitest files passed.
+- 38 Vitest tests passed.
+- 4 Playwright accessibility tests passed.
 
 Use this template for future sprint work.
 

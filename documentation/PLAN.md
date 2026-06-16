@@ -10,6 +10,13 @@ Four Tables is a family recipe archive focused on preserving holiday and cultura
 
 The project is being refactored to include an OpenAI-powered recipe assistant. The assistant will help users turn rough family recipe notes into structured recipe fields that can be reviewed, edited, and saved.
 
+Supporting implementation records:
+
+- [Sprint Plan](./SPRINT_PLAN.md)
+- [TDD Summary](./TDD_SUMMARY.md)
+- [Accessibility Audit](./ACCESSIBILITY_AUDIT.md)
+- [Screen Reader QA](./SCREEN_READER_QA.md)
+
 ## Purpose
 
 The purpose of Four Tables is to make family recipes easier to preserve, organize, and share. Many family recipes exist as handwritten notes, memories, or informal instructions. This app gives those recipes a consistent structure while still keeping the family context through notes and cultural/holiday groupings.
@@ -40,7 +47,7 @@ The purpose of Four Tables is to make family recipes easier to preserve, organiz
 - PostgreSQL hosted with Neon
 - OpenAI API for the recipe assistant
 - Vitest and React Testing Library for focused TDD coverage
-- Playwright for UI screenshot/audit support
+- Playwright for UI screenshot/audit support and WCAG accessibility checks
 - Vercel for deployment
 
 ## Data Model
@@ -156,9 +163,12 @@ Verification commands:
 ```bash
 npm run lint
 npm run test:run
+npm run test:a11y
 npm run build
 npm run check
 ```
+
+Accessibility evidence is tracked separately in [ACCESSIBILITY_AUDIT.md](./ACCESSIBILITY_AUDIT.md).
 
 ## Deployment Plan
 
@@ -173,6 +183,14 @@ Required production environment variables:
 - `CONTRIBUTOR_INVITE_CODE`
 - `AUTH_SECRET`
 
+Neon production branch notes:
+
+- Production branch: `production`
+- Primary compute autoscaling range: `1 CU -> 2 CU`
+- This was raised from `0.25 CU -> 2 CU` to reduce weak idle-state performance before demo/deploy.
+- Neon still shows suspend/scale-to-zero behavior as plan-controlled, so occasional cold-start latency may still occur after inactivity.
+- Read replicas were intentionally deferred because this project does not currently have read-heavy production traffic.
+
 After deployment, the live app will be smoke-tested for:
 
 - Home page
@@ -183,6 +201,7 @@ After deployment, the live app will be smoke-tested for:
 - Archive recipe
 - Contributor access gating
 - AI assist
+- Accessibility smoke test against the deployed experience
 - Mobile layout
 
 ## Sprint Timeline
