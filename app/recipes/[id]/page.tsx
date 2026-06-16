@@ -5,6 +5,12 @@ import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
 import { prisma } from "@/lib/prisma";
 
+type RelatedRecipe = {
+  id: number;
+  title: string;
+  holiday: string | null;
+};
+
 const cultureColor: Record<string, string> = {
   Italian: "var(--italian)",
   Dutch: "var(--dutch)",
@@ -193,7 +199,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             More {recipe.cultural} Recipes
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
-            {related.map((relatedRecipe) => (
+            {related.map((relatedRecipe: RelatedRecipe) => (
               <Link
                 key={relatedRecipe.id}
                 href={`/recipes/${relatedRecipe.id}`}
