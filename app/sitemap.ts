@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3002").replace(/\/+$/, "");
+const siteUrl = getSiteUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connection();

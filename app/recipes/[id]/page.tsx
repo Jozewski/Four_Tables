@@ -5,6 +5,11 @@ import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
 import { prisma } from "@/lib/prisma";
+import {
+  getBreadcrumbStructuredData,
+  getRecipeStructuredData,
+  toJsonLd,
+} from "@/lib/structuredData";
 
 type RelatedRecipe = {
   id: number;
@@ -99,8 +104,37 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
     take: 3,
   });
 
+  const recipeStructuredData = getRecipeStructuredData({
+    id: recipe.id,
+    title: recipe.title,
+    description: recipe.description,
+    cultural: recipe.cultural,
+    holiday: recipe.holiday,
+    category: recipe.category,
+    prepTime: recipe.prepTime,
+    imageUrl,
+    createdAt: recipe.createdAt,
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+  });
+
+  const breadcrumbStructuredData = getBreadcrumbStructuredData([
+    { name: "Four Tables", path: "/" },
+    { name: "All Recipes", path: "/recipes" },
+    { name: recipe.cultural, path: `/recipes?cultural=${encodeURIComponent(recipe.cultural)}` },
+    { name: recipe.title, path: `/recipes/${recipe.id}` },
+  ]);
+
   return (
     <div className="portal-shell py-8 md:py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(recipeStructuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(breadcrumbStructuredData) }}
+      />
       <nav className="mb-6 font-sans-alt text-[11px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)] fade-up">
         <Link href="/recipes" className="transition-colors hover:text-[var(--ink)]">
           All Recipes

@@ -7,6 +7,7 @@ import RecipeFormModal from "@/components/RecipeFormModal";
 import RecipeInlineListItem from "@/components/RecipeInlineListItem";
 import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
+import { getCollectionPageStructuredData, toJsonLd } from "@/lib/structuredData";
 
 type RecipeListItemRecipe = {
   id: number;
@@ -135,9 +136,45 @@ export default async function RecipesPage({
   const { cultural, holiday, category, status } = resolvedSearchParams;
   const showingArchived = status === "archived";
   const canContribute = await hasContributorAccess();
+  const listingRecipes = await prisma.recipe.findMany({
+    where: {
+      archivedAt: showingArchived ? { not: null } : null,
+      ...(cultural ? { cultural } : {}),
+      ...(holiday ? { holiday } : {}),
+      ...(category ? { category } : {}),
+    },
+    orderBy: [{ title: "asc" }],
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      cultural: true,
+      holiday: true,
+      category: true,
+      imageUrl: true,
+    },
+  });
+
+  const collectionStructuredData = getCollectionPageStructuredData({
+    name:
+      cultural || holiday || category
+        ? `${cultural ?? ""} ${holiday ?? ""} ${category ?? ""} Recipes`.trim()
+        : showingArchived
+          ? "Archived Recipes"
+          : "All Recipes",
+    description: showingArchived
+      ? "Review recipes that were removed from the main browsing list."
+      : "Browse the full Four Tables recipe archive by tradition, holiday, and category.",
+    path: "/recipes",
+    recipes: listingRecipes,
+  });
 
   return (
     <div className="portal-shell py-8 md:py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(collectionStructuredData) }}
+      />
       <div className="recipe-index-hero mb-8">
         <div>
           <p className="eyebrow mb-3">Recipe index</p>

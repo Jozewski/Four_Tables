@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
+import { getSiteUrl } from "@/lib/site";
+import { toJsonLd } from "@/lib/structuredData";
  
 const cultureColor: Record<string, string> = {
   Italian: "var(--italian)",
@@ -25,6 +27,7 @@ export const metadata: Metadata = {
 };
  
 export default async function HomePage() {
+  const siteUrl = getSiteUrl();
   const recipes = await prisma.recipe.findMany({
     orderBy: [{ cultural: "asc" }, { title: "asc" }],
     select: {
@@ -67,8 +70,29 @@ export default async function HomePage() {
     { label: "Holiday collections", value: String(new Set(recipes.map((recipe: Recipe) => recipe.holiday).filter(Boolean)).size) },
   ];
 
+  const collectionStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Four Tables",
+    url: siteUrl,
+    description: "A browse-first recipe home for four family traditions.",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Four Tables",
+      url: siteUrl,
+    },
+    about: cultures.map((culture) => ({
+      "@type": "Thing",
+      name: `${culture} family recipes`,
+    })),
+  };
+
   return (
     <div className="portal-shell py-10 md:py-14 space-y-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(collectionStructuredData) }}
+      />
       <section className="fade-up">
         <div className="soft-panel rounded-[2rem] p-8 md:p-10 overflow-hidden relative">
           <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[var(--accent-soft)] to-transparent opacity-80 pointer-events-none" />

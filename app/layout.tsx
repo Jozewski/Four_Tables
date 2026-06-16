@@ -5,8 +5,10 @@ import { cookies } from "next/headers";
 import ContributorSignOutButton from "@/components/ContributorSignOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
+import { getSiteUrl } from "@/lib/site";
+import { getWebsiteStructuredData, toJsonLd } from "@/lib/structuredData";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3002";
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -56,10 +58,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const signedIn = await hasContributorAccess();
+  const websiteStructuredData = getWebsiteStructuredData();
 
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toJsonLd(websiteStructuredData) }}
+        />
         <div className="flex h-1">
           {cultures.map((culture) => (
             <div
