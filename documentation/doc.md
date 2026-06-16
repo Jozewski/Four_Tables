@@ -8,6 +8,13 @@ The current sprint adds an OpenAI-powered recipe assistant that helps turn rough
 
 Phase 3 adds invite-only contributor access before deploy: public visitors can browse and read recipes, but recipe-changing actions must be limited to authorized contributors.
 
+Related implementation records:
+
+- [TDD Summary](./TDD_SUMMARY.md)
+- [Sprint Plan](./SPRINT_PLAN.md)
+- [Accessibility Audit](./ACCESSIBILITY_AUDIT.md)
+- [Screen Reader QA](./SCREEN_READER_QA.md)
+
 ## Target Users
 
 - Family members who want to preserve recipes from relatives.
@@ -140,6 +147,7 @@ Acceptance criteria:
 - Vitest
 - React Testing Library
 - Playwright for screenshot and browser QA support
+- Playwright plus axe-core for WCAG accessibility coverage
 - Vercel deployment
 
 ### Data Model
@@ -243,10 +251,23 @@ Required Vercel environment variables:
 - `CONTRIBUTOR_INVITE_CODE`
 - `AUTH_SECRET`
 
+Neon production configuration used for deploy prep:
+
+- Production branch compute autoscaling range is set to `1 CU -> 2 CU`.
+- This replaces the earlier `0.25 CU -> 2 CU` setting to improve production responsiveness.
+- Neon suspend behavior remains plan-controlled, so cold-start latency after inactivity is still a known tradeoff.
+- Read replicas are not configured because they are unnecessary for the current project workload.
+
 Final verification command:
 
 ```bash
 npm run check
+```
+
+Accessibility verification command:
+
+```bash
+npm run test:a11y
 ```
 
 ## Prompts For Writing Tests
@@ -391,6 +412,7 @@ npm run check
 - AI assist accepts rough notes.
 - AI assist fills editable fields.
 - AI failures show clear messages.
+- Browser accessibility checks pass for public and contributor-facing pages.
 - Production build passes.
 - Live Vercel URL works on desktop and mobile.
 

@@ -142,6 +142,7 @@ export default async function RecipesPage({
             <Link
               href="/contributor"
               className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_10px_24px_rgba(217,106,39,0.25)]"
+              style={{ color: "#fff" }}
             >
               Contributor Sign In
             </Link>
