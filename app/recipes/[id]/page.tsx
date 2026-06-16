@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import RecipeImage from "@/components/RecipeImage";
-import RecipeShareActions from "@/components/RecipeShareActions";
+import RecipeShareActionsClient from "@/components/RecipeShareActionsClient";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
 import { getSafeImageUrl } from "@/lib/images";
@@ -205,7 +205,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               </p>
             )}
 
-            <RecipeShareActions
+            <RecipeShareActionsClient
               title={recipe.title}
               description={recipe.description}
               url={recipeUrl}
