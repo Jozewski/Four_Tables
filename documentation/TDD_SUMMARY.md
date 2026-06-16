@@ -13,6 +13,7 @@ This document tracks the red/green/blue testing work used during the Four Tables
 ```bash
 npm run test:run
 npm run test:a11y
+npm run test:responsive
 npm run check
 ```
 
@@ -35,7 +36,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 16 test files and 42 total tests. The Playwright accessibility suite has 1 test file and 4 total tests.
+The current Vitest suite has 16 test files and 42 total tests. The Playwright browser suite has 2 test files: 1 accessibility file with 4 tests and 1 responsive layout file with 20 tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -129,6 +130,25 @@ Suite: `WCAG AA accessibility`
 
 4. `signed-in contributor recipes page has no detectable WCAG A/AA violations`
    - Proves the authenticated contributor recipe index state also passes browser-level axe checks.
+
+### `tests/responsive-layout.spec.ts`
+
+Suite: `responsive public layout`
+
+1. `home page layout stays usable across viewport sizes`
+   - Proves the landing page hero and header remain usable across desktop, tablet, and mobile widths.
+
+2. `recipes index layout stays usable across viewport sizes`
+   - Proves the recipes index, filter area, and header remain usable without horizontal overflow.
+
+3. `recipe detail layout stays usable across viewport sizes`
+   - Proves the public recipe detail page remains usable across the tested device set.
+
+4. `recipe detail tabs and content blocks fit cleanly without overlap`
+   - Proves the ingredients, steps, and notes controls remain visible and the detail layout does not overflow.
+
+5. `contributor page layout stays usable across viewport sizes`
+   - Proves the contributor access page remains usable across the tested device set.
 
 ### `__tests__/images.test.ts`
 
@@ -980,6 +1000,85 @@ Result:
 - 42 Vitest tests passed.
 - Production build passed.
 - Manual QA confirmed recipe sharing works as expected on the deployed site after the detail-route rendering fix.
+
+### 2026-06-16: Responsive Layout Coverage
+
+Goal:
+
+- Add browser-level layout regression coverage for the public site across desktop, tablet, and multiple mobile device sizes.
+
+:x: Red:
+
+- Added `tests/responsive-layout.spec.ts` against the core public flows.
+- The first run exposed unstable assumptions in the test design:
+  - device presets that required browsers not installed in this repo
+  - selectors that were too specific to optional UI states
+  - contributor form assertions that were too loose
+
+Failure proof:
+
+```bash
+npm run test:responsive
+```
+
+Result:
+
+- The first responsive run failed across unsupported browser presets and over-specific selectors.
+
+:white_check_mark: Green:
+
+- Updated `playwright.config.ts` to support both local and deployed execution through `PLAYWRIGHT_BASE_URL` or `BASE_URL`.
+- Added device coverage for:
+  - desktop
+  - tablet
+  - iPhone-sized mobile
+  - Android-sized mobile
+- Kept all responsive projects on Chromium emulation so the suite runs in this repo without extra browser installs.
+- Added stable layout assertions for:
+  - home page
+  - recipes index
+  - recipe detail page
+  - contributor page
+- Added no-horizontal-overflow checks as the core responsive regression signal.
+
+Verification:
+
+```bash
+npm run test:responsive
+```
+
+Result:
+
+- 20 Playwright responsive tests passed.
+
+:large_blue_circle: Blue:
+
+- Narrowed the responsive suite to stable layout behavior instead of optional feature placement.
+- Kept deployment-friendly configuration so the same suite can target local dev or a deployed Vercel URL.
+- Ignored `test-results/**` in ESLint so Playwright failure artifacts do not interfere with normal lint runs.
+
+Final verification:
+
+```bash
+npm run test:responsive
+npm run lint
+```
+
+Result:
+
+- 20 Playwright responsive tests passed.
+- Lint passed.
+
+Production verification:
+
+```powershell
+$env:PLAYWRIGHT_BASE_URL="https://jozewski.tech"
+npm run test:responsive
+```
+
+Result:
+
+- 20 Playwright responsive tests passed against the deployed Vercel site.
 
 Use this template for future sprint work.
 
