@@ -744,6 +744,70 @@ Result:
 - Lint passed.
 - Production build passed.
 
+### 2026-06-15: Invite-Code Contributor Access
+
+Goal:
+
+- Keep public recipe browsing open while protecting create, edit, archive, hard delete, image upload, and AI assist behind a contributor session.
+
+:x: Red:
+
+- Added `__tests__/contributorProtectedRoutes.test.ts`.
+- The first run failed because public requests still reached validation, database lookup, upload parsing, or OpenAI env checks instead of returning `401`.
+
+Failure proof:
+
+```bash
+npm run test:run -- __tests__/contributorAuth.test.ts __tests__/contributorSessionRoute.test.ts __tests__/contributorProtectedRoutes.test.ts
+```
+
+Result:
+
+- `__tests__/contributorProtectedRoutes.test.ts` failed.
+- 6 protected-route tests failed.
+
+:white_check_mark: Green:
+
+- Added `lib/contributorAuth.ts` for signed contributor session tokens and HTTP-only cookie helpers.
+- Added `POST /api/contributor/session` and `DELETE /api/contributor/session`.
+- Protected `POST /api/recipes`, `PUT /api/recipes/[id]`, `DELETE /api/recipes/[id]`, `PATCH /api/recipes/[id]/archive`, `POST /api/recipes/images`, and `POST /api/recipes/assist`.
+- Updated archive/delete route tests to use a signed contributor cookie.
+- Added `__tests__/RecipeInlineListItem.contributor.test.tsx` to prove public users do not see edit/archive controls.
+
+Verification:
+
+```bash
+npm run test:run -- __tests__/contributorAuth.test.ts __tests__/contributorSessionRoute.test.ts __tests__/contributorProtectedRoutes.test.ts __tests__/recipeArchiveRoute.test.ts __tests__/recipeDeleteRoute.test.ts __tests__/RecipeInlineListItem.contributor.test.tsx
+```
+
+Result:
+
+- 6 test files passed.
+- 19 tests passed.
+
+:large_blue_circle: Blue:
+
+- Added `/contributor` sign-in/sign-out UI.
+- Recipe index now checks the signed contributor cookie server-side before rendering Add/Edit/Archive controls.
+- Public visitors see a Contributor Sign In CTA instead of write controls.
+- Added `CONTRIBUTOR_INVITE_CODE` and `AUTH_SECRET` to `.env.example` and README.
+- Changed contributor sign-in to return to `/contributor` so the signed-in state is immediately visible after login.
+- Added visible signed-in status and logout affordances on `/contributor` plus a compact header `Log Out` pill for signed-in contributors.
+- Reduced the theme control to a smaller circular icon-only button that swaps between moon and sun icons instead of using the larger track-style switch.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- Lint passed.
+- 14 test files passed.
+- 37 tests passed.
+- Production build passed after rerunning with normal database/network access.
+
 Use this template for future sprint work.
 
 ### YYYY-MM-DD: Feature Name

@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-By Saturday, June 20, Four Tables is deployed to Vercel and a real user can browse, create, update, and read recipes. The add/edit recipe flow uses the OpenAI API meaningfully to turn rough recipe notes into structured recipe content. The app is ready to demo on Monday, June 22.
+By Saturday, June 20, Four Tables is deployed to Vercel and a real user can browse and read recipes. Invited contributors can create, update, archive, upload images, and use the OpenAI recipe assistant through a shared invite-code sign-in. The app is ready to demo on Monday, June 22.
 
 ## Current Baseline
 
@@ -24,6 +24,7 @@ Completed before this sprint:
 - AI feature: missing; build an OpenAI-powered recipe assistant for adding and updating recipes.
 - Live URL: missing; deploy to Vercel on Saturday, June 20.
 - User activity: missing; collect screenshots, short feedback, or analytics evidence from 2-3 real users before the Monday, June 22 demo.
+- Access control: implemented locally; create/edit/archive/image upload/AI assist are limited to invited contributors through a shared invite-code sign-in.
 
 ## App Audit
 
@@ -46,6 +47,7 @@ Completed before this sprint:
 | AI requirement | No OpenAI API integration exists, so the project does not satisfy the AI-touch gate. | P1 |
 | Production deployment | Vercel deployment is not completed or smoke-tested with production env vars. | P1 |
 | User evidence | No documented user activity evidence exists yet. | P1 |
+| Contributor access control | Implemented locally with invite-code sign-in, protected write routes, header logout, and hidden public controls; final deployed smoke test still pending. | P2 |
 | Final CRUD verification | Create/update APIs exist, but the complete browser workflow must be retested after AI changes. | P2 |
 | AI error states | Missing because AI feature is not implemented yet. | P2 |
 
@@ -59,6 +61,7 @@ Completed before this sprint:
 | `OPENAI_API_KEY` env documentation | Must Have | Small |
 | Vercel deployment notes and smoke test | Must Have | Medium |
 | User testing evidence checklist | Must Have | Small |
+| Invite-only contributor access | Must Have | Large |
 | Save success confirmation | Should Have | Small |
 | Archive recipes | Should Have | Medium |
 | Family recipe image uploads | Should Have | Medium |
@@ -66,7 +69,7 @@ Completed before this sprint:
 | Dark mode | Nice to Have | Medium |
 | Social sharing | Nice to Have | Small |
 | Extra analytics | Nice to Have | Medium |
-| Authentication/admin roles | Won't Do | Large |
+| Full user profiles/admin dashboard | Won't Do | Large |
 
 ## Prioritized Backlog
 
@@ -105,6 +108,11 @@ These estimates describe task size, not priority. Priority is handled separately
    - User story: As a reviewer, I can see that real people used the app so that the app clears the user activity gate.
    - Definition of Done: 2-3 users try the live URL and evidence is saved as screenshots, feedback notes, or analytics captures.
 
+6. Restrict recipe-changing actions to invited contributors.
+   - Estimate: Large (L, over 1 hour)
+   - User story: As the app owner, I can limit recipe changes to people with the family invite code so that public visitors cannot alter the archive.
+   - Definition of Done: Public visitors can browse/read only; protected write routes reject unauthenticated users; invited contributors can sign in at `/contributor` and create/edit/archive/upload/use AI; env docs list `CONTRIBUTOR_INVITE_CODE` and `AUTH_SECRET`.
+
 ### Should Have
 
 - Add a small save success confirmation after create/update.
@@ -126,7 +134,7 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ### Won't Do This Sprint
 
-- Authentication or admin roles.
+- Full user profiles or admin dashboard.
 - Full automated test suite beyond focused TDD and manual QA.
 - Full redesign; yesterday's merged UI pass is the sprint baseline.
 - Multi-user collaboration features.
@@ -217,6 +225,20 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ### DAY 5 (Friday, June 19)
 
+- [x] Build Phase 3 invite-only contributor access.
+  - Type: Build
+  - Estimate: Large (L, over 1 hour)
+  - User story: As the app owner, I can limit recipe-changing actions to invited contributors so that public visitors cannot alter the archive.
+  - Definition of Done: Public read access stays open; create/edit/archive/image upload/AI assist are protected in route handlers and UI; `/contributor` sign-in is documented and testable.
+  - Progress: Custom invite-code contributor session implemented with a signed HTTP-only cookie.
+
+- [x] Add access-control tests.
+  - Type: Test
+  - Estimate: Medium (M, 30-60 minutes)
+  - User story: As a developer, I can trust the app will reject unauthorized writes in production.
+  - Definition of Done: Tests prove unauthenticated/unauthorized calls cannot create, update, archive, upload images, or use AI assist.
+  - Progress: Focused route and UI tests passed for contributor tokens, sign-in, protected route rejection, authenticated archive/delete paths, and hidden public controls.
+
 - [ ] Fix only deploy-blocking bugs.
   - Type: Fix
   - Estimate: Medium (M, 30-60 minutes)
@@ -289,6 +311,11 @@ These estimates describe task size, not priority. Priority is handled separately
 - [x] Light/dark mode toggle switches the visible app theme with a sun/moon icon CTA.
 - [x] All Recipes ordering was verified after changing the recipe index query to sort by title.
 - [ ] AI errors are understandable when the API key is missing or the request fails.
+- [x] Public visitor can browse/read but cannot create, edit, archive, upload images, or use AI assist at the route layer.
+- [x] Public visitor does not see add/edit/archive controls in the recipe index.
+- [x] Invited contributor can sign in at `/contributor`, then create, edit, archive, upload images, and use AI assist in the browser.
+- [x] Signed-in contributor sees a visible signed-in state plus `Log Out` controls on `/contributor` and in the header.
+- [x] App owner can invite contributors by setting `CONTRIBUTOR_INVITE_CODE` and `AUTH_SECRET` in local/Vercel env vars.
 - [x] `npm run lint` passes.
 - [x] `npm run test:run` passes.
 - [x] `npm run build` passes.

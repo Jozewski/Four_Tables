@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isContributorRequest, unauthorizedContributorResponse } from "@/lib/contributorAuth";
 import { normalizeAiRecipeOutput } from "@/lib/aiRecipeAssist";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
@@ -119,6 +120,10 @@ function getOpenAiErrorMessage(payload: unknown): string {
 }
 
 export async function POST(request: Request) {
+  if (!isContributorRequest(request)) {
+    return unauthorizedContributorResponse();
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(

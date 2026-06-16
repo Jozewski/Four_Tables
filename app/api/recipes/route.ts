@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { isContributorRequest, unauthorizedContributorResponse } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 import { validateRecipeInput } from "@/lib/recipeValidation";
 
 export async function POST(request: Request) {
+  if (!isContributorRequest(request)) {
+    return unauthorizedContributorResponse();
+  }
+
   try {
     const payload = await request.json();
     const validation = validateRecipeInput(payload);

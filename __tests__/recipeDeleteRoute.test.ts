@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DELETE } from "@/app/api/recipes/[id]/route";
+import { CONTRIBUTOR_COOKIE_NAME, createContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 
 vi.mock("@/lib/prisma", () => ({
@@ -24,13 +25,17 @@ vi.mock("@/lib/prisma", () => ({
 const prismaMock = vi.mocked(prisma);
 
 function deleteRecipe(id: string) {
-  return DELETE(new Request("http://localhost/api/recipes/" + id), {
+  const token = createContributorSessionToken(1_800_000_000_000);
+  return DELETE(new Request("http://localhost/api/recipes/" + id, {
+    headers: { cookie: `${CONTRIBUTOR_COOKIE_NAME}=${token}` },
+  }), {
     params: Promise.resolve({ id }),
   });
 }
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv("AUTH_SECRET", "test-secret-with-enough-length");
   prismaMock.$transaction.mockImplementation(async (operations) => Promise.all(operations));
 });
 

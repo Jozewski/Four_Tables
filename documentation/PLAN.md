@@ -25,9 +25,10 @@ The purpose of Four Tables is to make family recipes easier to preserve, organiz
 
 - As a visitor, I can browse recipes by cultural tradition, holiday, and category so that I can find recipes quickly.
 - As a visitor, I can open a recipe detail page so that I can see ingredients, steps, prep time, and family notes.
-- As a user, I can add a new recipe so that the archive can grow over time.
-- As a user, I can update an existing recipe so that recipe details can be corrected or improved.
-- As a user, I can paste rough recipe notes into an AI assistant so that the app can help structure the recipe before I save it.
+- As an invited contributor, I can add a new recipe so that the archive can grow over time.
+- As an invited contributor, I can update or archive an existing recipe so that recipe details can be corrected or hidden safely.
+- As an invited contributor, I can paste rough recipe notes into an AI assistant so that the app can help structure the recipe before I save it.
+- As the app owner, I can control the shared contributor invite code so that family recipe data stays protected.
 
 ## Tech Stack
 
@@ -71,8 +72,8 @@ Already completed:
 
 Still required before the Monday, June 22 demo:
 
-- OpenAI recipe assistant.
-- Final create/read/update browser verification.
+- Invite-only contributor access for create, edit, archive, image upload, and AI assist.
+- Final create/read/update/archive browser verification.
 - Vercel deployment.
 - Live URL smoke test.
 - Evidence from 2-3 real users.
@@ -92,20 +93,55 @@ Planned workflow:
 
 The API key will only be used server-side through `OPENAI_API_KEY`.
 
-## CRUD Scope
+## CRUD And Access Scope
 
 Must demonstrate:
 
-- Create: user can add a recipe with ingredients and steps.
+- Create: invited contributor can add a recipe with ingredients and steps.
 - Read: user can browse recipes and view a recipe detail page.
-- Update: user can edit an existing recipe and see changes persist.
+- Update: invited contributor can edit an existing recipe and see changes persist.
+- Archive: invited contributor can hide a recipe from normal browsing without permanently deleting it.
+
+Phase 3 pre-deploy scope:
+
+- Public visitors can read recipes without signing in.
+- Create, edit, AI assist, image upload, and archive are restricted to invited contributors.
+- The app owner manages contributor access with a shared invite code stored in environment variables.
+- Full email invitations and user profiles are deferred until after deploy.
 
 Not in scope for this sprint:
 
-- Delete recipes.
-- Authentication.
-- Admin roles.
-- Social sharing.
+- Multi-user collaboration beyond invite-only contributor access.
+- Full user profiles or an admin dashboard.
+
+## Phase 3: Invite-Only Contributor Access
+
+Goal:
+
+- Keep Four Tables publicly browsable while limiting recipe-changing actions to authorized family contributors.
+
+Target access levels:
+
+- Visitor: can browse recipes and read details.
+- Contributor: can create, edit, upload images, use AI assist, and archive recipes.
+- App owner: controls `CONTRIBUTOR_INVITE_CODE` and `AUTH_SECRET` in local/Vercel environment variables.
+
+Implementation:
+
+- Use a narrow invite-code sign-in flow for this sprint.
+- Store contributor access in a signed HTTP-only cookie.
+- Add server-side route protection for create, update, archive, image upload, and AI assist.
+- Hide protected UI controls for visitors, but do not rely on hidden buttons as security.
+- Preserve public read access for home, recipe index, filters, and recipe detail pages.
+
+Definition of Done:
+
+- Unauthenticated visitors can browse and read recipes.
+- Unauthenticated visitors cannot create, edit, archive, upload images, or call AI assist.
+- Authorized contributors can create, edit, archive, upload images, and use AI assist.
+- App owner can invite contributors by sharing the configured invite code.
+- Access-control tests cover route protection for create/update/archive/image upload/AI assist.
+- `npm run check` passes before deploy.
 
 ## Testing Plan
 
@@ -133,6 +169,9 @@ Required production environment variables:
 - `DATABASE_URL`
 - `DIRECT_URL`
 - `OPENAI_API_KEY`
+- `OPENAI_MODEL`
+- `CONTRIBUTOR_INVITE_CODE`
+- `AUTH_SECRET`
 
 After deployment, the live app will be smoke-tested for:
 
@@ -141,6 +180,8 @@ After deployment, the live app will be smoke-tested for:
 - Recipe detail
 - Add recipe
 - Edit recipe
+- Archive recipe
+- Contributor access gating
 - AI assist
 - Mobile layout
 
@@ -170,7 +211,8 @@ Day 4: Thursday, June 18
 
 Day 5: Friday, June 19
 
-- Fix deploy-blocking bugs only.
+- Build Phase 3 invite-only contributor access.
+- Verify public read access and protected create/edit/archive routes.
 - Run final `npm run check`.
 - Prepare Vercel deployment checklist.
 
@@ -191,8 +233,9 @@ Demo Day: Monday, June 22
 
 - App is deployed to a live Vercel URL.
 - User can browse and read recipes.
-- User can create a recipe.
-- User can update a recipe.
+- Invited contributor can create a recipe.
+- Invited contributor can update and archive a recipe.
+- Public visitor cannot create, update, archive, upload images, or use AI assist.
 - Recipe relationships are visible and explainable.
 - OpenAI API is used meaningfully in the add/edit recipe flow.
 - `npm run check` passes.
@@ -200,7 +243,7 @@ Demo Day: Monday, June 22
 
 ## Known Tradeoffs
 
-- Delete is intentionally out of scope because Create and Read are the required CRUD minimum, and Update already improves the app's usefulness.
-- Authentication is out of scope because it would add risk before deployment.
+- Archive replaced destructive delete so recipes can be hidden without losing family data.
+- Invite-only contributor access has moved into pre-deploy scope because create/edit/archive should not be public.
 - The UI has been improved, but final polish is secondary to AI, deployment, and user evidence.
 - The AI assistant will generate structured draft content, but users must review and edit before saving.

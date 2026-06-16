@@ -257,16 +257,16 @@ export default function RecipeFormModal({
   const labelClass =
     "text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-muted)]";
   const inputClass =
-    "w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[color:var(--accent-soft)]";
+    "recipe-form-field w-full rounded-xl border border-[var(--border)] px-3 py-2.5 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[color:var(--accent-soft)]";
   const sectionCardClass =
-    "rounded-2xl border border-[var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] px-5 py-4 md:px-6 md:py-5";
+    "recipe-form-section rounded-2xl border border-[var(--border)] px-5 py-4 md:px-6 md:py-5";
   const horizontalPad = "clamp(18px, 3.5vw, 42px)";
 
   const modalContent = open ? (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed z-[200] overflow-y-auto bg-[rgba(24,24,27,0.52)] backdrop-blur-[2px] px-5 py-4 sm:px-7 md:px-12 md:py-8"
+      className="recipe-form-overlay fixed z-[200] overflow-y-auto px-5 py-4 backdrop-blur-[2px] sm:px-7 md:px-12 md:py-8"
       style={{
         top: 0,
         right: 0,
@@ -278,12 +278,12 @@ export default function RecipeFormModal({
       onClick={closeModal}
     >
       <div
-        className="recipe-form-dialog relative mx-auto my-3 md:my-8 w-full max-w-5xl rounded-[1.6rem] border border-[var(--border)] bg-[linear-gradient(180deg,#ffffff_0%,#fffaf3_100%)] shadow-[0_28px_90px_rgba(17,17,17,0.32)] max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto"
+        className="recipe-form-dialog relative mx-auto my-3 md:my-8 w-full max-w-5xl rounded-[1.6rem] border border-[var(--border)] shadow-[0_28px_90px_rgba(17,17,17,0.32)] max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto"
         style={{ width: "min(1040px, 100%)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-[rgba(255,253,248,0.95)] px-6 py-4 backdrop-blur-sm md:px-8"
+          className="recipe-form-header sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] px-6 py-4 backdrop-blur-sm md:px-8"
           style={{ paddingInline: horizontalPad }}
         >
           <div>
@@ -300,7 +300,7 @@ export default function RecipeFormModal({
           <button
             type="button"
             onClick={closeModal}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-white text-lg leading-none text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+            className="recipe-form-icon-button inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] text-lg leading-none text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             x
@@ -327,7 +327,7 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={handleAiAssist}
-                className="rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[var(--accent)] disabled:opacity-60 lg:mb-1"
+                className="recipe-form-ai-button rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[var(--accent)] disabled:opacity-60 lg:mb-1"
                 disabled={aiSubmitting || submitting}
               >
                 {aiSubmitting ? "Drafting..." : "Draft with AI"}
@@ -479,14 +479,14 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={addIngredient}
-                className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                className="recipe-form-add-button rounded-full border border-[var(--border)] px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
               >
                 + Add
               </button>
             </div>
             <div className="space-y-2">
               {values.ingredients.map((ingredient, index) => (
-                <div key={`ingredient-${index}`} className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] bg-white/90 p-3 sm:grid-cols-12 sm:items-center">
+                <div key={`ingredient-${index}`} className="recipe-form-row grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] p-3 sm:grid-cols-12 sm:items-center">
                   <input
                     value={ingredient.amount}
                     onChange={(e) => updateIngredient(index, "amount", e.target.value)}
@@ -524,14 +524,14 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={addStep}
-                className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                className="recipe-form-add-button rounded-full border border-[var(--border)] px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
               >
                 + Add
               </button>
             </div>
             <div className="space-y-2">
               {values.steps.map((step, index) => (
-                <div key={`step-${index}`} className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] bg-white/90 p-3 sm:grid-cols-12 sm:items-start">
+                <div key={`step-${index}`} className="recipe-form-row grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] p-3 sm:grid-cols-12 sm:items-start">
                   <textarea
                     value={step.instruction}
                     onChange={(e) => updateStep(index, e.target.value)}
@@ -557,14 +557,14 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={addNote}
-                className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                className="recipe-form-add-button rounded-full border border-[var(--border)] px-3 py-1.5 text-[11px] font-sans-alt font-bold uppercase tracking-[0.1em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
               >
                 + Add
               </button>
             </div>
             <div className="space-y-2">
               {values.notes.map((note, index) => (
-                <div key={`note-${index}`} className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] bg-white/90 p-3 sm:grid-cols-12 sm:items-start">
+                <div key={`note-${index}`} className="recipe-form-row grid grid-cols-1 gap-2 rounded-xl border border-[var(--border)] p-3 sm:grid-cols-12 sm:items-start">
                   <input
                     value={note.author}
                     onChange={(e) => updateNote(index, "author", e.target.value)}
@@ -591,7 +591,7 @@ export default function RecipeFormModal({
           </section>
 
           <div
-            className="sticky bottom-0 z-10 -mx-6 border-t border-[var(--border)] bg-[rgba(255,253,248,0.95)] px-6 pt-4 pb-3 md:-mx-8 md:px-8 backdrop-blur-sm"
+            className="recipe-form-footer sticky bottom-0 z-10 -mx-6 border-t border-[var(--border)] px-6 pt-4 pb-3 backdrop-blur-sm md:-mx-8 md:px-8"
             style={{
               marginInline: `calc(${horizontalPad} * -1)`,
               paddingInline: horizontalPad,
@@ -601,7 +601,7 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded-full border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                className="recipe-form-cancel-button rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
                 disabled={submitting}
               >
                 Cancel

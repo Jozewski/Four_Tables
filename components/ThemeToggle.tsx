@@ -105,15 +105,11 @@ export default function ThemeToggle() {
       aria-label="Toggle color theme"
       title="Toggle color theme"
     >
-      <span className="theme-toggle-icon theme-toggle-icon-sun">
-        <SunIcon className="h-4 w-4" />
-      </span>
-      <span aria-hidden="true" className="theme-toggle-track">
-        <span className="theme-toggle-thumb" />
-      </span>
-      <span className="theme-toggle-icon theme-toggle-icon-moon">
-        <MoonIcon className="h-4 w-4" />
-      </span>
+      {theme === "dark" ? (
+        <SunIcon className="h-4.5 w-4.5" />
+      ) : (
+        <MoonIcon className="h-4.5 w-4.5" />
+      )}
     </button>
   );
 }

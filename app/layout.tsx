@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import ContributorSignOutButton from "@/components/ContributorSignOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
+import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 
 export const metadata: Metadata = {
   title: "Four Tables",
@@ -27,11 +30,19 @@ const siteLinks = [
   { label: "Sweets", href: "/recipes?category=Dessert" },
 ];
 
-export default function RootLayout({
+async function hasContributorAccess() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(CONTRIBUTOR_COOKIE_NAME)?.value;
+  return Boolean(verifyContributorSessionToken(token));
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const signedIn = await hasContributorAccess();
+
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
@@ -83,6 +94,7 @@ export default function RootLayout({
                   {culture.label}
                 </Link>
               ))}
+              {signedIn && <ContributorSignOutButton compact />}
               <ThemeToggle />
             </div>
 
@@ -100,6 +112,14 @@ export default function RootLayout({
 
               <div className="absolute right-0 top-full mt-3 w-[min(84vw,17rem)] rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_20px_50px_rgba(24,24,27,0.12)]">
                 <div className="grid gap-4">
+                  {signedIn && (
+                    <div className="grid gap-2 border-b border-[var(--border)] pb-4">
+                      <p className="font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--accent)]">
+                        Contributor
+                      </p>
+                      <ContributorSignOutButton compact />
+                    </div>
+                  )}
                   <div>
                     <p className="mb-3 font-sans-alt text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--ink-muted)]">
                       Browse
