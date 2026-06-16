@@ -32,7 +32,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 6 test files and 14 total tests.
+The current Vitest suite has 8 test files and 19 total tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -118,6 +118,34 @@ Suite: `ThemeToggle`
    - Proves the theme button switches the app between light and dark mode.
    - Confirms the selected theme is stored in `localStorage`.
    - Confirms the document `data-theme` attribute changes so CSS variables can style the app.
+
+### `__tests__/recipeDeleteRoute.test.ts`
+
+Suite: `DELETE /api/recipes/[id]`
+
+1. `rejects invalid recipe ids`
+   - Proves invalid route params return a `400` response.
+   - Confirms no delete call is attempted for invalid IDs.
+
+2. `returns 404 when the recipe does not exist`
+   - Proves missing recipes return a `404` response.
+   - Confirms no delete call is attempted for missing recipes.
+
+3. `deletes related records before deleting the recipe`
+   - Proves ingredients, steps, and family notes are deleted before the recipe row.
+   - Confirms the work is wrapped in a Prisma transaction.
+
+### `__tests__/DeleteRecipeButton.test.tsx`
+
+Suite: `DeleteRecipeButton`
+
+1. `does not delete when confirmation is cancelled`
+   - Proves the UI requires confirmation before delete.
+   - Confirms cancelling does not call the API or refresh the page.
+
+2. `deletes after confirmation and refreshes the current page`
+   - Proves the UI calls `DELETE /api/recipes/:id`.
+   - Confirms the page refreshes after a successful delete.
 
 ## TDD Log
 
@@ -569,6 +597,136 @@ Result:
 ## Next TDD Entries
 
 ## Additional QA Notes
+
+### 2026-06-15: Archive Recipes
+
+Goal:
+
+- Let users hide test, duplicate, or unwanted recipes without permanently deleting family data.
+
+:x: Red:
+
+- Added `__tests__/recipeDeleteRoute.test.ts`.
+- Wrote failing coverage for:
+  - invalid IDs returning `400`
+  - missing recipes returning `404`
+  - related records being deleted before the recipe
+- First red run:
+
+```bash
+npm run test:run -- __tests__/recipeDeleteRoute.test.ts
+```
+
+- First failure output:
+
+```text
+TypeError: DELETE is not a function
+```
+
+- Added `__tests__/DeleteRecipeButton.test.tsx`.
+- Wrote failing coverage for:
+  - cancelling confirmation prevents deletion
+  - confirming deletion calls the API and refreshes the page
+- First UI red run:
+
+```bash
+npm run test:run -- __tests__/DeleteRecipeButton.test.tsx
+```
+
+- First UI failure output:
+
+```text
+Error: Failed to resolve import "@/components/DeleteRecipeButton"
+```
+
+- Added `__tests__/recipeArchiveRoute.test.ts`.
+- Wrote failing coverage for:
+  - invalid IDs returning `400`
+  - missing recipes returning `404`
+  - archiving a recipe by setting `archivedAt`
+- First archive route red run:
+
+```bash
+npm run test:run -- __tests__/recipeArchiveRoute.test.ts __tests__/ArchiveRecipeButton.test.tsx
+```
+
+- First archive failure output:
+
+```text
+Error: Failed to resolve import "@/app/api/recipes/[id]/archive/route"
+Error: Failed to resolve import "@/components/ArchiveRecipeButton"
+```
+
+:white_check_mark: Green:
+
+- Added `DELETE` to `app/api/recipes/[id]/route.ts`.
+- Added `components/DeleteRecipeButton.tsx`.
+- Added the delete button to recipe index cards.
+- Added `archivedAt` to the Prisma `Recipe` model.
+- Added `PATCH /api/recipes/[id]/archive`.
+- Added `components/ArchiveRecipeButton.tsx` with a confirmation modal.
+- Updated the recipe index so normal browsing hides archived recipes and the `Archived` view shows them.
+- Confirmed the focused delete suites passed:
+
+```bash
+npm run test:run -- __tests__/recipeDeleteRoute.test.ts __tests__/DeleteRecipeButton.test.tsx
+```
+
+Result:
+
+- 2 test files passed.
+- 5 tests passed.
+
+- Confirmed the focused archive suites passed:
+
+```bash
+npm run test:run -- __tests__/recipeArchiveRoute.test.ts __tests__/ArchiveRecipeButton.test.tsx
+```
+
+Result:
+
+- 2 test files passed.
+- 5 tests passed.
+
+:large_blue_circle: Blue:
+
+- Kept related-record cleanup in one API transaction.
+- Kept delete confirmation in a focused client component instead of expanding the recipe card component state.
+- Replaced the destructive UI action with a safer archive flow.
+- Kept hard delete API coverage available, but the recipe index now exposes archive as the user-facing action.
+- Ran `npx prisma generate` and `npx prisma db push`; Neon confirmed the database is in sync with the new nullable `archivedAt` column.
+- Manual smoke test completed successfully after restarting the dev server.
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 8 test files passed.
+- 19 tests passed.
+- Lint passed.
+- Production build passed.
+
+### 2026-06-15: Theme Toggle Hydration Fix
+
+- Fixed a React hydration mismatch where the server rendered the theme toggle as light, but the client rendered it as dark on first render when `localStorage` contained a saved dark preference.
+- Replaced client-first `useState(localStorage)` initialization with `useSyncExternalStore`, using a server-safe light snapshot for hydration and reading saved theme state after hydration.
+- Made the toggle button markup theme-neutral (`className`, `aria-label`, and `title` no longer change between light and dark) and moved the visual state to CSS selectors based on `html[data-theme]`.
+- Verified with:
+
+```bash
+npm run check
+```
+
+Result:
+
+- 10 test files passed.
+- 24 tests passed.
+- Lint passed.
+- Production build passed.
 
 ### 2026-06-15: Recipe Index Alphabetical Ordering
 

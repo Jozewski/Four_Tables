@@ -60,7 +60,7 @@ Completed before this sprint:
 | Vercel deployment notes and smoke test | Must Have | Medium |
 | User testing evidence checklist | Must Have | Small |
 | Save success confirmation | Should Have | Small |
-| Delete recipes | Should Have | Medium |
+| Archive recipes | Should Have | Medium |
 | Family recipe image uploads | Should Have | Medium |
 | Additional recipe form polish | Should Have | Medium |
 | Dark mode | Nice to Have | Medium |
@@ -110,7 +110,7 @@ These estimates describe task size, not priority. Priority is handled separately
 - Add a small save success confirmation after create/update.
 - Add a short README section for AI setup, Vercel env vars, and QA steps.
 - Improve AI prompt copy in the modal after first manual test.
-- Add delete recipe support with a confirmation step after create/update/AI are stable.
+- Add archive recipe support with a confirmation modal after create/update/AI are stable.
 - Add family recipe image uploads for create/edit after AI is stable.
 - Add one screenshot of the deployed app to the sprint docs.
 - Use Playwright screenshots to do one final UI pass before deploy.
@@ -196,11 +196,12 @@ These estimates describe task size, not priority. Priority is handled separately
   - User story: As a user, I get clearer feedback after saving a recipe so that the app feels finished.
   - Definition of Done: Add save success feedback, clearer AI prompt copy, or one small UI fix. Do not add new major features.
 
-- [ ] Add delete recipe support only if Must Haves are stable.
+- [x] Add archive recipe support only if Must Haves are stable.
   - Type: Build
   - Estimate: Medium (M, 30-60 minutes)
-  - User story: As a user, I can delete a recipe I no longer want in the archive so that test or duplicate recipes can be removed.
-  - Definition of Done: Delete action has a confirmation step, removes the recipe and related records safely, refreshes the list, and does not break create/read/update.
+  - User story: As a user, I can archive a recipe I no longer want in the main list so that test or duplicate recipes are hidden without losing family data.
+  - Definition of Done: Archive action has a confirmation modal, sets `archivedAt`, hides the recipe from the main list, keeps it available from the archived recipes view, refreshes the list, and does not break create/read/update.
+  - Progress: Manual smoke test completed successfully after dev restart.
 
 - [x] Add family recipe image uploads.
   - Type: Build
@@ -278,7 +279,8 @@ These estimates describe task size, not priority. Priority is handled separately
 - [x] Add recipe modal opens and closes.
 - [x] Create recipe saves a new recipe with ingredients and steps.
 - [x] Edit recipe saves changed title, ingredients, steps, and notes.
-- [ ] Delete recipe requires confirmation and removes the recipe.
+- [x] Archive recipe requires confirmation modal and hides the recipe from the main list.
+- [x] Archived recipes view is reachable from the recipe index.
 - [x] AI assist accepts rough recipe notes.
 - [x] AI assist returns useful structured data.
 - [x] AI output can be edited before saving.

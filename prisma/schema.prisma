@@ -16,6 +16,7 @@ model Recipe {
   prepTime    Int?         // minutes
   imageUrl    String?      // URL to food photography
   createdAt   DateTime     @default(now())
+  archivedAt  DateTime?
 
   notes       FamilyNote[]
   ingredients Ingredient[]
