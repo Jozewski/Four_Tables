@@ -6,13 +6,27 @@ import ContributorSignOutButton from "@/components/ContributorSignOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3002";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Four Tables",
   description:
     "A family recipe collection shaped like a modern recipe portal, built around Italian, Dutch, German, and Mexican traditions.",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Four Tables",
+    title: "Four Tables",
+    description:
+      "A family recipe collection shaped like a modern recipe portal, built around Italian, Dutch, German, and Mexican traditions.",
   },
 };
 

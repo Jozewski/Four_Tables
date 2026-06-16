@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
@@ -9,9 +10,18 @@ const cultureColor: Record<string, string> = {
   Mexican: "var(--mexican)",
 };
  
-export const metadata = {
+export const metadata: Metadata = {
   title: "Four Tables - Home",
   description: "A browse-first recipe home for four family traditions.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Four Tables - Home",
+    description: "A browse-first recipe home for four family traditions.",
+    url: "/",
+    type: "website",
+  },
 };
  
 export default async function HomePage() {

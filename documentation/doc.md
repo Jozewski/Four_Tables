@@ -8,12 +8,17 @@ The current sprint adds an OpenAI-powered recipe assistant that helps turn rough
 
 Phase 3 adds invite-only contributor access before deploy: public visitors can browse and read recipes, but recipe-changing actions must be limited to authorized contributors.
 
+Live deployment:
+
+- `https://jozewski.tech`
+
 Related implementation records:
 
 - [TDD Summary](./TDD_SUMMARY.md)
 - [Sprint Plan](./SPRINT_PLAN.md)
 - [Accessibility Audit](./ACCESSIBILITY_AUDIT.md)
 - [Screen Reader QA](./SCREEN_READER_QA.md)
+- [V2 Project Roadmap](./V2_PROJECT_ROADMAP.md)
 
 ## Target Users
 
@@ -251,6 +256,12 @@ Required Vercel environment variables:
 - `CONTRIBUTOR_INVITE_CODE`
 - `AUTH_SECRET`
 
+Current production status:
+
+- Live domain attached: `jozewski.tech`
+- Initial production smoke test passed
+- App is ready for full QA testing on the deployed environment
+
 Neon production configuration used for deploy prep:
 
 - Production branch compute autoscaling range is set to `1 CU -> 2 CU`.
@@ -424,3 +435,15 @@ npm run check
 - Updated documentation for env vars and deployment.
 - Vercel live URL.
 - User evidence from 2-3 real users.
+
+## Version 2 Notes
+
+Post-demo work is tracked in [V2_PROJECT_ROADMAP.md](./V2_PROJECT_ROADMAP.md).
+
+Key Version 2 additions:
+
+- `NEXT_PUBLIC_APP_URL`
+- canonical metadata
+- Open Graph metadata
+- sitemap generation
+- social sharing links

@@ -20,9 +20,9 @@ Completed before this sprint:
 ## Gate Requirements
 
 - Schema walkthrough: covered by `Recipe -> Ingredient[]`, `Step[]`, and `FamilyNote[]` in `prisma/schema.prisma`.
-- CRUD: Create, Read, and Update exist; they need final browser verification after AI is added.
-- AI feature: missing; build an OpenAI-powered recipe assistant for adding and updating recipes.
-- Live URL: missing; deploy to Vercel on Saturday, June 20.
+- CRUD: Create, Read, and Update exist; final production QA is still in progress.
+- AI feature: implemented through the OpenAI-powered recipe assistant for adding and updating recipes.
+- Live URL: complete; deployed at `https://jozewski.tech`.
 - User activity: missing; collect screenshots, short feedback, or analytics evidence from 2-3 real users before the Monday, June 22 demo.
 - Access control: implemented locally; create/edit/archive/image upload/AI assist are limited to invited contributors through a shared invite-code sign-in.
 
@@ -44,12 +44,12 @@ Completed before this sprint:
 
 | Feature | Bug Description | Priority |
 |---|---|---|
-| AI requirement | No OpenAI API integration exists, so the project does not satisfy the AI-touch gate. | P1 |
-| Production deployment | Vercel deployment is not completed or smoke-tested with production env vars. | P1 |
+| AI requirement | Implemented; continue full QA around AI output and error handling in production. | P2 |
+| Production deployment | Initial deployment and smoke test succeeded at `jozewski.tech`; continue full QA across live flows. | P2 |
 | User evidence | No documented user activity evidence exists yet. | P1 |
 | Contributor access control | Implemented locally with invite-code sign-in, protected write routes, header logout, and hidden public controls; final deployed smoke test still pending. | P2 |
 | Final CRUD verification | Create/update APIs exist, but the complete browser workflow must be retested after AI changes. | P2 |
-| AI error states | Missing because AI feature is not implemented yet. | P2 |
+| AI error states | Need final production QA for missing-key/failure-path messaging. | P2 |
 
 ### Missing
 
@@ -274,17 +274,19 @@ These estimates describe task size, not priority. Priority is handled separately
 
 ### DEPLOY DAY (Saturday, June 20)
 
-- [ ] Deploy to Vercel.
+- [x] Deploy to Vercel.
   - Type: Deploy
   - Estimate: Medium (M, 30-60 minutes)
   - User story: As a reviewer, I can open Four Tables from a live URL.
   - Definition of Done: Vercel build succeeds and the live URL works with `DATABASE_URL`, `DIRECT_URL`, and `OPENAI_API_KEY`.
+  - Progress: Production deployment is live at `https://jozewski.tech`.
 
-- [ ] Smoke test the live URL.
+- [x] Smoke test the live URL.
   - Type: Test
   - Estimate: Small (S, under 30 minutes)
   - User story: As a reviewer, I can use the deployed app, not just the local app.
   - Definition of Done: Live home, recipes, detail, create, update, and AI assist all work.
+  - Progress: Initial production smoke test passed; app is ready for full QA.
 
 - [ ] Collect user evidence.
   - Type: Document
@@ -329,7 +331,7 @@ These estimates describe task size, not priority. Priority is handled separately
 - [x] `npm run test:a11y` passes.
 - [x] `npm run build` passes.
 - [x] `npm run check` passes.
-- [ ] Live Vercel URL works on desktop.
+- [x] Live Vercel URL works on desktop.
 - [ ] Live Vercel URL works on mobile.
 - [ ] User evidence is captured from 2-3 real users.
 - [ ] Neon production branch wake-from-idle latency is acceptable for demo use.
