@@ -7,6 +7,21 @@ import RecipeInlineListItem from "@/components/RecipeInlineListItem";
 import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 
+type RecipeListItemRecipe = {
+  id: number;
+  title: string;
+  description: string | null;
+  cultural: string;
+  holiday: string | null;
+  category: string;
+  prepTime: number | null;
+  imageUrl: string | null;
+  archivedAt: Date | null;
+  ingredients: Array<{ id: number; order: number; amount: string; unit: string | null; name: string }>;
+  steps: Array<{ id: number; stepNumber: number; instruction: string }>;
+  notes: Array<{ id: number; author: string; content: string }>;
+};
+
 type SearchParams = {
   cultural?: string;
   holiday?: string;
@@ -86,7 +101,7 @@ async function RecipeGrid({
         {showingArchived ? " / archived" : ""}
       </p>
       <div className="space-y-5">
-        {recipes.map((recipe) => (
+        {recipes.map((recipe: RecipeListItemRecipe) => (
           <RecipeInlineListItem key={recipe.id} recipe={recipe} canContribute={canContribute} />
         ))}
       </div>

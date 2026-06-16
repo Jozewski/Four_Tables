@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { PATCH } from "@/app/api/recipes/[id]/archive/route";
 import { CONTRIBUTOR_COOKIE_NAME, createContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
@@ -12,7 +12,12 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-const prismaMock = vi.mocked(prisma);
+const prismaMock = prisma as unknown as {
+  recipe: {
+    findUnique: Mock;
+    update: Mock;
+  };
+};
 
 function archiveRecipe(id: string) {
   const token = createContributorSessionToken(1_800_000_000_000);

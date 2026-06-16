@@ -1,9 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const contributorInviteCode = process.env.CONTRIBUTOR_INVITE_CODE ?? "";
 
-async function expectNoSeriousA11yIssues(page: Parameters<typeof AxeBuilder>[0]["page"], options?: {
+async function expectNoSeriousA11yIssues(page: Page, options?: {
   include?: string[];
   exclude?: string[];
 }) {

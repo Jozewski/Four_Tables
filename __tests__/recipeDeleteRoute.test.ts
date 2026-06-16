@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { DELETE } from "@/app/api/recipes/[id]/route";
 import { CONTRIBUTOR_COOKIE_NAME, createContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
@@ -22,7 +22,22 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-const prismaMock = vi.mocked(prisma);
+const prismaMock = prisma as unknown as {
+  recipe: {
+    findUnique: Mock;
+    delete: Mock;
+  };
+  ingredient: {
+    deleteMany: Mock;
+  };
+  step: {
+    deleteMany: Mock;
+  };
+  familyNote: {
+    deleteMany: Mock;
+  };
+  $transaction: Mock;
+};
 
 function deleteRecipe(id: string) {
   const token = createContributorSessionToken(1_800_000_000_000);
@@ -36,7 +51,7 @@ function deleteRecipe(id: string) {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("AUTH_SECRET", "test-secret-with-enough-length");
-  prismaMock.$transaction.mockImplementation(async (operations) => Promise.all(operations));
+  prismaMock.$transaction.mockImplementation(async (operations: Promise<unknown>[]) => Promise.all(operations));
 });
 
 describe("DELETE /api/recipes/[id]", () => {
