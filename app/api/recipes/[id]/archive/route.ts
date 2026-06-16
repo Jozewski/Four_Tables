@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
+import { isContributorRequest, unauthorizedContributorResponse } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (!isContributorRequest(request)) {
+    return unauthorizedContributorResponse();
+  }
+
   try {
     const resolvedParams = await params;
     const id = Number(resolvedParams.id);

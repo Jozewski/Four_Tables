@@ -39,6 +39,8 @@ cp .env.example .env
 # Paste pooled URL as DATABASE_URL
 # Paste direct URL as DIRECT_URL
 # Paste your OpenAI API key as OPENAI_API_KEY
+# Set a shared contributor invite code as CONTRIBUTOR_INVITE_CODE
+# Set a long random signing secret as AUTH_SECRET
 ```
 
 Optional:
@@ -52,7 +54,13 @@ DATABASE_URL
 DIRECT_URL
 OPENAI_API_KEY
 OPENAI_MODEL
+CONTRIBUTOR_INVITE_CODE
+AUTH_SECRET
 ```
+
+Public visitors can browse and read recipes. Invited contributors sign in at `/contributor`
+with `CONTRIBUTOR_INVITE_CODE` before adding, editing, archiving, uploading images, or using
+AI assist.
 
 ### 3. Push the schema and seed
 

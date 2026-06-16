@@ -59,7 +59,13 @@ function cultureInitial(cultural: string): string {
   return cultural.slice(0, 1).toUpperCase();
 }
 
-export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
+export default function RecipeInlineListItem({
+  recipe,
+  canContribute,
+}: {
+  recipe: Recipe;
+  canContribute: boolean;
+}) {
   const color = cultureColor[recipe.cultural] ?? "var(--ink)";
   const imageUrl = getSafeImageUrl(recipe.imageUrl);
   const initialValues: RecipeFormValues = {
@@ -142,19 +148,23 @@ export default function RecipeInlineListItem({ recipe }: { recipe: Recipe }) {
             >
               Open Recipe
             </Link>
-            <RecipeFormModal
-              mode="edit"
-              recipeId={recipe.id}
-              initialValues={initialValues}
-              triggerLabel="Edit"
-              triggerClassName="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--ink)]"
-            />
-            {recipe.archivedAt ? (
-              <span className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
-                Archived
-              </span>
-            ) : (
-              <ArchiveRecipeButton recipeId={recipe.id} recipeTitle={recipe.title} />
+            {canContribute && (
+              <>
+                <RecipeFormModal
+                  mode="edit"
+                  recipeId={recipe.id}
+                  initialValues={initialValues}
+                  triggerLabel="Edit"
+                  triggerClassName="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--ink)]"
+                />
+                {recipe.archivedAt ? (
+                  <span className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-5 py-2.5 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+                    Archived
+                  </span>
+                ) : (
+                  <ArchiveRecipeButton recipeId={recipe.id} recipeTitle={recipe.title} />
+                )}
+              </>
             )}
           </div>
         </div>

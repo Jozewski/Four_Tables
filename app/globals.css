@@ -282,16 +282,6 @@ a {
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.94));
 }
 
-:root[data-theme="dark"] .recipe-form-dialog {
-  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-}
-
-:root[data-theme="dark"] .recipe-form-dialog input,
-:root[data-theme="dark"] .recipe-form-dialog textarea,
-:root[data-theme="dark"] .recipe-form-dialog select {
-  background: #0f172a;
-}
-
 :root[data-theme="dark"] .recipe-index-hero {
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.94));
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
@@ -370,14 +360,14 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  min-height: 2.35rem;
-  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 2.35rem;
   border-radius: 9999px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--ink);
-  padding: 0.25rem 0.35rem 0.25rem 0.6rem;
+  padding: 0;
   box-shadow: 0 8px 20px rgba(24, 24, 27, 0.08);
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
@@ -388,75 +378,10 @@ a {
   transform: translateY(-1px);
 }
 
-.theme-toggle-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.35rem;
-  height: 1.35rem;
-  color: var(--ink-muted);
-}
-
-.theme-toggle-track {
-  position: relative;
-  width: 4rem;
-  height: 1.75rem;
-  border-radius: 9999px;
-  border: 1px solid var(--border);
-  background: linear-gradient(135deg, #fef3c7, #dbeafe);
-  padding: 0.15rem;
-}
-
-.theme-toggle-thumb {
-  position: absolute;
-  top: 0.15rem;
-  left: 0.15rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.45rem;
-  height: 1.45rem;
-  border-radius: 9999px;
-  background: #f59e0b;
-  color: #111827;
-  font-size: 0;
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.26);
-  transition: transform 0.22s ease, background-color 0.22s ease;
-}
-
-.theme-toggle-thumb::before {
-  content: '';
-  width: 0.72rem;
-  height: 0.72rem;
-  border-radius: 9999px;
-  background: currentColor;
-}
-
-:root[data-theme="dark"] .theme-toggle-track {
-  background: linear-gradient(135deg, #0f172a, #334155);
-}
-
-:root[data-theme="dark"] .theme-toggle-thumb {
-  transform: translateX(2.25rem);
-  background: #e2e8f0;
-  color: #0f172a;
-}
-
-:root[data-theme="dark"] .theme-toggle-thumb::before {
-  box-shadow: -0.22rem -0.05rem 0 0 #e2e8f0;
-  background: #0f172a;
-}
-
-.theme-toggle-icon-sun {
-  color: var(--ink);
-}
-
-:root[data-theme="dark"] .theme-toggle-icon-sun {
-  color: var(--ink-muted);
-}
-
-:root[data-theme="dark"] .theme-toggle-icon-moon {
-  color: var(--ink);
+:root[data-theme="dark"] .theme-toggle {
+  background: rgba(15, 23, 42, 0.92);
+  color: #fde68a;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
 .mobile-menu {
@@ -610,6 +535,40 @@ a {
 
 .recipe-form-dialog {
   width: min(1040px, 100%);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 243, 0.98) 100%);
+}
+
+.recipe-form-overlay {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(217, 106, 39, 0.18), transparent 28%),
+    rgba(24, 24, 27, 0.56);
+}
+
+.recipe-form-header,
+.recipe-form-footer {
+  background: rgba(255, 253, 248, 0.95);
+}
+
+.recipe-form-section {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.recipe-form-row {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.recipe-form-field,
+.recipe-form-icon-button,
+.recipe-form-add-button,
+.recipe-form-ai-button,
+.recipe-form-cancel-button {
+  background: #fff;
+}
+
+.recipe-form-field {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .recipe-form-dialog input,
@@ -633,6 +592,110 @@ a {
 .recipe-form-dialog select:focus {
   outline: 2px solid rgba(217, 106, 39, 0.22);
   border-color: var(--accent);
+}
+
+:root[data-theme="dark"] .recipe-form-overlay {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.14), transparent 30%),
+    radial-gradient(circle at 82% 88%, rgba(96, 165, 250, 0.1), transparent 30%),
+    rgba(2, 6, 23, 0.78);
+}
+
+:root[data-theme="dark"] .recipe-form-dialog {
+  border-color: rgba(148, 163, 184, 0.28);
+  background:
+    linear-gradient(180deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.99) 100%);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(248, 250, 252, 0.06);
+}
+
+:root[data-theme="dark"] .recipe-form-header,
+:root[data-theme="dark"] .recipe-form-footer {
+  border-color: rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.92);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+}
+
+:root[data-theme="dark"] .recipe-form-section {
+  border-color: rgba(148, 163, 184, 0.24);
+  background:
+    linear-gradient(180deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.72));
+  box-shadow:
+    inset 0 1px 0 rgba(248, 250, 252, 0.05),
+    0 16px 34px rgba(0, 0, 0, 0.16);
+}
+
+:root[data-theme="dark"] .recipe-form-row {
+  border-color: rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.32);
+}
+
+:root[data-theme="dark"] .recipe-form-field,
+:root[data-theme="dark"] .recipe-form-dialog input,
+:root[data-theme="dark"] .recipe-form-dialog textarea,
+:root[data-theme="dark"] .recipe-form-dialog select {
+  border-color: rgba(148, 163, 184, 0.28);
+  background: rgba(15, 23, 42, 0.94);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.04);
+}
+
+:root[data-theme="dark"] .recipe-form-dialog input::placeholder,
+:root[data-theme="dark"] .recipe-form-dialog textarea::placeholder {
+  color: rgba(148, 163, 184, 0.78);
+}
+
+:root[data-theme="dark"] .recipe-form-dialog input:focus,
+:root[data-theme="dark"] .recipe-form-dialog textarea:focus,
+:root[data-theme="dark"] .recipe-form-dialog select:focus {
+  outline-color: rgba(56, 189, 248, 0.22);
+  border-color: rgba(56, 189, 248, 0.78);
+  box-shadow:
+    0 0 0 3px rgba(56, 189, 248, 0.12),
+    inset 0 1px 0 rgba(248, 250, 252, 0.05);
+}
+
+:root[data-theme="dark"] .recipe-form-icon-button,
+:root[data-theme="dark"] .recipe-form-add-button,
+:root[data-theme="dark"] .recipe-form-cancel-button {
+  background: rgba(15, 23, 42, 0.88);
+  color: var(--ink-soft);
+}
+
+:root[data-theme="dark"] .recipe-form-icon-button:hover,
+:root[data-theme="dark"] .recipe-form-add-button:hover,
+:root[data-theme="dark"] .recipe-form-cancel-button:hover {
+  background: rgba(30, 41, 59, 0.98);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .recipe-form-ai-button {
+  background: #38bdf8;
+  color: #082f49;
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.22);
+}
+
+:root[data-theme="dark"] .recipe-form-ai-button:hover {
+  background: #7dd3fc;
+  color: #082f49;
+}
+
+:root[data-theme="dark"] .recipe-form-dialog input::file-selector-button {
+  border: 0;
+  background: #38bdf8;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+:root[data-theme="dark"] .recipe-form-dialog input::file-selector-button:hover {
+  background: #7dd3fc;
+}
+
+:root[data-theme="dark"] .recipe-form-dialog [class*="bg-red-50"] {
+  border-color: rgba(248, 113, 113, 0.42) !important;
+  background-color: rgba(127, 29, 29, 0.28) !important;
+  color: #fecaca !important;
 }
 
 @media (max-width: 1100px) {

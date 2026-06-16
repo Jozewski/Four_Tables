@@ -2,15 +2,19 @@
 
 ## Project Overview
 
-Four Tables is a family recipe archive for preserving traditional recipes from four cultural traditions: Italian, Dutch, German, and Mexican. The app lets users browse recipes, view full recipe details, create new recipes, and update existing recipes.
+Four Tables is a family recipe archive for preserving traditional recipes from four cultural traditions: Italian, Dutch, German, and Mexican. The app lets public visitors browse recipes and view full recipe details. Invited contributors can create, update, archive, upload images, and use AI assist.
 
 The current sprint adds an OpenAI-powered recipe assistant that helps turn rough family notes into structured recipe fields. The app will be deployed to Vercel on Saturday, June 20, and demoed on Monday, June 22.
+
+Phase 3 adds invite-only contributor access before deploy: public visitors can browse and read recipes, but recipe-changing actions must be limited to authorized contributors.
 
 ## Target Users
 
 - Family members who want to preserve recipes from relatives.
 - Home cooks looking for traditional holiday recipes.
 - Users converting handwritten or informal recipe notes into structured digital recipes.
+- Invited family contributors who are trusted to add, edit, archive, and enrich recipes.
+- The app owner, who controls the shared contributor invite code in environment variables.
 - Reviewers evaluating schema relationships, CRUD behavior, AI usage, deployment, and user activity evidence.
 
 ## Core Purpose
@@ -45,11 +49,12 @@ Acceptance criteria:
 
 ### Create A Recipe
 
-As a user, I can add a new recipe so that the recipe archive can grow over time.
+As an invited contributor, I can add a new recipe so that the recipe archive can grow over time.
 
 Acceptance criteria:
 
 - Add recipe modal opens and closes.
+- User must be an authorized contributor.
 - Required fields are validated before save.
 - User can add ingredients and steps.
 - Saving creates a new `Recipe` with related `Ingredient` and `Step` records.
@@ -58,11 +63,12 @@ Acceptance criteria:
 
 ### Update A Recipe
 
-As a user, I can edit an existing recipe so that family recipes can be corrected or improved.
+As an invited contributor, I can edit an existing recipe so that family recipes can be corrected or improved.
 
 Acceptance criteria:
 
 - Edit action opens the existing recipe data in the form.
+- User must be an authorized contributor.
 - User can change title, description, tradition, holiday, category, prep time, image URL, ingredients, steps, and notes.
 - Saving persists the updates.
 - Updated recipe detail page shows the new values after refresh.
@@ -70,17 +76,44 @@ Acceptance criteria:
 
 ### Use AI Recipe Assist
 
-As a user, I can paste rough family recipe notes into an AI assistant so that the app can draft structured recipe fields for me.
+As an invited contributor, I can paste rough family recipe notes into an AI assistant so that the app can draft structured recipe fields for me.
 
 Acceptance criteria:
 
 - AI assist is available from the add/edit recipe modal.
+- User must be an authorized contributor.
 - User can enter rough notes before calling AI.
 - The OpenAI API is called only from a server route.
 - `OPENAI_API_KEY` is never exposed to client code.
 - AI output is validated before it is applied to the form.
 - User can edit AI-filled fields before saving.
 - Missing API key, failed API calls, or malformed AI output show clear errors.
+
+### Archive A Recipe
+
+As an invited contributor, I can archive a recipe so that test or duplicate recipes leave the main list without being permanently deleted.
+
+Acceptance criteria:
+
+- User must be an authorized contributor.
+- Archive action opens a confirmation modal.
+- Confirming archive sets `archivedAt`.
+- Archived recipes no longer appear in the main recipe list.
+- Archived recipes are available from an archived recipes view.
+- Public visitors cannot archive recipes.
+
+### Manage Contributor Access
+
+As the app owner, I can set a shared invite code so that only trusted people can change the recipe archive.
+
+Acceptance criteria:
+
+- Public visitors can browse and read recipes.
+- Public visitors cannot create, edit, archive, upload images, or use AI assist.
+- Contributors can create, edit, archive, upload images, and use AI assist.
+- App owner can rotate the invite code through `CONTRIBUTOR_INVITE_CODE`.
+- Contributor sessions use a signed HTTP-only cookie based on `AUTH_SECRET`.
+- Protected server routes enforce authorization, not just hidden UI buttons.
 
 ### Deploy And Collect Evidence
 
@@ -136,10 +169,20 @@ Existing routes:
 - `POST /api/recipes`
   - Creates one recipe with related ingredients, steps, and notes.
   - Validates payload through `validateRecipeInput`.
+- Requires contributor authorization.
 
 - `PUT /api/recipes/[id]`
   - Updates one recipe.
   - Replaces related ingredients, steps, and notes with validated submitted data.
+- Requires contributor authorization.
+
+- `PATCH /api/recipes/[id]/archive`
+  - Archives one recipe by setting `archivedAt`.
+- Requires contributor authorization.
+
+- `POST /api/recipes/images`
+  - Validates and applies uploaded recipe images.
+- Requires contributor authorization.
 
 Planned route:
 
@@ -148,6 +191,12 @@ Planned route:
   - Calls OpenAI from the server.
   - Returns structured recipe form data.
   - Handles missing API key, invalid request body, failed model calls, and malformed model responses.
+- Requires contributor authorization.
+
+Phase 3 access routes:
+
+- `POST /api/contributor/session`: accepts the shared invite code and sets a signed HTTP-only contributor cookie.
+- `DELETE /api/contributor/session`: clears the contributor cookie.
 
 ### AI Output Shape
 
@@ -190,6 +239,9 @@ Required Vercel environment variables:
 - `DATABASE_URL`
 - `DIRECT_URL`
 - `OPENAI_API_KEY`
+- `OPENAI_MODEL`
+- `CONTRIBUTOR_INVITE_CODE`
+- `AUTH_SECRET`
 
 Final verification command:
 
@@ -282,6 +334,24 @@ Behavior:
 If full route testing is too heavy, suggest extracting a mapping helper and testing that helper with Vitest.
 ```
 
+### Prompt 6: Access-Control Route Tests
+
+```text
+I need Vitest tests for contributor-only write routes in a Next.js 16 App Router recipe app.
+
+Behavior:
+- public visitors can read recipes
+- unauthenticated users cannot POST /api/recipes
+- unauthenticated users cannot PUT /api/recipes/[id]
+- unauthenticated users cannot PATCH /api/recipes/[id]/archive
+- unauthenticated users cannot POST /api/recipes/images
+- unauthenticated users cannot POST /api/recipes/assist
+- authorized contributors can access those routes
+
+Mock the auth/session helper. Do not call a real auth provider.
+Write the failing tests first.
+```
+
 ## TDD Plan
 
 ### Red
@@ -315,6 +385,9 @@ npm run check
 - Add recipe modal opens.
 - Create recipe works.
 - Edit recipe works.
+- Archive recipe works.
+- Public visitor cannot access protected write actions.
+- Invited contributor can access protected write actions.
 - AI assist accepts rough notes.
 - AI assist fills editable fields.
 - AI failures show clear messages.

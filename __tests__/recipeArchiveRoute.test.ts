@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PATCH } from "@/app/api/recipes/[id]/archive/route";
+import { CONTRIBUTOR_COOKIE_NAME, createContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 
 vi.mock("@/lib/prisma", () => ({
@@ -14,13 +15,17 @@ vi.mock("@/lib/prisma", () => ({
 const prismaMock = vi.mocked(prisma);
 
 function archiveRecipe(id: string) {
-  return PATCH(new Request("http://localhost/api/recipes/" + id + "/archive"), {
+  const token = createContributorSessionToken(1_800_000_000_000);
+  return PATCH(new Request("http://localhost/api/recipes/" + id + "/archive", {
+    headers: { cookie: `${CONTRIBUTOR_COOKIE_NAME}=${token}` },
+  }), {
     params: Promise.resolve({ id }),
   });
 }
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv("AUTH_SECRET", "test-secret-with-enough-length");
 });
 
 describe("PATCH /api/recipes/[id]/archive", () => {

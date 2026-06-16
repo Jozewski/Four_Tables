@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import FilterBar from "@/components/FilterBar";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import RecipeInlineListItem from "@/components/RecipeInlineListItem";
+import { CONTRIBUTOR_COOKIE_NAME, verifyContributorSessionToken } from "@/lib/contributorAuth";
 import { prisma } from "@/lib/prisma";
 
 type SearchParams = {
@@ -12,7 +14,19 @@ type SearchParams = {
   status?: string;
 };
 
-async function RecipeGrid({ cultural, holiday, category, status }: SearchParams) {
+async function hasContributorAccess() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(CONTRIBUTOR_COOKIE_NAME)?.value;
+  return Boolean(verifyContributorSessionToken(token));
+}
+
+async function RecipeGrid({
+  canContribute,
+  cultural,
+  holiday,
+  category,
+  status,
+}: SearchParams & { canContribute: boolean }) {
   const showingArchived = status === "archived";
   const where: Record<string, unknown> = {
     archivedAt: showingArchived ? { not: null } : null,
@@ -73,7 +87,7 @@ async function RecipeGrid({ cultural, holiday, category, status }: SearchParams)
       </p>
       <div className="space-y-5">
         {recipes.map((recipe) => (
-          <RecipeInlineListItem key={recipe.id} recipe={recipe} />
+          <RecipeInlineListItem key={recipe.id} recipe={recipe} canContribute={canContribute} />
         ))}
       </div>
     </>
@@ -88,6 +102,7 @@ export default async function RecipesPage({
   const resolvedSearchParams = await searchParams;
   const { cultural, holiday, category, status } = resolvedSearchParams;
   const showingArchived = status === "archived";
+  const canContribute = await hasContributorAccess();
 
   return (
     <div className="portal-shell py-8 md:py-10">
@@ -109,17 +124,28 @@ export default async function RecipesPage({
         </div>
 
         <div className="flex flex-wrap gap-3 md:justify-end">
-          <Link
-            href={showingArchived ? "/recipes" : "/recipes?status=archived"}
-            className="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
-          >
-            {showingArchived ? "All Recipes" : "Archived"}
-          </Link>
-          <RecipeFormModal
-            mode="create"
-            triggerLabel="Add Recipe"
-            triggerClassName="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_10px_24px_rgba(217,106,39,0.25)]"
-          />
+          {canContribute && (
+            <Link
+              href={showingArchived ? "/recipes" : "/recipes?status=archived"}
+              className="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--ink)]"
+            >
+              {showingArchived ? "All Recipes" : "Archived"}
+            </Link>
+          )}
+          {canContribute ? (
+            <RecipeFormModal
+              mode="create"
+              triggerLabel="Add Recipe"
+              triggerClassName="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_10px_24px_rgba(217,106,39,0.25)]"
+            />
+          ) : (
+            <Link
+              href="/contributor"
+              className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-3 text-[11px] font-sans-alt font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_10px_24px_rgba(217,106,39,0.25)]"
+            >
+              Contributor Sign In
+            </Link>
+          )}
         </div>
       </div>
 
@@ -138,7 +164,13 @@ export default async function RecipesPage({
           </div>
         }
       >
-        <RecipeGrid cultural={cultural} holiday={holiday} category={category} status={status} />
+        <RecipeGrid
+          canContribute={canContribute}
+          cultural={cultural}
+          holiday={holiday}
+          category={category}
+          status={status}
+        />
       </Suspense>
     </div>
   );

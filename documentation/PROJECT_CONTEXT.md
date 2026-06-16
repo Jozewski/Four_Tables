@@ -13,7 +13,7 @@ Four Tables is a family recipe archive for Italian, Dutch, German, and Mexican r
 - Sprint length: 5 build days.
 - Deploy day: Saturday, June 20.
 - Demo day: Monday, June 22.
-- Main sprint goal: ship a deployed recipe app with working create/read/update and meaningful OpenAI integration.
+- Main sprint goal: ship a deployed recipe app with public browsing, invite-code protected contributor create/read/update/archive, and meaningful OpenAI integration.
 
 ## Required Gate Items
 
@@ -23,6 +23,8 @@ Four Tables is a family recipe archive for Italian, Dutch, German, and Mexican r
 - One meaningful OpenAI API feature.
 - Live Vercel URL.
 - Evidence that 2-3 real users used the app.
+- Create, edit, archive, image upload, and AI assist must be restricted to authorized contributors before deploy.
+- Sprint access control uses `CONTRIBUTOR_INVITE_CODE` plus a signed HTTP-only cookie, not a full account/profile system.
 
 ## Tech Stack Rules
 
@@ -64,6 +66,7 @@ Guardrails:
 - Preserve ingredient order by mapping submitted ingredients to sequential `order` values before saving.
 - Preserve step order by mapping submitted steps to sequential `stepNumber` values before saving.
 - Treat AI-generated recipe data as untrusted input and pass it through the same validation path as manual form submissions.
+- Treat user identity and role as server-side authorization inputs. UI hiding is not sufficient.
 - Add or update Vitest coverage when changing ingredient, step, or AI output validation.
 - Normalize optional fields through existing validation behavior instead of handling empty strings differently in separate routes or components.
 
@@ -72,6 +75,7 @@ Guardrails:
 - The OpenAI API must only be called from server-side code.
 - Never expose `OPENAI_API_KEY` to the browser.
 - The user must review and edit AI output before saving.
+- AI assist is a contributor-only action because it can write draft content into recipe forms.
 - AI output must be treated as untrusted input.
 - AI output must pass the same validation rules as manual recipe input.
 - If OpenAI fails, the app should show a clear error and preserve user-entered form data.
@@ -111,8 +115,8 @@ npm run check
 - The add/edit modal should guide the user through structured entry.
 - AI assist belongs near the top of the add/edit flow.
 - Avoid large new redesigns during this sprint.
-- Do not add auth unless the sprint Must Haves are already complete.
-- Delete recipes, dark mode, and social sharing are allowed sprint items, but they must not delay AI, CRUD verification, deployment, or user evidence.
+- Auth is now Phase 3 pre-deploy scope: public read access stays open, but create/edit/archive/image upload/AI assist must be contributor-only.
+- Archive recipes, dark mode, and access-control work are allowed sprint items, but they must not delay deployment or user evidence. Access control is now required before deploy for write actions.
 
 ## Scope Rules
 
@@ -120,13 +124,14 @@ Must do:
 
 - OpenAI recipe assist.
 - Create/read/update verification.
+- Invite-only contributor access for create/edit/archive before deployment.
 - Deployment.
 - User evidence.
 
 Should do:
 
 - Save success confirmation.
-- Delete recipe support with confirmation.
+- Archive recipe support with confirmation.
 - AI setup documentation.
 - Final screenshot audit.
 
@@ -137,10 +142,18 @@ Stretch goals:
 
 Won't do this sprint:
 
-- Authentication.
-- Admin roles.
 - Full design system rewrite.
 - Multi-user collaboration.
+
+## Phase 3 Access-Control Guardrails
+
+- Browsing and recipe detail pages remain public.
+- Create, update, archive, image upload, and AI assist routes require an authorized contributor session.
+- The app owner controls the shared contributor invite code through environment variables for this sprint.
+- Route handlers must enforce authorization server-side.
+- Client components may hide protected controls for visitors, but this is convenience only.
+- Tests must cover blocked unauthenticated access for protected write routes.
+- Use the narrow invite-code flow for this sprint; full user profiles and admin approval are deferred.
 
 ## File Ownership Notes
 

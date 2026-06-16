@@ -1,6 +1,11 @@
+import { isContributorRequest, unauthorizedContributorResponse } from "@/lib/contributorAuth";
 import { imageFileToDataUrl } from "@/lib/recipeImageUpload";
 
 export async function POST(request: Request) {
+  if (!isContributorRequest(request)) {
+    return unauthorizedContributorResponse();
+  }
+
   const formData = await request.formData().catch(() => null);
   const file = formData?.get("image");
 
