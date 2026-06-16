@@ -42,6 +42,19 @@ It is not required for the current shipping version because the existing app doe
 
 ## V2 Scope
 
+## Current Status
+
+Completed on the current V2 branches:
+
+- `NEXT_PUBLIC_APP_URL` wired into canonical site URL handling
+- canonical metadata for home, recipes index, and recipe detail pages
+- Open Graph metadata for those same public pages
+- `sitemap.xml` generation for public routes and recipe detail pages
+- `robots.txt` generation
+- `WebSite`, `CollectionPage`, `ItemList`, `Recipe`, and `BreadcrumbList` structured data
+- canonical host hardening for `jozewski.tech` with a `www` to apex redirect
+- recipe-detail social sharing controls
+
 ### 1. Canonical Metadata And SEO Tags
 
 Goal:
@@ -111,10 +124,11 @@ Goal:
 
 - Let users share a recipe directly from the recipe detail page.
 
-Planned implementation:
+Implemented on `feature/v2-social-sharing-tdd`:
 
-- Add a copy-link action
-- Add optional direct sharing links for common platforms
+- Add a native `Share` CTA with clipboard fallback
+- Add a dedicated `Copy Link` CTA
+- Add direct `Email` and `Pinterest` share links
 - Limit sharing UI to recipe detail pages
 
 Expected value:

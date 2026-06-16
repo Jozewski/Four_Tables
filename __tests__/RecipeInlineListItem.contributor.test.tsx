@@ -30,6 +30,7 @@ describe("RecipeInlineListItem contributor controls", () => {
     render(<RecipeInlineListItem recipe={recipe} canContribute={false} />);
 
     expect(screen.getByRole("link", { name: "Open Recipe" })).toBeDefined();
+    expect(screen.queryByRole("link", { name: "Open Sunday Sauce" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Edit" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Archive Sunday Sauce" })).toBeNull();
   });
