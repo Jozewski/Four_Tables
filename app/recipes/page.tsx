@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import FilterBar from "@/components/FilterBar";
@@ -27,6 +28,22 @@ type SearchParams = {
   holiday?: string;
   category?: string;
   status?: string;
+};
+
+export const metadata: Metadata = {
+  title: "All Recipes - Four Tables",
+  description:
+    "Browse the full Four Tables recipe archive by tradition, holiday, and category.",
+  alternates: {
+    canonical: "/recipes",
+  },
+  openGraph: {
+    title: "All Recipes - Four Tables",
+    description:
+      "Browse the full Four Tables recipe archive by tradition, holiday, and category.",
+    url: "/recipes",
+    type: "website",
+  },
 };
 
 async function hasContributorAccess() {

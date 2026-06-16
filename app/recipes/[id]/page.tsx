@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import RecipeImage from "@/components/RecipeImage";
 import { notFound } from "next/navigation";
 import RecipeDetail from "@/components/RecipeDetail";
@@ -38,7 +39,7 @@ export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const id = Number(resolvedParams.id);
 
@@ -46,10 +47,30 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   const recipe = await prisma.recipe.findUnique({
     where: { id },
-    select: { title: true, cultural: true },
+    select: { title: true, cultural: true, description: true, imageUrl: true },
   });
   if (!recipe) return { title: "Recipe Not Found" };
-  return { title: `${recipe.title} - Four Tables` };
+
+  const description =
+    recipe.description ??
+    `${recipe.title} from the ${recipe.cultural} tradition on Four Tables.`;
+
+  const imageUrl = getSafeImageUrl(recipe.imageUrl);
+
+  return {
+    title: `${recipe.title} - Four Tables`,
+    description,
+    alternates: {
+      canonical: `/recipes/${id}`,
+    },
+    openGraph: {
+      title: `${recipe.title} - Four Tables`,
+      description,
+      url: `/recipes/${id}`,
+      type: "article",
+      images: imageUrl ? [{ url: imageUrl, alt: recipe.title }] : undefined,
+    },
+  };
 }
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {

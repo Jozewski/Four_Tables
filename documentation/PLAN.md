@@ -16,6 +16,7 @@ Supporting implementation records:
 - [TDD Summary](./TDD_SUMMARY.md)
 - [Accessibility Audit](./ACCESSIBILITY_AUDIT.md)
 - [Screen Reader QA](./SCREEN_READER_QA.md)
+- [V2 Project Roadmap](./V2_PROJECT_ROADMAP.md)
 
 ## Purpose
 
@@ -76,13 +77,13 @@ Already completed:
 - Project converted to package-level ESM.
 - Baseline Vitest tests.
 - `npm run check` script for lint, tests, and production build.
+- Production deployment is live at `https://jozewski.tech`.
+- Initial production smoke test passed and the app is ready for full QA.
 
 Still required before the Monday, June 22 demo:
 
 - Invite-only contributor access for create, edit, archive, image upload, and AI assist.
 - Final create/read/update/archive browser verification.
-- Vercel deployment.
-- Live URL smoke test.
 - Evidence from 2-3 real users.
 
 ## AI Feature Plan
@@ -172,7 +173,9 @@ Accessibility evidence is tracked separately in [ACCESSIBILITY_AUDIT.md](./ACCES
 
 ## Deployment Plan
 
-The app will be deployed to Vercel on Saturday, June 20.
+The app is deployed on Vercel and is currently live at:
+
+- `https://jozewski.tech`
 
 Required production environment variables:
 
@@ -203,6 +206,12 @@ After deployment, the live app will be smoke-tested for:
 - AI assist
 - Accessibility smoke test against the deployed experience
 - Mobile layout
+
+Current deployment status:
+
+- Custom domain attached: `jozewski.tech`
+- Initial production smoke test passed
+- App is ready for full QA across desktop, mobile, contributor, and AI flows
 
 ## Sprint Timeline
 
@@ -237,8 +246,8 @@ Day 5: Friday, June 19
 
 Deploy Day: Saturday, June 20
 
-- Deploy to Vercel.
-- Smoke test the live URL.
+- Deploy to Vercel. Completed.
+- Smoke test the live URL. Initial pass completed.
 - Collect user evidence.
 
 Demo Day: Monday, June 22
@@ -266,3 +275,15 @@ Demo Day: Monday, June 22
 - Invite-only contributor access has moved into pre-deploy scope because create/edit/archive should not be public.
 - The UI has been improved, but final polish is secondary to AI, deployment, and user evidence.
 - The AI assistant will generate structured draft content, but users must review and edit before saving.
+
+## Post-Demo Roadmap
+
+Version 2 planning is tracked separately in [V2_PROJECT_ROADMAP.md](./V2_PROJECT_ROADMAP.md).
+
+Planned Version 2 focus:
+
+- `NEXT_PUBLIC_APP_URL`
+- canonical metadata and SEO tags
+- Open Graph metadata
+- sitemap generation
+- recipe-level social sharing
