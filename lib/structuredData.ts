@@ -72,14 +72,7 @@ export function getCollectionPageStructuredData(input: {
         "@type": "ListItem",
         position: index + 1,
         url: `${siteUrl}/recipes/${recipe.id}`,
-        item: {
-          "@type": "Recipe",
-          name: recipe.title,
-          description: recipe.description ?? undefined,
-          recipeCategory: recipe.category,
-          keywords: [recipe.cultural, recipe.holiday, recipe.category].filter(Boolean).join(", "),
-          image: recipe.imageUrl ?? undefined,
-        },
+        name: recipe.title,
       })),
     },
   };
