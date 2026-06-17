@@ -241,6 +241,12 @@ export default async function RootLayout({
               </div>
             </div>
           </div>
+          <div className="portal-shell border-t border-[var(--border)] py-5">
+            <div className="flex flex-col gap-2 font-body text-xs leading-6 text-[var(--ink-muted)] sm:flex-row sm:items-center sm:justify-between">
+              <p>&copy; 2026 Four Tables. All rights reserved.</p>
+              <p>Built by Joanne Liszewski with love.</p>
+            </div>
+          </div>
         </footer>
       </body>
     </html>
