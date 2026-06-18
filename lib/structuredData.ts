@@ -95,11 +95,12 @@ export function getRecipeStructuredData(recipe: RecipeStructuredDataInput) {
     recipeCategory: recipe.category,
     recipeCuisine: recipe.cultural,
     keywords,
+    prepTime: recipe.prepTime ? `PT${recipe.prepTime}M` : undefined,
     totalTime: recipe.prepTime ? `PT${recipe.prepTime}M` : undefined,
     recipeIngredient: recipe.ingredients.map((ingredient) =>
       `${ingredient.amount}${ingredient.unit ? ` ${ingredient.unit}` : ""} ${ingredient.name}`.trim(),
     ),
-    recipeInstructions: recipe.steps
+    recipeInstructions: [...recipe.steps]
       .sort((a, b) => a.stepNumber - b.stepNumber)
       .map((step) => ({
         "@type": "HowToStep",

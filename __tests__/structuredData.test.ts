@@ -58,6 +58,14 @@ describe("structured data", () => {
     });
 
     expect(jsonLd["@type"]).toBe("Recipe");
+    expect(jsonLd.recipeCuisine).toBe("Italian");
+    expect(jsonLd.prepTime).toBe("PT15M");
+    expect(jsonLd.totalTime).toBe("PT15M");
+    expect(jsonLd.author).toEqual({
+      "@type": "Organization",
+      name: "Four Tables",
+      url: "https://jozewski.tech",
+    });
     expect(jsonLd.recipeIngredient).toEqual(["4 ripe Roma tomatoes", "2 cloves garlic"]);
     expect(jsonLd.recipeInstructions).toEqual([
       {
@@ -71,5 +79,26 @@ describe("structured data", () => {
         text: "Spoon the mixture over toasted bread.",
       },
     ]);
+  });
+
+  it("does not publish recommended Recipe fields when Four Tables has no real source data", () => {
+    const jsonLd = getRecipeStructuredData({
+      id: 8,
+      title: "Simple Broth",
+      description: null,
+      cultural: "German",
+      holiday: null,
+      category: "Soup",
+      prepTime: null,
+      imageUrl: null,
+      createdAt: new Date("2026-06-17T12:00:00.000Z"),
+      ingredients: [{ amount: "4", unit: "cups", name: "stock" }],
+      steps: [{ stepNumber: 1, instruction: "Warm the stock until steaming." }],
+    });
+
+    expect(jsonLd).not.toHaveProperty("aggregateRating");
+    expect(jsonLd).not.toHaveProperty("cookTime");
+    expect(jsonLd).not.toHaveProperty("nutrition");
+    expect(jsonLd).not.toHaveProperty("video");
   });
 });
