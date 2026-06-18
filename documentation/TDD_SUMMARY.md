@@ -677,62 +677,6 @@ Result:
 - Lint passed.
 - Production build passed.
 
-## Next TDD Entries
-
-## Additional QA Notes
-
-### 2026-06-18: Recipe Structured Data Search Console Enhancements
-
-Goal:
-
-- Improve Google recipe rich-result readiness for flagged recipe detail pages such as `https://jozewski.tech/recipes/114` without publishing fake structured data.
-
-:x: Red:
-
-- Updated `__tests__/structuredData.test.ts`.
-- Added and expanded coverage for:
-  - full Recipe detail JSON-LD fields: `recipeIngredient`, `recipeInstructions`, `recipeCuisine`, `prepTime`, `totalTime`, and `author`
-  - recommended fields that should not be published when Four Tables has no real source data: `aggregateRating`, `cookTime`, `nutrition`, and `video`
-  - uploaded `data:image/...` values being excluded from Recipe JSON-LD
-- First targeted failure for the embedded image guard:
-
-```bash
-npm run test:run -- __tests__/structuredData.test.ts
-```
-
-- First failure output:
-
-```text
-FAIL  __tests__/structuredData.test.ts > structured data > keeps embedded image data out of Recipe JSON-LD
-AssertionError: expected { ...(16) } to not have property "image"
-```
-
-:white_check_mark: Green:
-
-- Updated `lib/structuredData.ts`.
-- Added explicit `prepTime` output while keeping `totalTime`.
-- Filtered Recipe JSON-LD `image` output so only crawlable `http` and `https` URLs are included.
-- Left uploaded data images available for page display, but removed them from structured data.
-
-:large_blue_circle: Blue:
-
-- Changed recipe instruction sorting to copy the steps array before sorting so structured-data generation does not mutate caller data.
-- Kept `aggregateRating`, `cookTime`, `nutrition`, and `video` out of JSON-LD until the app has real visible data for those fields.
-- Verified the live flagged page already had valid Recipe fields, and identified the oversized base64 image in JSON-LD as the risky Search Console/crawler signal.
-
-Final verification:
-
-```bash
-npm run test:run -- __tests__\structuredData.test.ts
-npm run lint
-```
-
-Result:
-
-- 1 focused Vitest file passed.
-- 4 structured-data tests passed.
-- Lint passed.
-
 ### 2026-06-15: Archive Recipes
 
 Goal:
@@ -1151,6 +1095,60 @@ npm run test:responsive
 Result:
 
 - 20 Playwright responsive tests passed against the deployed Vercel site.
+
+### 2026-06-18: Recipe Structured Data Search Console Enhancements
+
+Goal:
+
+- Improve Google recipe rich-result readiness for flagged recipe detail pages such as `https://jozewski.tech/recipes/114` without publishing fake structured data.
+
+:x: Red:
+
+- Updated `__tests__/structuredData.test.ts`.
+- Added and expanded coverage for:
+  - full Recipe detail JSON-LD fields: `recipeIngredient`, `recipeInstructions`, `recipeCuisine`, `prepTime`, `totalTime`, and `author`
+  - recommended fields that should not be published when Four Tables has no real source data: `aggregateRating`, `cookTime`, `nutrition`, and `video`
+  - uploaded `data:image/...` values being excluded from Recipe JSON-LD
+- First targeted failure for the embedded image guard:
+
+```bash
+npm run test:run -- __tests__/structuredData.test.ts
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/structuredData.test.ts > structured data > keeps embedded image data out of Recipe JSON-LD
+AssertionError: expected { ...(16) } to not have property "image"
+```
+
+:white_check_mark: Green:
+
+- Updated `lib/structuredData.ts`.
+- Added explicit `prepTime` output while keeping `totalTime`.
+- Filtered Recipe JSON-LD `image` output so only crawlable `http` and `https` URLs are included.
+- Left uploaded data images available for page display, but removed them from structured data.
+
+:large_blue_circle: Blue:
+
+- Changed recipe instruction sorting to copy the steps array before sorting so structured-data generation does not mutate caller data.
+- Kept `aggregateRating`, `cookTime`, `nutrition`, and `video` out of JSON-LD until the app has real visible data for those fields.
+- Verified the live flagged page already had valid Recipe fields, and identified the oversized base64 image in JSON-LD as the risky Search Console/crawler signal.
+
+Final verification:
+
+```bash
+npm run test:run -- __tests__\structuredData.test.ts
+npm run lint
+```
+
+Result:
+
+- 1 focused Vitest file passed.
+- 4 structured-data tests passed.
+- Lint passed.
+
+## Next TDD Entries
 
 Use this template for future sprint work.
 
