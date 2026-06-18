@@ -101,4 +101,23 @@ describe("structured data", () => {
     expect(jsonLd).not.toHaveProperty("nutrition");
     expect(jsonLd).not.toHaveProperty("video");
   });
+
+  it("keeps embedded image data out of Recipe JSON-LD", () => {
+    const jsonLd = getRecipeStructuredData({
+      id: 9,
+      title: "Chiles en Nogada",
+      description: "Roasted poblano chiles with walnut cream sauce.",
+      cultural: "Mexican",
+      holiday: null,
+      category: "Main",
+      prepTime: 180,
+      imageUrl: "data:image/png;base64,aGVsbG8=",
+      createdAt: new Date("2026-06-17T12:00:00.000Z"),
+      ingredients: [{ amount: "4", unit: null, name: "poblano chiles" }],
+      steps: [{ stepNumber: 1, instruction: "Roast and peel the chiles." }],
+    });
+
+    expect(jsonLd).not.toHaveProperty("image");
+    expect(JSON.stringify(jsonLd).length).toBeLessThan(2000);
+  });
 });

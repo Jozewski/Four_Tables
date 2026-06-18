@@ -4,6 +4,17 @@ export function toJsonLd(value: unknown) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
+function getStructuredDataImageUrl(imageUrl: string | null) {
+  if (!imageUrl) return undefined;
+
+  try {
+    const parsed = new URL(imageUrl);
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? imageUrl : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function getWebsiteStructuredData() {
   const siteUrl = getSiteUrl();
 
@@ -82,6 +93,7 @@ export function getRecipeStructuredData(recipe: RecipeStructuredDataInput) {
   const siteUrl = getSiteUrl();
   const recipeUrl = `${siteUrl}/recipes/${recipe.id}`;
   const keywords = [recipe.cultural, recipe.holiday, recipe.category].filter(Boolean).join(", ");
+  const structuredDataImageUrl = getStructuredDataImageUrl(recipe.imageUrl);
 
   return {
     "@context": "https://schema.org",
@@ -90,7 +102,7 @@ export function getRecipeStructuredData(recipe: RecipeStructuredDataInput) {
     description:
       recipe.description ?? `${recipe.title} from the ${recipe.cultural} tradition on Four Tables.`,
     url: recipeUrl,
-    image: recipe.imageUrl ? [recipe.imageUrl] : undefined,
+    ...(structuredDataImageUrl ? { image: [structuredDataImageUrl] } : {}),
     datePublished: recipe.createdAt.toISOString(),
     recipeCategory: recipe.category,
     recipeCuisine: recipe.cultural,

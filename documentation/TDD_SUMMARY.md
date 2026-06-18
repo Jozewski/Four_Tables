@@ -36,7 +36,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 16 test files and 42 total tests. The Playwright browser suite has 2 test files: 1 accessibility file with 4 tests and 1 responsive layout file with 20 tests.
+The current Vitest suite has 16 test files and 44 total tests. The Playwright browser suite has 2 test files: 1 accessibility file with 4 tests and 1 responsive layout file with 20 tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -172,6 +172,26 @@ Suite: `recipe image uploads`
 2. `rejects non-image uploads`
    - Proves text files and other non-image uploads are rejected before they can be saved.
    - Confirms the user-facing error explains the accepted image formats.
+
+### `__tests__/structuredData.test.ts`
+
+Suite: `structured data`
+
+1. `keeps recipe list pages as an ItemList without partial Recipe entries`
+   - Proves collection pages publish an `ItemList` of recipe URLs instead of partial `Recipe` entities.
+   - Prevents Google Search Console from treating recipe index entries as incomplete Recipe rich-result items.
+
+2. `publishes full Recipe fields on recipe detail pages`
+   - Proves recipe detail JSON-LD includes `recipeIngredient`, `recipeInstructions`, `recipeCuisine`, `prepTime`, `totalTime`, and `author`.
+   - Confirms recipe steps are emitted as ordered `HowToStep` entries.
+
+3. `does not publish recommended Recipe fields when Four Tables has no real source data`
+   - Proves the app does not fake `aggregateRating`, `cookTime`, `nutrition`, or `video`.
+   - Keeps structured data aligned with visible page content and available recipe data.
+
+4. `keeps embedded image data out of Recipe JSON-LD`
+   - Proves uploaded `data:image/...` values are not emitted in the Recipe `image` field.
+   - Keeps JSON-LD image values limited to crawlable HTTP/HTTPS URLs.
 
 ### `__tests__/ThemeToggle.test.tsx`
 
@@ -660,6 +680,58 @@ Result:
 ## Next TDD Entries
 
 ## Additional QA Notes
+
+### 2026-06-18: Recipe Structured Data Search Console Enhancements
+
+Goal:
+
+- Improve Google recipe rich-result readiness for flagged recipe detail pages such as `https://jozewski.tech/recipes/114` without publishing fake structured data.
+
+:x: Red:
+
+- Updated `__tests__/structuredData.test.ts`.
+- Added and expanded coverage for:
+  - full Recipe detail JSON-LD fields: `recipeIngredient`, `recipeInstructions`, `recipeCuisine`, `prepTime`, `totalTime`, and `author`
+  - recommended fields that should not be published when Four Tables has no real source data: `aggregateRating`, `cookTime`, `nutrition`, and `video`
+  - uploaded `data:image/...` values being excluded from Recipe JSON-LD
+- First targeted failure for the embedded image guard:
+
+```bash
+npm run test:run -- __tests__/structuredData.test.ts
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/structuredData.test.ts > structured data > keeps embedded image data out of Recipe JSON-LD
+AssertionError: expected { ...(16) } to not have property "image"
+```
+
+:white_check_mark: Green:
+
+- Updated `lib/structuredData.ts`.
+- Added explicit `prepTime` output while keeping `totalTime`.
+- Filtered Recipe JSON-LD `image` output so only crawlable `http` and `https` URLs are included.
+- Left uploaded data images available for page display, but removed them from structured data.
+
+:large_blue_circle: Blue:
+
+- Changed recipe instruction sorting to copy the steps array before sorting so structured-data generation does not mutate caller data.
+- Kept `aggregateRating`, `cookTime`, `nutrition`, and `video` out of JSON-LD until the app has real visible data for those fields.
+- Verified the live flagged page already had valid Recipe fields, and identified the oversized base64 image in JSON-LD as the risky Search Console/crawler signal.
+
+Final verification:
+
+```bash
+npm run test:run -- __tests__\structuredData.test.ts
+npm run lint
+```
+
+Result:
+
+- 1 focused Vitest file passed.
+- 4 structured-data tests passed.
+- Lint passed.
 
 ### 2026-06-15: Archive Recipes
 
