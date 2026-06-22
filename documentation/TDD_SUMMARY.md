@@ -36,7 +36,7 @@ OPENAI_MODEL
 
 ## Current Test Suite
 
-The current Vitest suite has 16 test files and 44 total tests. The Playwright browser suite has 2 test files: 1 accessibility file with 4 tests and 1 responsive layout file with 20 tests.
+The current Vitest suite has 17 test files and 47 total tests. The Playwright browser suite has 2 test files: 1 accessibility file with 4 tests and 1 responsive layout file with 20 tests.
 
 ### `__tests__/recipeValidation.test.ts`
 
@@ -90,6 +90,10 @@ Suite: `RecipeFormModal AI assist`
 2. `shows AI assist errors returned by the server`
    - Proves the modal displays server-returned AI errors.
    - Proves rough notes remain in the textarea after an AI failure.
+
+3. `shows an AI loading spinner while the draft request is in flight`
+   - Proves the modal exposes an accessible loading spinner while the AI draft request is unresolved.
+   - Proves the spinner disappears after the request completes.
 
 ### `__tests__/RecipeFormModal.accessibility.test.tsx`
 
@@ -1147,6 +1151,72 @@ Result:
 - 1 focused Vitest file passed.
 - 4 structured-data tests passed.
 - Lint passed.
+
+### 2026-06-22: AI Assist Loading Spinner
+
+Goal:
+
+- Prove users see clear loading feedback while the AI assist draft request is in flight.
+
+:x: Red:
+
+- Updated `__tests__/RecipeFormModal.ai.test.tsx`.
+- Added coverage for:
+  - clicking `Draft with AI`
+  - keeping the mocked AI request unresolved
+  - showing an accessible loading spinner while `aiSubmitting` is true
+  - removing the spinner after the request completes
+- First red run:
+
+```bash
+npm test -- --run __tests__/RecipeFormModal.ai.test.tsx
+```
+
+- First failure output:
+
+```text
+FAIL  __tests__/RecipeFormModal.ai.test.tsx > RecipeFormModal AI assist > shows an AI loading spinner while the draft request is in flight
+TestingLibraryElementError: Unable to find role="status" and name "Drafting recipe with AI"
+```
+
+:white_check_mark: Green:
+
+- Updated `components/RecipeFormModal.tsx`.
+- Added a small spinner inside the `Draft with AI` button while `aiSubmitting` is true.
+- Exposed the spinner as `role="status"` with `aria-label="Drafting recipe with AI"`.
+- Confirmed the focused modal AI suite passed:
+
+```bash
+npm test -- --run __tests__/RecipeFormModal.ai.test.tsx
+```
+
+Result:
+
+- 1 test file passed.
+- 4 tests passed.
+
+:large_blue_circle: Blue:
+
+- Moved spinner border color into `app/globals.css` as `.recipe-form-ai-spinner`.
+- Used `currentColor` for the spinner border so it follows the existing AI button colors in both light and dark mode.
+- Completed a manual browser smoke test on `localhost:3002`:
+  - signed in as a contributor
+  - pasted recipe notes
+  - clicked `Draft with AI`
+  - confirmed the spinner appeared during a delayed AI request and disappeared after the response populated the form
+
+Final verification:
+
+```bash
+npm run check
+```
+
+Result:
+
+- Lint passed.
+- 17 Vitest test files passed.
+- 47 Vitest tests passed.
+- Production build passed.
 
 ## Next TDD Entries
 

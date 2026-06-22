@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import { RecipeFormValues } from "@/lib/recipeValidation";
@@ -86,6 +86,45 @@ describe("RecipeFormModal AI assist", () => {
     expect((screen.getByLabelText("AI recipe notes") as HTMLTextAreaElement).value).toBe(
       "Grandma sauce with tomatoes, olive oil, and a slow simmer.",
     );
+  });
+
+  it("shows an AI loading spinner while the draft request is in flight", async () => {
+    let resolveFetch: (response: {
+      ok: boolean;
+      json: () => Promise<{ ok: boolean; values: RecipeFormValues }>;
+    }) => void;
+    const fetchPromise = new Promise<{
+      ok: boolean;
+      json: () => Promise<{ ok: boolean; values: RecipeFormValues }>;
+    }>((resolve) => {
+      resolveFetch = resolve;
+    });
+    const fetchMock = vi.fn().mockReturnValue(fetchPromise);
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<RecipeFormModal mode="create" triggerLabel="Add Recipe" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Recipe" }));
+    fireEvent.change(screen.getByLabelText("AI recipe notes"), {
+      target: { value: "Grandma sauce with tomatoes, olive oil, and a slow simmer." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Draft with AI" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("status", { name: "Drafting recipe with AI" })).toBeDefined();
+    });
+
+    await act(async () => {
+      resolveFetch({
+        ok: true,
+        json: async () => ({ ok: true, values: aiValues }),
+      });
+      await fetchPromise;
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("status", { name: "Drafting recipe with AI" })).toBeNull();
+    });
   });
 
   it("uploads a family photo and applies the returned image value", async () => {

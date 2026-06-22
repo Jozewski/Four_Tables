@@ -327,9 +327,16 @@ export default function RecipeFormModal({
               <button
                 type="button"
                 onClick={handleAiAssist}
-                className="recipe-form-ai-button rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[var(--accent)] disabled:opacity-60 lg:mb-1"
+                className="recipe-form-ai-button inline-flex items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-sans-alt font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[var(--accent)] disabled:opacity-60 lg:mb-1"
                 disabled={aiSubmitting || submitting}
               >
+                {aiSubmitting && (
+                  <span
+                    role="status"
+                    aria-label="Drafting recipe with AI"
+                    className="recipe-form-ai-spinner inline-block h-4 w-4 animate-spin rounded-full"
+                  />
+                )}
                 {aiSubmitting ? "Drafting..." : "Draft with AI"}
               </button>
             </div>

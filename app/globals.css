@@ -612,6 +612,11 @@ a {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.recipe-form-ai-spinner {
+  border: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-top-color: currentColor;
+}
+
 .recipe-form-dialog input,
 .recipe-form-dialog textarea,
 .recipe-form-dialog select {
